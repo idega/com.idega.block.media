@@ -126,6 +126,7 @@ public ImageInserter(Class WindowToOpen) {
 	  }
 	  if( limitWidth ) {
 	    image.setMaxImageWidth(this.maxImageWidth);
+            image.setHeight(90);
 	  }
 	  if(imageWidth > 0 ){
 	    image.setWidth(imageWidth);
