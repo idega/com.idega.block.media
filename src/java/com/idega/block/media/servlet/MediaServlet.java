@@ -58,16 +58,7 @@ public class MediaServlet extends IWCoreServlet{
   }
 
   public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException{
-    //////
-    java.util.Enumeration enum = request.getParameterNames();
-    System.err.println("media servlet usage");
-    while(enum.hasMoreElements()){
-      String name = (String) enum.nextElement();
-      System.err.println("prm: "+name+" val: "+request.getParameter(name));
-    }
-    System.err.println("media servlet usage");
 
-    //(((((
     if( iwma == null )
       iwma = IWMainApplication.getIWMainApplication(getServletContext());
 
@@ -79,7 +70,6 @@ public class MediaServlet extends IWCoreServlet{
     }
     else if(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS)!=null){
       try{
-        System.err.println("reporting");
         MediaWritable mw = (MediaWritable) Class.forName(IWMainApplication.decryptClassName(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS))).newInstance();
         mw.init(request);
         response.setContentType(mw.getMimeType());
