@@ -21,6 +21,8 @@ import java.util.*;
 import com.oreilly.servlet.MultipartRequest;
 import com.idega.block.media.servlet.MediaServlet;
 import com.idega.block.media.business.MediaBusiness;
+import com.idega.idegaweb.IWResourceBundle;
+import com.idega.idegaweb.IWBundle;
 
 /**
  * Title: com.idega.block.media.presentation.MediaUploaderWindow
@@ -33,6 +35,9 @@ import com.idega.block.media.business.MediaBusiness;
 
 public class MediaUploaderWindow extends Window{
 
+private IWBundle iwb;
+private IWResourceBundle iwrb;
+
 /** this parameter is changed right away**/
     private String fileInSessionParameter = "";
 
@@ -40,6 +45,8 @@ public class MediaUploaderWindow extends Window{
     }
 
     public void main(IWContext iwc){
+      iwrb = getResourceBundle(iwc);
+      iwb = getBundle(iwc);
       fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
       setBackgroundColor("white");
       setTitle("idegaWeb uploader");
@@ -58,20 +65,35 @@ public class MediaUploaderWindow extends Window{
           /**@todo: insert a generated localized generated button**/
           submitSave.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
           submitSave.setAsImageButton(true);
-          T.add(submitSave,1,1);
 
           Link submitNew = new Link("New");
           /**@todo: insert a generated localized generated button**/
           submitNew.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_UPLOAD);
           submitNew.setAsImageButton(true);
+
           T.add(submitNew,2,1);
 
-          /**@todo here we place File Handlers**/
-          //T.add(new Image(mediaProps.getWebPath()),1,2);
 
-          FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,mediaProps.getContentType());
+          try {
+            FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,mediaProps.getContentType());
+            T.add(handler.getPresentationObject(mediaProps,iwc),1,2);
+            T.add(submitSave,1,1);
+          }
+          catch (Exception ex) {
+            StringBuffer text = new StringBuffer();
+            text.append(iwrb.getLocalizedString("uploader.window.nomimetype.firsthalf","The mimetype"));
+            text.append(" ");
+            text.append(mediaProps.getContentType());
+            text.append(iwrb.getLocalizedString("uploader.window.nomimetype.secondhalf"," is not in the database."));
 
-          T.add(handler.getPresentationObject(mediaProps,iwc),1,2);
+            Link mimeWindow = new Link(iwrb.getLocalizedString("uploader.window.mimewindowbutton","Add mimetype"));
+            mimeWindow.setAsImageButton(true);
+            mimeWindow.setWindowToOpen(MimeTypeWindow.class);
+            mimeWindow.addParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME,mediaProps.getContentType());
+            T.add(text.toString(),1,2);
+            T.add(mimeWindow,2,2);
+          }
+
 
           add(T);
         }
@@ -116,15 +138,12 @@ public class MediaUploaderWindow extends Window{
       if(mediaProps !=null){
         int i = MediaBusiness.SaveMediaToDB(mediaProps);
         iwc.setSessionAttribute(fileInSessionParameter,String.valueOf(i));
-        //try {
-         // add(new Image(i));/**@todo: add filehandler here**/
-         //mediaProps.getContentType()
          FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,mediaProps.getContentType());
          add(handler.getPresentationObject(i,iwc));
-        //}
-       // catch (SQLException ex) {
-
-       // }
       }
     }
+
+  public String getBundleIdentifier(){
+    return MediaConstants.IW_BUNDLE_IDENTIFIER ;
+  }
 }

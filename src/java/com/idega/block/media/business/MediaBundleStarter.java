@@ -40,6 +40,7 @@ public class MediaBundleStarter implements IWBundleStartable{
                             "MPEG audio  mpa abs mpega","audio/x-mpeg",
                             "MPEG-2 audio mp2a mpa2","audio/x-mpeg-2",
                             "MIDI music data  mmid","x-music/x-midi",
+                            "MPEG audio MP3","audio/mpeg"
                             };
 
   private String[] document = {
@@ -62,7 +63,7 @@ public class MediaBundleStarter implements IWBundleStartable{
                               "Javascript program  js ls mocha","text/javascript",
                               "Javascript program  js ls mocha","application/x-javascript",
                               "Gnu tar format gtar","application/x-gtar",
-                              "4.3BSD tar format tar","application/x-tar",
+                              "4.3BSD tar format tar","application/x-tar"
                               };
   private String[] image = {
                             "GIF","image/gif",

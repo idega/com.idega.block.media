@@ -170,7 +170,7 @@ public class MediaBusiness  {
 
     ICMimeType mime = (ICMimeType) cm.getFromCachedTable(ICMimeType.class,mimeType);
 
-    System.out.println("type id "+mime.getFileTypeID());
+    System.out.println("type id "+mimeType);
 
     ICFileType type = (ICFileType) cm.getFromCachedTable(ICFileType.class,Integer.toString(mime.getFileTypeID()));
 

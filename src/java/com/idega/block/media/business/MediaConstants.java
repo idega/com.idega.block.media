@@ -24,6 +24,11 @@ public class MediaConstants {
 
   public static final String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
   public static final String MEDIA_ACTION_PARAMETER_NAME = "media_chooser_action";
+  public static final String MEDIA_MIME_TYPE_PARAMETER_NAME = "media_mime_type";
+  public static final String MEDIA_MIME_TYPE_DESCRIPTION_PARAMETER_NAME = "media_mime_type_description";
+  public static final String MEDIA_FILE_TYPE_PARAMETER_NAME = "media_file_type";
+  public static final String MEDIA_FILE_TYPE_DESCRIPTION_PARAMETER_NAME = "media_file_type_description";
+
   public static final String FILE_IN_SESSION_PARAMETER_NAME = "media_file_in_session_name";
   public static final String MEDIA_ID_IN_SESSION = "media_id_in_session";
 
