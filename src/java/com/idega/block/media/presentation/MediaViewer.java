@@ -7,6 +7,8 @@ import com.idega.core.file.data.ICFile;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.Block;
 import com.idega.presentation.IWContext;
+import com.idega.presentation.Table;
+import com.idega.presentation.text.Text;
 import com.idega.util.caching.Cache;
 /**
 
@@ -68,7 +70,9 @@ public class MediaViewer extends Block {
 		if ((mediaId == -1) && (props == null)) {
 			mediaId = MediaBusiness.getMediaId(iwc);
 		}
+		
 		if (mediaId != -1) {
+			displayCurrentMediaName(iwc, mediaId);
 			viewFileFromDB(iwc, mediaId);
 		}
 		else if (props != null) {
@@ -89,8 +93,16 @@ public class MediaViewer extends Block {
 	
 	 */
 	protected void viewFileFromDisk(IWContext iwc, MediaProperties props) {
+		Table table = new Table();
+		table.setCellpadding(0);
+		table.setCellspacing(0);
+		table.setWidth(Table.HUNDRED_PERCENT);
+		table.setStyleAttribute("background: #ffffff; border: 1px solid #cccccc");
+
 		FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc, props.getMimeType());
-		add(handler.getPresentationObject(props, iwc));
+		table.add(handler.getPresentationObject(props, iwc));
+		add(Text.BREAK);
+		add(table);
 	}
 	/**
 	
@@ -107,7 +119,39 @@ public class MediaViewer extends Block {
 		Cache cache = FileTypeHandler.getCachedFileInfo(mediaId, iwc);
 		ICFile file = (ICFile) cache.getEntity();
 		FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc, file.getMimeType());
+		add(Text.BREAK);
 		add(handler.getPresentationObject(id, iwc));
+	}
+	
+	private void displayCurrentMediaName(IWContext iwc, int mediaId) {
+		IWResourceBundle iwrb = getResourceBundle(iwc);
+		Table table = new Table();
+		table.setCellpadding(4);
+		table.setCellspacing(0);
+		table.setWidth(Table.HUNDRED_PERCENT);
+		table.setStyleAttribute("background: #ffffff; border-bottom: 1px solid #cccccc; border-top: 1px solid #cccccc");
+
+	  Cache cache = FileTypeHandler.getCachedFileInfo( mediaId, iwc );
+	  ICFile file = ( ICFile ) cache.getEntity();
+	  
+	  if(MediaBusiness.isFolder(file)) {
+	  		Text folderText = new Text(iwrb.getLocalizedString("mediaviewer.current_folder", "The current folder is") + ": ");
+	  		folderText.setStyle(Text.FONT_FACE_ARIAL);
+	  		folderText.setFontSize(Text.FONT_SIZE_10_HTML_2);
+	  		folderText.setBold();
+	  		table.add(folderText, 1, 1);
+	  }
+	  else {
+	  		Text fileText = new Text(iwrb.getLocalizedString("mediaviewer.current_file", "The current file is") + ": ");
+	  		fileText.setStyle(Text.FONT_FACE_ARIAL);
+	  		fileText.setFontSize(Text.FONT_SIZE_10_HTML_2);
+	  		fileText.setBold();
+	  		table.add(fileText, 1, 1);
+	  }
+	  table.add(file.getName(), 1, 1);
+	  add(Text.BREAK);
+	  add(table);
+
 	}
 	/**
 	
