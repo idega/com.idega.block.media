@@ -77,7 +77,7 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
 
           if(myInputStream!=null){
 
-          System.err.println("FileSize: "+myInputStream.available());
+    //      System.err.println("FileSize: "+myInputStream.available());
 
             DataOutputStream output = new DataOutputStream( response.getOutputStream() );
 
