@@ -106,12 +106,11 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
 
          // while(RS.next()){
           if( (RS!=null) &&  (RS.next()) ){
+						contentType = RS.getString(2);
+						System.err.println("MediaServlet: contenttype: "+contentType);
             myInputStream = RS.getBinaryStream(1);
-          // debug
-           contentType = RS.getString(2);
+
           }
-
-
           // debug
           if(myInputStream!=null){
 
