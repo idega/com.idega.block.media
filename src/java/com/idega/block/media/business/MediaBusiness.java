@@ -147,17 +147,15 @@ public class MediaBusiness  {
     String fileInSessionParameter = getMediaParameterNameInSession(iwc);
 
     String id = "-1";
+
     if(iwc.getParameter(fileInSessionParameter)!=null){
       id = iwc.getParameter(fileInSessionParameter);
-      //used for viewing the last thing used
-      //iwc.setSessionAttribute(fileInSessionParameter+"_2",id);
     }
     else if(iwc.getSessionAttribute(fileInSessionParameter)!=null){
       id = (String) iwc.getSessionAttribute(fileInSessionParameter);
-    }//used for viewing the last thing used
-   // else if(iwc.getSessionAttribute(fileInSessionParameter+"_2")!=null){
-   //   id = (String) iwc.getSessionAttribute(fileInSessionParameter+"_2");
-   // }
+    }
+
+
 
     return id;
   }
@@ -166,9 +164,8 @@ public class MediaBusiness  {
     iwc.removeSessionAttribute(getMediaParameterNameInSession(iwc));
   }
 
-  public static void saveMediaId(IWContext iwc,String mediaId){
+  public static void saveMediaIdToSession(IWContext iwc,String mediaId){
     iwc.setSessionAttribute(getMediaParameterNameInSession(iwc),mediaId);
-    iwc.removeSessionAttribute(getMediaParameterNameInSession(iwc)+"_2");
   }
 
   public static PresentationObject saveMedia(IWContext iwc){
@@ -226,8 +223,7 @@ public class MediaBusiness  {
 
   public static Link getUseImageLink(){
     Link L = (Link) MediaConstants.MEDIA_VIEWER_LINK.clone();
-    L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
-    L.setOnClick(getSaveImageFunctionName());
+    L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_USE);
     L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
     return L;
   }
@@ -300,6 +296,13 @@ public class MediaBusiness  {
     if(file.getMimeType().equals(ICMimeType.IC_MIME_TYPE_FOLDER)) return true;
     else return false;
   }
+
+
+  public static boolean reloadOnClose(IWContext iwc){
+    if(iwc.getParameter(MediaConstants.MEDIA_ACTION_RELOAD)!=null ) return true;
+    else return false;
+  }
+
 
 
 }//end of class

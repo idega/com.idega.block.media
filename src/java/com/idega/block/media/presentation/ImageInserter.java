@@ -21,6 +21,7 @@ import com.idega.block.media.business.ImageBusiness;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.block.media.business.*;
 
 public class ImageInserter extends Block{
 
@@ -39,10 +40,10 @@ private int imageHeight = 0;
 private boolean hasUseBox = true;
 private boolean selected = false;
 private boolean openInWindow = false;
-private Class windowClass = SimpleChooserWindow.class;
+private Class windowClass = MediaChooserWindow.class;
 private Image setImage;
 private boolean limitWidth = true;
-public final String sessionImageParameterName = "im_image_session_name";
+public final String sessionImageParameterName = MediaConstants.FILE_IN_SESSION_PARAMETER_NAME;
 private String prmUseBox = "insertImage";
 private boolean maintainSessionParameter = false;
 private boolean setWindowToReloadParent = false;
@@ -148,8 +149,11 @@ public ImageInserter(Class WindowToOpen) {
         Window insertNewsImageWindow = new Window(nameOfWindow,ImageBusiness.IM_BROWSER_WIDTH,ImageBusiness.IM_BROWSER_HEIGHT,adminURL);
         imageAdmin = new Link(image,insertNewsImageWindow);
       }
-      if(setWindowToReloadParent)
-        imageAdmin.addParameter(SimpleChooserWindow.prmReloadParent,"true");
+
+      if(setWindowToReloadParent){
+        imageAdmin.addParameter(MediaConstants.MEDIA_ACTION_RELOAD,"true");
+      }
+
       imageAdmin.addParameter("submit","new");
       imageAdmin.addParameter(sessionImageParameterName,imSessionImageName);
       //imageAdmin.addParameter("image_name",image.getName());

@@ -8,6 +8,7 @@ import com.idega.util.idegaTimestamp;
 import com.idega.idegaweb.IWBundle;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.presentation.FrameSet;
+import com.idega.block.media.business.MediaBusiness;
 /**
  * Title: com.idega.block.media.presentation.MediaChooserWindow
  * Description: The frame window that displays the filesystem
@@ -44,6 +45,12 @@ import com.idega.presentation.FrameSet;
   }
 
   public void displaySelection(IWContext iwc){
+    //MediaBusiness.getMediaParameterNameInSession(iwc);//store the parameter in session
+System.err.println(MediaBusiness.getMediaParameterNameInSession(iwc));
+    if( MediaBusiness.reloadOnClose(iwc) ){
+      frame.setParentToReload();
+    }
+
     add(frame);
   }
 

@@ -24,24 +24,27 @@ public class MediaConstants {
 
   public static final String target3 = "buttons";
 
-  public static final String MEDIA_ACTION_VIEW = "media_action_view";
-  public static final String MEDIA_ACTION_SAVE = "media_action_save";
-  public static final String MEDIA_ACTION_RELOAD = "media_action_reload";
-  public static final String MEDIA_ACTION_DELETE = "media_action_delete";
-  public static final String MEDIA_ACTION_DELETE_CONFIRM = "media_action_delete_confirm";
-  public static final String MEDIA_ACTION_NEW = "media_action_new";
-  public static final String MEDIA_ACTION_EDIT = "media_action_edit";
+  public static final String MEDIA_ACTION_VIEW = "me_act_v";
+  public static final String MEDIA_ACTION_SAVE = "me_act_s";
+  public static final String MEDIA_ACTION_RELOAD = "me_act_r";
+  public static final String MEDIA_ACTION_DELETE = "me_act_d";
+  public static final String MEDIA_ACTION_DELETE_CONFIRM = "me_act_d_c";
+  public static final String MEDIA_ACTION_NEW = "me_act_n";
+  public static final String MEDIA_ACTION_EDIT = "me_act_e";
+  public static final String MEDIA_ACTION_USE = "me_act_u";
 
-  public static final String MEDIA_ACTION_PARAMETER_NAME = "media_chooser_action";
-  public static final String MEDIA_MIME_TYPE_PARAMETER_NAME = "media_mime_type";
-  public static final String MEDIA_MIME_TYPE_DESCRIPTION_PARAMETER_NAME = "media_mime_type_description";
-  public static final String MEDIA_FILE_TYPE_PARAMETER_NAME = "media_file_type";
-  public static final String MEDIA_FILE_TYPE_DESCRIPTION_PARAMETER_NAME = "media_file_type_description";
-  public static final String FILE_IN_SESSION_PARAMETER_NAME = "media_file_in_session_name";
-  public static final String MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME = "media_properties_in_session_name";
-  public static final String MEDIA_FOLDER_NAME_PARAMETER_NAME = "media_folder_name";
 
-  public static final String MEDIA_ID_IN_SESSION = "media_id_in_session";
+  public static final String MEDIA_ACTION_PARAMETER_NAME = "me_cho_act";
+  public static final String MEDIA_MIME_TYPE_PARAMETER_NAME = "me_mime_type";
+  public static final String MEDIA_MIME_TYPE_DESCRIPTION_PARAMETER_NAME = "me_mime_type_desc";
+  public static final String MEDIA_FILE_TYPE_PARAMETER_NAME = "me_file_type";
+  public static final String MEDIA_FILE_TYPE_DESCRIPTION_PARAMETER_NAME = "me_file_type_desc";
+
+  public static final String MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME = "me_prop_in_sess_n";
+  public static final String FILE_IN_SESSION_PARAMETER_NAME = "me_file_in_sess_n";
+  public static final String MEDIA_FOLDER_NAME_PARAMETER_NAME = "me_fol_n";
+
+  public static final String MEDIA_ID_IN_SESSION = "me_id_in_sess";
 
   public static final int FILE_UPLOAD_MAXIMUM_SIZE = 20*1024*1024;//20MB
 

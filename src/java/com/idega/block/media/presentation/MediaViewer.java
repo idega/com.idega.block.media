@@ -2,6 +2,7 @@ package com.idega.block.media.presentation;
 
 import com.idega.presentation.PresentationObjectContainer;
 import com.idega.presentation.IWContext;
+import com.idega.idegaweb.IWCacheManager;
 import com.idega.presentation.Table;
 import com.idega.presentation.ui.IFrame;
 import com.idega.presentation.text.Link;
@@ -35,81 +36,27 @@ public class MediaViewer extends  Window {
 
   private String fileInSessionParameter = "ic_file_id";
 
-  /*public MediaViewer(){
-   super(true);
-  }
-*/
     public void  main(IWContext iwc) throws Exception{
-
+      fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
       String mediaId = MediaBusiness.getMediaId(iwc);
       String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
-      fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
-      iwc.removeSessionAttribute(fileInSessionParameter);
+      if( action==null ) action = "";
 
       if( (mediaId!=null) && !(mediaId.equalsIgnoreCase("-1")) ){
-        //saveMediaId(iwc,mediaId);
-        if(action != null){
-          if(action.equals(MediaConstants.MEDIA_ACTION_SAVE)){
-            MediaBusiness.saveMediaId(iwc,mediaId);
-          }
-          else if(action.equals(MediaConstants.MEDIA_ACTION_DELETE)){
-           ConfirmDeleteMedia(mediaId);
-          }
-          else if(action.equals(MediaConstants.MEDIA_ACTION_DELETE_CONFIRM)){
-            deleteMedia(mediaId);
-            MediaBusiness.removeMediaIdFromSession(iwc);
-            setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
-            add(new Text("Deleted"));
-          }
+        if(action.equals("") || action.equals(MediaConstants.MEDIA_ACTION_USE) ){//viewing or have pressed the use button
+          viewOrUse(iwc,action,mediaId);
         }
-        else{
-
-          int id = Integer.parseInt(mediaId);
-          Cache cache = FileTypeHandler.getCachedFileInfo(id,iwc);
-          ICFile file = (ICFile) cache.getEntity();
-          Table T = new Table();
-          T.add(file.getName(),1,1);
-          T.setWidth("100%");
-          T.setHeight("100%");
-
-          FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,file.getMimeType());
-          T.add(handler.getPresentationObject(id,iwc),1,2);
-
-          getAssociatedScript().addFunction(ONCLICK_FUNCTION_NAME,"function "+ONCLICK_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+"){ }");
-          getAssociatedScript().addToFunction(ONCLICK_FUNCTION_NAME,"top."+AbstractChooserWindow.SELECT_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+")");
-
-          Link use = new Link();
-          use.setTextOnLink("Use");
-          use.setAsImageButton(true);
-          use.setURL("#");
-          use.setOnClick(ONCLICK_FUNCTION_NAME+"('"+file.getName()+"','"+file.getID()+"')");
-          add(use);
-
-
-          Link newLink = new Link("New",MediaUploaderWindow.class);
-          newLink.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
-          newLink.setAsImageButton(true);
-          newLink.addParameter(fileInSessionParameter,id);
-          newLink.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_NEW);
-          add(newLink);
-
-
-          Link delete = new Link("Delete",MediaViewer.class);
-          delete.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
-          delete.setAsImageButton(true);
-          delete.addParameter(fileInSessionParameter,id);
-          delete.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_DELETE);
-          add(delete);
-
-          if( MediaBusiness.isFolder(file) ){
-            Link folder = MediaBusiness.getNewFolderLink();
-            folder.setText("folder");
-            folder.setAsImageButton(true);
-            folder.addParameter(fileInSessionParameter,id);
-            add(folder);
-          }
-
-          add(T);
+        else if(action.equals(MediaConstants.MEDIA_ACTION_SAVE)){
+          MediaBusiness.saveMediaIdToSession(iwc,mediaId);
+        }
+        else if(action.equals(MediaConstants.MEDIA_ACTION_DELETE)){
+         ConfirmDeleteMedia(mediaId);
+         setOnUnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
+        }
+        else if(action.equals(MediaConstants.MEDIA_ACTION_DELETE_CONFIRM)){
+          deleteMedia(mediaId);
+          MediaBusiness.removeMediaIdFromSession(iwc);
+          add(new Text("Deleted"));
         }
       }
     }
@@ -149,7 +96,7 @@ public class MediaViewer extends  Window {
             T.setBackgroundImage(1,2,image);*/
             T.add(file.getName(),1,1);
             T.add(warning,1,2);
-            T.setHeight(1,2,"100%");
+            T.setHeight("100%");
             T.setAlignment(1,2,"center");
             Link confirm = new Link("delete");
             confirm.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME ,MediaConstants.MEDIA_ACTION_DELETE_CONFIRM);
@@ -164,6 +111,71 @@ public class MediaViewer extends  Window {
         add(T);
     }
 
+
+   public void viewOrUse(IWContext iwc, String action, String mediaId){
+    iwc.removeSessionAttribute(fileInSessionParameter);
+    IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+
+
+    if( action.equals(MediaConstants.MEDIA_ACTION_USE) ){
+      MediaBusiness.saveMediaIdToSession(iwc,mediaId);
+    }
+
+    int id = Integer.parseInt(mediaId);
+    Cache cache = FileTypeHandler.getCachedFileInfo(id,iwc);
+    ICFile file = (ICFile) cache.getEntity();
+
+    Table T = new Table();
+    T.add(file.getName(),1,1);
+    T.setWidth("100%");
+    T.setHeight("100%");
+
+    FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,file.getMimeType());
+    T.add(handler.getPresentationObject(id,iwc),1,2);
+
+    getAssociatedScript().addFunction(ONCLICK_FUNCTION_NAME,"function "+ONCLICK_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+"){ }");
+    getAssociatedScript().addToFunction(ONCLICK_FUNCTION_NAME,"top."+AbstractChooserWindow.SELECT_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+")");
+
+    Link use = MediaBusiness.getUseImageLink();
+    use.setTextOnLink("Use");
+    use.setAsImageButton(true);
+//**@todo filter out types and use this differently for each plugin?
+    if( handler instanceof com.idega.block.media.business.ImageTypeHandler ){
+      use.setOnClick("top.window.opener.setImageId('"+file.getID()+"','"+fileInSessionParameter+"')");
+      use.addParameter(fileInSessionParameter,id);
+    }
+    else{
+      use.setURL("#");
+      use.setOnClick(ONCLICK_FUNCTION_NAME+"('"+file.getName()+"','"+file.getID()+"')");
+    }
+
+    add(use);
+
+    Link newLink = new Link("New",MediaUploaderWindow.class);
+    newLink.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+    newLink.setAsImageButton(true);
+    newLink.addParameter(fileInSessionParameter,id);
+    newLink.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_NEW);
+    add(newLink);
+
+
+    Link delete = new Link("Delete",MediaViewer.class);
+    delete.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+    delete.setAsImageButton(true);
+    delete.addParameter(fileInSessionParameter,id);
+    delete.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_DELETE);
+    add(delete);
+
+    if( MediaBusiness.isFolder(file) ){
+      Link folder = MediaBusiness.getNewFolderLink();
+      folder.setText("Folder");
+      folder.setAsImageButton(true);
+      folder.addParameter(fileInSessionParameter,id);
+      add(folder);
+    }
+
+    add(T);
+   }
 
     public String getBundleIdentifier(){
       return MediaConstants.IW_BUNDLE_IDENTIFIER ;
