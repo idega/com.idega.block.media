@@ -26,14 +26,6 @@
     </version>
   </versions>
   <branches/>
-  <mailingLists>
-    <mailingList>
-      <name>${pom.name} Dev List</name>
-    </mailingList>
-    <mailingList>
-      <name>${pom.name} User List</name>
-    </mailingList>
-  </mailingLists>
   <developers>
     <developer>
       <name>Tryggvi Larusson</name>
