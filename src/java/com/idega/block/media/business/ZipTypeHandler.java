@@ -175,12 +175,12 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 	
 	private void uncompressZipToDB(String zipFilePath,boolean createDirectories,Integer parentID)throws ZipException,IOException,CreateException{
 		ZipFile zipFile = new ZipFile(new File(zipFilePath));
-		Enumeration enum = zipFile.entries();
+		Enumeration enumer = zipFile.entries();
 		Map folderMap = new Hashtable();
 		FileNameMap fileNameMap = URLConnection.getFileNameMap();
 		String file,folder;
-		while (enum.hasMoreElements()) {
-			ZipEntry entry = (ZipEntry) enum.nextElement();
+		while (enumer.hasMoreElements()) {
+			ZipEntry entry = (ZipEntry) enumer.nextElement();
 			
 			String name = entry.getName();
 			int i = name.lastIndexOf("/");

@@ -164,10 +164,10 @@ public class MediaBusiness {
 	public static MediaProperties uploadToDiskAndGetMediaProperties(IWContext iwc) {
 		MediaProperties mediaProps = null;
 		HashMap parameters = new HashMap();
-		Enumeration enum = iwc.getParameterNames();
-		if (enum != null) {
-			while (enum.hasMoreElements()) {
-				String name = (String)enum.nextElement();
+		Enumeration enumer = iwc.getParameterNames();
+		if (enumer != null) {
+			while (enumer.hasMoreElements()) {
+				String name = (String)enumer.nextElement();
 				String value = iwc.getParameter(name);
 				if (value != null) {
 					parameters.put(name, value);
