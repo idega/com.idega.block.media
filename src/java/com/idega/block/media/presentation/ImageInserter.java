@@ -41,6 +41,7 @@ private Image setImage;
 private boolean limitWidth = true;
 public final String sessionImageParameterName = "im_image_session_name";
 private String prmUseBox = "insertImage";
+private boolean maintainSessionParameter = false;
 
 private IWBundle iwb;
 private IWResourceBundle iwrb;
@@ -93,15 +94,18 @@ public ImageInserter(Class WindowToOpen) {
 
       nameOfWindow = iwrb.getLocalizedString("new_image","New image");
       sUseBoxString = iwrb.getLocalizedString("use_image","Use image");
-
-      String imageSessionId = (String) iwc.getSession().getAttribute(imSessionImageName);
+      System.err.println("Imageinserter : imSessionImageName "+imSessionImageName);
+      String imageSessionId = (String) iwc.getSessionAttribute(imSessionImageName);
       // debug
       //add(imSessionImageName + " "+imageSessionId);
 
       if ( imageSessionId != null ) {
         imageId = Integer.parseInt(imageSessionId);
-        iwc.removeSessionAttribute(imSessionImageName);
+        if(!maintainSessionParameter){
+          iwc.removeSessionAttribute(imSessionImageName);
+        }
       }
+
 
       Image image=setImage;
         if(image==null){
@@ -115,8 +119,6 @@ public ImageInserter(Class WindowToOpen) {
           image.setNoImageLink();
         }
         image.setName("rugl");
-
-        String s = image.getMediaServletString();
         Page P = getParentPage();
         if(P!=null){
           Script S = P.getAssociatedScript();
@@ -226,6 +228,10 @@ public ImageInserter(Class WindowToOpen) {
 
   public String getImSessionImageName() {
     return this.imSessionImageName;
+  }
+
+  public void maintainSessionParameter(){
+    maintainSessionParameter = true;
   }
 
   public void setWindowClassToOpen(Class WindowClass){
