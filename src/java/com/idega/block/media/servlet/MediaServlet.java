@@ -27,6 +27,16 @@ public static final String PARAMETER_NAME = "media_id";
 public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
 
 
+public static String getMediaURL(int iFileId){
+    StringBuffer URIBuffer = new StringBuffer(com.idega.idegaweb.IWMainApplication.MEDIA_SERVLET_URL);
+    URIBuffer.append(iFileId);
+    URIBuffer.append("media?");
+    URIBuffer.append(PARAMETER_NAME);
+    URIBuffer.append("=");
+    URIBuffer.append(iFileId);
+    return URIBuffer.toString();
+}
+
 public void doGet( HttpServletRequest _req, HttpServletResponse _res) throws IOException{
   doPost(_req,_res);
 }

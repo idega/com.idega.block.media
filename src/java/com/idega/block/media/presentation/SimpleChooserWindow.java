@@ -40,7 +40,7 @@ import com.idega.idegaweb.IWBundle;
       add(SC);
       addHeaderObject(SC.getLinkTable(iwb));
       setTitle("Image Chooser");
-      addTitle("Image Chooser rugl" );
+      addTitle("Image Chooser" );
 
       setParentToReload();
     }

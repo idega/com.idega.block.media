@@ -20,7 +20,7 @@ import java.sql.*;
 public class SimpleViewer extends PresentationObjectContainer{
     public String prmImageView = "img_view_id";
     public static final String prmAction = "img_view_action";
-    public static final String actSave = "save",actDelete = "delete";
+    public static final String actSave = "save",actDelete = "delete",actConfirmDelete="conf_delete";
     public static final String sessionSaveParameter = "img_id";
     public static final String sessionParameter = "image_id";
     public String sessImageParameterName = "im_image_session_name";
@@ -38,7 +38,10 @@ public class SimpleViewer extends PresentationObjectContainer{
             saveImageId(iwc,sImageId);
           }
           else if(sAction.equals(actDelete)){
-            deleteImage(sImageId);
+           (ConfirmDeleteImage(sImageId));
+          }
+          else if(sAction.equals(actConfirmDelete)){
+            deleteImage( sImageId);
             removeFromSession(iwc);
           }
         }
@@ -50,6 +53,7 @@ public class SimpleViewer extends PresentationObjectContainer{
             T.add(ieImage.getName(),1,1);
             T.add(new Image(id),1,2);
             add(T);
+
           }
           catch (SQLException ex) {
             add("error");
@@ -87,6 +91,38 @@ public class SimpleViewer extends PresentationObjectContainer{
       catch (NumberFormatException ex){
         return false;
       }
+    }
+
+    public void ConfirmDeleteImage(String sImageId){
+       Table T = new Table();
+       T.setWidth("100%");
+       T.setHeight("100%");
+       int id = Integer.parseInt(sImageId);
+          try {
+            ImageEntity ieImage = new ImageEntity(id);
+
+            Text warning = new Text("Are you sure ?");
+            warning.setFontSize(6);
+            warning.setFontColor("FF0000");
+            warning.setBold();
+            Image image = new Image(id);
+            image.setURL(com.idega.block.media.servlet.MediaServlet.getMediaURL(id));
+            T.setBackgroundImage(1,2,image);
+            T.add(ieImage.getName(),1,1);
+            T.add(warning,1,2);
+            T.setHeight(1,2,"100%");
+            T.setAlignment(1,2,"center");
+            Link confirm = new Link("delete");
+            confirm.addParameter(prmAction ,actConfirmDelete);
+            confirm.addParameter(sessImageParameter,sImageId);
+            T.add(confirm,1,3);
+            //T.add(new Image(id),1,2);
+            //add(T);
+          }
+          catch (SQLException ex) {
+            T.add("error");
+          }
+        add(T);
     }
 
     public String getImageId(IWContext iwc){
