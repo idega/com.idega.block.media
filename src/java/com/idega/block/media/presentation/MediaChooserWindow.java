@@ -9,7 +9,6 @@ import com.idega.presentation.FrameSet;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Page;
 import com.idega.presentation.Table;
-import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.AbstractChooserWindow;
 /**
  * Title: com.idega.block.media.presentation.MediaChooserWindow
