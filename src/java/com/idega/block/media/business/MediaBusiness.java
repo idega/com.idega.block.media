@@ -1,5 +1,6 @@
 package com.idega.block.media.business;
 
+import com.idega.io.*;
 import java.io.*;
 import com.idega.util.caching.Cache;
 import com.idega.idegaweb.IWMainApplication;
@@ -15,7 +16,6 @@ import com.idega.idegaweb.IWCacheManager;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.text.Link;
 import com.idega.util.FileUtil;
-import com.idega.io.UploadFile;
 //this package must be installed
 import com.oreilly.servlet.multipart.FilePart;
 import com.oreilly.servlet.multipart.MultipartParser;
@@ -48,20 +48,21 @@ public class MediaBusiness {
     int id = -1;
     try {
 
+      long time1 = System.currentTimeMillis();
+
       FileInputStream input = new FileInputStream( mediaProps.getRealPath() );
-      BufferedInputStream bis = new BufferedInputStream(input);
 
       ICFile file = new ICFile();
       file.setName( mediaProps.getName() );
       file.setMimeType( mediaProps.getMimeType() );
 
-      file.setFileValue( bis );
+      file.setFileValue( input );
       file.setFileSize( ( int ) mediaProps.getSize() );
-      long time1 = System.currentTimeMillis();
-      file.insert();
 
+
+      file.insert();
       long time2 = System.currentTimeMillis();
-      System.out.println("BLOBINSERT TIME :"+ (time2 - time1 )+ " ms");
+      System.out.println("MediaBusiness saveMediaToDB :"+ (time2 - time1 )+ " ms for "+mediaProps.getSize()+" bytes");
 
 
       if( icFileParentId == -1 ) {//add to root
