@@ -6,18 +6,6 @@
   <name>idegaWeb Media Block</name>
   <artifactId>com.idega.block.media</artifactId>
   <currentVersion>1.1-SNAPSHOT</currentVersion>
-  <organization>
-    <name>idega software</name>
-    <url>http://www.idega.com</url>
-    <logo>http://support.idega.is/images/idegalogo2.gif</logo>
-  </organization>
-  <inceptionYear>2000</inceptionYear>
-  <shortDescription>idegaWeb Builder is</shortDescription>
-  <issueTrackingUrl>http://issues.idega.is</issueTrackingUrl>
-  <repository>
-    <connection>scm:cvs:ext:tryggvil@einstein.idega.is:/idega/cvs:bundles/com.idega.builder.bundle</connection>
-    <developerConnection>scm:cvs:ext:tryggvil@einstein.idega.is:/idega/cvs:bundles/com.idega.builder.bundle</developerConnection>
-  </repository>
   <versions>
     <version>
       <id>1.0</id>
