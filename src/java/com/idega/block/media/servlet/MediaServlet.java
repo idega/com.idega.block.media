@@ -60,7 +60,7 @@ public class MediaServlet extends IWCoreServlet{
     else if(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS)!=null){
       try{
         MediaWritable mw = (MediaWritable) Class.forName(IWMainApplication.decryptClassName(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS))).newInstance();
-        mw.init(request);
+        mw.init(request,iwma);
         response.setContentType(mw.getMimeType());
         ServletOutputStream out = response.getOutputStream();
         mw.writeTo(out);
