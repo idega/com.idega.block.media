@@ -64,10 +64,12 @@ import com.idega.block.media.servlet.MediaServlet;
       Frame.setCellspacing(0);
       IFrame ifList = new IFrame(target1,SimpleLister.class);
       IFrame ifViewer = new IFrame(target2, SimpleViewer.class);
+      /*
       if(usesOld){
         ifList = new IFrame(target1,com.idega.jmodule.image.presentation.SimpleLister.class);
         ifViewer = new IFrame(target2, com.idega.jmodule.image.presentation.SimpleViewer.class);
       }
+      */
       ifList.setWidth(210);
       ifList.setHeight(410);
       ifViewer.setWidth(500);
@@ -136,7 +138,8 @@ import com.idega.block.media.servlet.MediaServlet;
     }
 
     public Link getNewImageLink(PresentationObject mo){
-      Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleUploaderWindow.class :SimpleUploaderWindow.class;
+      //Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleUploaderWindow.class :SimpleUploaderWindow.class;
+      Class C = SimpleUploaderWindow.class;
       Link L = new Link(mo,C);
       L.addParameter("action","upload");
       L.addParameter("submit","new");
@@ -145,7 +148,8 @@ import com.idega.block.media.servlet.MediaServlet;
     }
 
     public Link getSaveLink(PresentationObject mo){
-      Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleViewer.class :SimpleViewer.class;
+      //Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleViewer.class :SimpleViewer.class;
+      Class C = SimpleViewer.class;
       Link L = new Link(mo,C);
       L.addParameter(prmAction,actSave);
       L.setOnClick(getSaveImageFunctionName());
@@ -154,7 +158,8 @@ import com.idega.block.media.servlet.MediaServlet;
     }
 
     public Link getDeleteLink(PresentationObject mo){
-      Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleViewer.class :SimpleViewer.class;
+      //Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleViewer.class :SimpleViewer.class;
+      Class C = SimpleViewer.class;
       Link L = new Link(mo,C);
       L.addParameter(prmAction,actDelete);
       L.setOnClick("top.setTimeout('top.frames.lister.location.reload()',150)");
@@ -163,7 +168,8 @@ import com.idega.block.media.servlet.MediaServlet;
     }
 
     public Link getReloadLink(PresentationObject mo){
-      Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleLister.class :SimpleLister.class;
+      //Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleLister.class :SimpleLister.class;
+      Class C = SimpleLister.class;
       Link L = new Link(mo,C);
       L.setTarget(target1);
       return L;

@@ -107,7 +107,7 @@ public void setConnectionAttributes(String attributeName, String attributeId) {
 
 
 public void main(IWContext iwc)throws Exception{
-  isAdmin= isAdministrator(iwc);
+  isAdmin= iwc.hasEditPermission(this);
 
   /**@todo : add localisation support
    *
