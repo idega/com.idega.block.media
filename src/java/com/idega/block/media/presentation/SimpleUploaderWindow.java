@@ -59,6 +59,7 @@ public class SimpleUploaderWindow extends Window implements SimpleImage{
     }
 
     public void control(IWContext iwc){
+      //add("block.media");
       //add(sessImageParameter);
       String sContentType = iwc.getRequest().getContentType();
       if(sContentType !=null && sContentType.indexOf("multipart")!=-1){
@@ -73,13 +74,14 @@ public class SimpleUploaderWindow extends Window implements SimpleImage{
           add(getMultiForm(iwc));
       }
 
+
     }
     public Form getMultiForm(IWContext iwc){
       Form f = new Form();
       f.setMultiPart();
       String s = iwc.getRequestURI()+"?"+"idegaweb_instance_class"+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass());
       f.setAction(s);
-      add(s);
+      //add(s);
       f.add(new FileInput());
       f.add(new SubmitButton());
       return f;
@@ -99,7 +101,9 @@ public class SimpleUploaderWindow extends Window implements SimpleImage{
         Form form = new Form();
         Table T = new Table();
         T.add(new Image(ip.getWebPath()),1,1);
-        T.add(new SubmitButton("save","Save"),1,2);
+        SubmitButton save = new SubmitButton("save","Save");
+        save.setOnClick("top.setTimeout('top.frames.lister.location.reload()',150)");
+        T.add(save,1,2);
         T.add(new SubmitButton("newimage","New"),1,2);
         form.add(T);
         return form;

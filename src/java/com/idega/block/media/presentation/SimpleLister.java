@@ -82,7 +82,8 @@ public class SimpleLister extends PresentationObjectContainer {
   public List listOfImages(){
     List L = null;
     try {
-      L = EntityFinder.findAllDescendingOrdered(new ImageEntity(),"image_id");
+      ImageEntity image = new ImageEntity();
+      L = EntityFinder.findAllDescendingOrdered(image,image.getIDColumnName());
     }
     catch (SQLException ex) {
       L = null;

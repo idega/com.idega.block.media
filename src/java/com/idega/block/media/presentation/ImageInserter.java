@@ -17,8 +17,7 @@ import com.idega.util.*;
 import com.idega.presentation.text.*;
 import com.idega.presentation.*;
 import com.idega.presentation.ui.*;
-import com.idega.jmodule.image.data.*;
-import com.idega.jmodule.image.business.*;
+import com.idega.block.media.business.ImageBusiness;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
@@ -110,10 +109,19 @@ public ImageInserter(Class WindowToOpen) {
             image = iwrb.getImage("picture.gif",iwrb.getLocalizedString("new_image","New image"),138,90);
           }
           else {
-            image = new Image(imageId);
+            image = new Image(imageId);//,"rugl");
           }
           if( limitWidth ) image.setMaxImageWidth(this.maxImageWidth);
           image.setNoImageLink();
+        }
+        image.setName("rugl");
+
+        String s = image.getMediaServletString();
+        Page P = getParentPage();
+        if(P!=null){
+          Script S = P.getAssociatedScript();
+          if(S!=null)
+            S.addFunction("imchange",getImageChangeJSFunction());
         }
 
       Link imageAdmin = null;
@@ -154,6 +162,20 @@ public ImageInserter(Class WindowToOpen) {
         imageTable.add(hidden,1,2);
 
       add(imageTable);
+  }
+
+  public static String getFunction(int id){
+    return "setImageId("+id+")";
+  }
+
+  public String getImageChangeJSFunction(){
+    StringBuffer function = new StringBuffer("");//var imageName = \"rugl\"; \n");
+    function.append("function setImageId(imageId) { \n \t");
+    function.append("if (document.images) { \n \t\t");
+    function.append("document.rugl.src = \"/servlet/MediaServlet/\"+imageId+\"media?media_id=\"+imageId; \n\t ");
+    function.append("document.forms[0]."+sHiddenInputName+".value = imageId \n\t}\n }");
+
+    return function.toString();
   }
 
   public void setHasUseBox(boolean useBox){
