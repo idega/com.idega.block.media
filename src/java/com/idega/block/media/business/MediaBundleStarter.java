@@ -183,7 +183,7 @@ public class MediaBundleStarter implements IWBundleStartable{
     try {
       //**insert the Root folder if it doesn't exist yet**/
       ICFile file = new ICFile();
-      List root = EntityFinder.findAllByColumn(file,file.getColumnNameName(),ICFile.IC_ROOT_FOLDER_NAME,file.getColumnNameMimeType(),ICMimeType.IC_MIME_TYPE_FOLDER);
+      List root = EntityFinder.findAllByColumn(file,ICFile.getColumnNameName(),ICFile.IC_ROOT_FOLDER_NAME,ICFile.getColumnNameMimeType(),ICMimeType.IC_MIME_TYPE_FOLDER);
       if( root == null ){
        file.setName(ICFile.IC_ROOT_FOLDER_NAME);
        file.setMimeType(ICMimeType.IC_MIME_TYPE_FOLDER);
