@@ -25,7 +25,7 @@ import com.idega.user.business.UserBusiness;
 //public class MediaChooserWindow extends FrameSet {
 public class MediaChooserWindow extends AbstractChooserWindow {
 
-	private static final String IW_BUNDLE_IDENTIFIER = "com.idega.user";
+	private static final String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
 
 	private IWBundle iwb;
 	//  public static String prmReloadParent = "simple_upl_wind_rp";
@@ -142,7 +142,7 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 
 			parentPage = this.getParentPage();
 			userBusiness = getUserBusiness(iwc);
-			styleSrc = userBusiness.getUserApplicationStyleSheet(parentPage, iwc);
+			styleSrc = userBusiness.getUserApplicationStyleSheetURL();
 			parentPage.addStyleSheetURL(styleSrc);
 
 			//   headerTable.add(iwc.getApplication().getCoreBundle().getImage("/editorwindow/idegaweb.gif","idegaWeb"),1,1);
