@@ -24,8 +24,10 @@ public class MediaConstants {
   public static final String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
   public static final String MEDIA_ACTION_PARAMETER_NAME = "media_chooser_action";
   public static final String FILE_IN_SESSION_PARAMETER_NAME = "media_file_in_session_name";
+  public static final String MEDIA_ID_IN_SESSION = "media_id_in_session";
+
   public static final String MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME = "media_properties_in_session_name";
-  public static final int FILE_UPLOAD_MAXIMUM_SIZE = 10*1024*1024;//10MB
+  public static final int FILE_UPLOAD_MAXIMUM_SIZE = 20*1024*1024;//20MB
 
 
   public String getBundleIdentifier(){

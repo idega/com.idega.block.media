@@ -8,6 +8,7 @@ import com.idega.core.data.ICFile;
 import com.idega.util.idegaTimestamp;
 import com.idega.data.EntityFinder;
 import com.idega.block.media.business.MediaConstants;
+import com.idega.block.media.business.MediaBusiness;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class MediaTreeViewer extends PresentationObjectContainer {
       getParentPage().setAllMargins(0);
       List L = listOfMedia();
 
-      checkParameterName(iwc);
+      fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
 
       if(L!= null){
         Table Frame = new Table();
@@ -61,20 +62,15 @@ public class MediaTreeViewer extends PresentationObjectContainer {
       }
     }
 
-  public void checkParameterName(IWContext iwc){
-     if(iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null){
-      fileInSessionParameter = iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
-      iwc.setSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME,fileInSessionParameter);
-    }
-    else if(iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null)
-      fileInSessionParameter = (String) iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
-  }
 
   public Link getMediaLink(ICFile file,String target){
     Link L = new Link(file.getName(),MediaViewer.class);
     L.setFontSize(1);
-    L.setOnClick("top.iImageId = "+file.getID() );
+    //L.setOnClick("top.iImageId = "+file.getID() );
     L.addParameter(fileInSessionParameter,file.getID());
+
+    System.out.println("fileInSessionParameter: " + fileInSessionParameter +" id: "+file.getID());
+
     L.setTarget(target);
     return L;
   }

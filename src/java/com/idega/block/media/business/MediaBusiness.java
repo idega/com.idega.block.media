@@ -105,6 +105,50 @@ public class MediaBusiness  {
     return mediaProps;
 }
 
+  public static String getMediaParameterNameInSession(IWContext iwc){
+    String fileInSessionParameter = null;
+     if(iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null){
+      fileInSessionParameter = iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
+    }
+    else if(iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null){
+      fileInSessionParameter = (String) iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
+    }
+    else{//default name for the parameter
+      fileInSessionParameter = MediaConstants.MEDIA_ID_IN_SESSION;
+    }
+
+    iwc.setSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME,fileInSessionParameter);
+
+    return fileInSessionParameter;
+  }
+
+  public static String getMediaId(IWContext iwc){
+    String fileInSessionParameter = getMediaParameterNameInSession(iwc);
+
+    String id = null;
+    if(iwc.getParameter(fileInSessionParameter)!=null){
+      id = iwc.getParameter(fileInSessionParameter);
+      iwc.setSessionAttribute(fileInSessionParameter+"_2",id);
+    }
+    else if(iwc.getSessionAttribute(fileInSessionParameter)!=null){
+      id = (String) iwc.getSessionAttribute(fileInSessionParameter);
+    }
+    else if(iwc.getSessionAttribute(fileInSessionParameter+"_2")!=null){
+      id = (String) iwc.getSessionAttribute(fileInSessionParameter+"_2");
+    }
+
+    return id;
+  }
+
+  public static void removeMediaIdFromSession(IWContext iwc){
+    iwc.removeSessionAttribute(getMediaParameterNameInSession(iwc));
+  }
+
+  public static void saveMediaId(IWContext iwc,String mediaId){
+    iwc.setSessionAttribute(getMediaParameterNameInSession(iwc),mediaId);
+    iwc.removeSessionAttribute(getMediaParameterNameInSession(iwc)+"_2");
+  }
+
 
 
 }//end of class

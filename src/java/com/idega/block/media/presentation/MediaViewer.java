@@ -6,11 +6,14 @@ import com.idega.presentation.Table;
 import com.idega.presentation.ui.IFrame;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.Window;
 import com.idega.core.data.ICFile;
 import com.idega.util.idegaTimestamp;
 import com.idega.block.media.business.MediaConstants;
+import com.idega.block.media.business.MediaBusiness;
 import java.sql.*;
 import com.idega.block.media.servlet.MediaServlet;
+import com.idega.presentation.ui.AbstractChooserWindow;
 
 /**
  * Title: com.idega.block.media.presentation.MediaViewer
@@ -21,29 +24,39 @@ import com.idega.block.media.servlet.MediaServlet;
  * @version 1.0
  */
 
-public class MediaViewer extends PresentationObjectContainer{
-    private String fileInSessionParameter = "ic_file_id";
+public class MediaViewer extends  Window {
+  /** these are used for creating a chooser function that has a unique name for this chooser**/
+  public static final String ONCLICK_FUNCTION_NAME = "fileselect";
+  public static final String FILE_ID_PARAMETER_NAME = "media_file_id";
+  public static final String FILE_NAME_PARAMETER_NAME = "media_file_name";
 
-    public void  main(IWContext iwc){
+  private String fileInSessionParameter = "ic_file_id";
 
-      String sMediaId = getMediaId(iwc);
+  /*public MediaViewer(){
+   super(true);
+  }
+*/
+    public void  main(IWContext iwc) throws Exception{
+
+      String sMediaId = MediaBusiness.getMediaId(iwc);
       String sAction = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
 
       if(sMediaId != null){
         //saveMediaId(iwc,sMediaId);
         if(sAction != null){
           if(sAction.equals(MediaConstants.MEDIA_ACTION_SAVE)){
-            saveMediaId(iwc,sMediaId);
+            MediaBusiness.saveMediaId(iwc,sMediaId);
           }
           else if(sAction.equals(MediaConstants.MEDIA_ACTION_DELETE)){
            ConfirmDeleteMedia(sMediaId);
           }
           else if(sAction.equals(MediaConstants.MEDIA_ACTION_DELETE_CONFIRM)){
             deleteMedia( sMediaId);
-            removeFromSession(iwc);
+            MediaBusiness.removeMediaIdFromSession(iwc);
           }
         }
-       {
+        else{
+
           int id = Integer.parseInt(sMediaId);
           try {
             ICFile file = new ICFile(id);
@@ -52,6 +65,17 @@ public class MediaViewer extends PresentationObjectContainer{
 
             /** @todo insert fileHandler */
             T.add(new IFrame("media", MediaServlet.getMediaURL(file.getID())), 1,2);
+
+            getAssociatedScript().addFunction(ONCLICK_FUNCTION_NAME,"function "+ONCLICK_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+"){ }");
+            getAssociatedScript().addToFunction(ONCLICK_FUNCTION_NAME,"top."+AbstractChooserWindow.SELECT_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+")");
+
+            Link l = new Link();
+            l.setTextOnLink("Use");
+            l.setAsImageButton(true);
+            l.setURL("#");
+            l.setOnClick(ONCLICK_FUNCTION_NAME+"('"+file.getName()+"','"+file.getID()+"')");
+            add(l);
+
 
             add(T);
 
@@ -63,14 +87,11 @@ public class MediaViewer extends PresentationObjectContainer{
       }
     }
 
-    public void checkParameterName(IWContext iwc){
-     if(iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null){
-      fileInSessionParameter = iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
-      iwc.setSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME,fileInSessionParameter);
-    }
-    else if(iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null)
-      fileInSessionParameter = (String) iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
-    }
+
+
+
+
+
 
     public boolean deleteMedia(String sMediaId){
       try {
@@ -118,36 +139,6 @@ public class MediaViewer extends PresentationObjectContainer{
             T.add("error");
           }
         add(T);
-    }
-
-    public String getMediaId(IWContext iwc){
-      if(iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null)
-       fileInSessionParameter = iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
-      else if(iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null){
-        fileInSessionParameter = (String) iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
-      }
-      //add(fileInSessionParameter);
-      String s = null;
-      if(iwc.getParameter(fileInSessionParameter)!=null){
-        s = iwc.getParameter(fileInSessionParameter);
-        iwc.setSessionAttribute(fileInSessionParameter+"_2",s);
-      }
-      else if(iwc.getSessionAttribute(fileInSessionParameter)!=null)
-        s = (String) iwc.getSessionAttribute(fileInSessionParameter);
-      else if(iwc.getSessionAttribute(fileInSessionParameter+"_2")!=null)
-        s = (String) iwc.getSessionAttribute(fileInSessionParameter+"_2");
-      //add(" " +s);
-      return s;
-    }
-
-
-    public void removeFromSession(IWContext iwc){
-      iwc.removeSessionAttribute(fileInSessionParameter);
-    }
-
-    public void saveMediaId(IWContext iwc,String sMediaId){
-      iwc.setSessionAttribute(fileInSessionParameter,sMediaId);
-      iwc.removeSessionAttribute(fileInSessionParameter+"_2");
     }
 
 

@@ -17,7 +17,7 @@ import com.idega.block.media.business.MediaConstants;
  * @version 1.0
  */
 
- public class MediaChooserWindow extends IWAdminWindow {
+ public class MediaChooserWindow extends AbstractChooserWindow {
     private IWBundle iwb;
     public static String prmReloadParent = "simple_upl_wind_rp";
 
@@ -32,14 +32,13 @@ import com.idega.block.media.business.MediaConstants;
       return MediaConstants.IW_BUNDLE_IDENTIFIER;
     }
 
-    public void  main(IWContext iwc) throws Exception{
+    public void  displaySelection(IWContext iwc){
       iwb = getBundle(iwc);
       MediaChooser SC = new MediaChooser();
       SC.setToIncludeLinks(false);
       add(SC);
-      addHeaderObject(SC.getLinkTable(iwb));
+      //addHeaderObject(SC.getLinkTable(iwb));
       setTitle("idegaWeb media chooser");
-      addTitle("idegaWeb media chooser");
       if(iwc.getParameter(prmReloadParent )!= null)
         setParentToReload();
     }

@@ -18,6 +18,7 @@ import java.io.*;
 import java.util.*;
 import com.oreilly.servlet.MultipartRequest;
 import com.idega.block.media.servlet.MediaServlet;
+import com.idega.block.media.business.MediaBusiness;
 
 /**
  * Title: com.idega.block.media.presentation.MediaUploaderWindow
@@ -43,19 +44,11 @@ public class MediaUploaderWindow extends Window{
       return fileInSessionParameter;
     }
 
-     private void checkParameterName(IWContext iwc){
-       if(iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null){
-        fileInSessionParameter = iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
-        iwc.setSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME,fileInSessionParameter);
-      }
-      else if(iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null)
-        fileInSessionParameter = (String) iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
-    }
 
     public void main(IWContext iwc){
-      checkParameterName(iwc);
-      this.setBackgroundColor("white");
-      this.setTitle("idegaWeb uploader");
+      fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
+      setBackgroundColor("white");
+      setTitle("idegaWeb uploader");
       control(iwc);
     }
 

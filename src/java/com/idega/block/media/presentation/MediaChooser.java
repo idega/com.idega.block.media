@@ -7,13 +7,14 @@ import com.idega.util.idegaTimestamp;
 import com.idega.idegaweb.IWBundle;
 import com.idega.block.media.servlet.MediaServlet;
 import com.idega.block.media.business.MediaConstants;
+import com.idega.block.media.business.MediaBusiness;
 
 /**
  * Title: com.idega.block.media.presentation.MediaChooser
- * Description: The Finder (FileManager) main class. This sets upp all the different object such as the tree and viewer.
+ * Description: The Finder (FileManager) main class. This sets up all the different object such as the tree and viewer.
  * Copyright:    Copyright (c) 2001
  * Company:      idega software
- * @author Eirikur S. Hrafnsson eiki@idega.is with good imput from Aron "Brockowitch" ( aron@idega.is )
+ * @author Eirikur S. Hrafnsson eiki@idega.is with good input from Aron "Brockowich" ( aron@idega.is )
  * @version 1.0
  */
 
@@ -22,7 +23,6 @@ import com.idega.block.media.business.MediaConstants;
     private String fileInSessionParameter = "ic_file_id";
 
     private boolean includeLinks;
-    private boolean usesOld = false;
 
     public void setToIncludeLinks(boolean includeLinks){
       this.includeLinks = includeLinks;
@@ -47,13 +47,15 @@ import com.idega.block.media.business.MediaConstants;
 
     public void  main(IWContext iwc){
       IWBundle iwb = getBundle(iwc);
-      checkParameterName(iwc);
+      fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
 
-      if(iwc.getApplication().getSettings().getProperty(MediaServlet.USES_OLD_TABLES)!=null)
-        usesOld = true;
-      getParentPage().getAssociatedScript().addFunction("callbim",getSaveImageFunction() );
+/**@todo make a FrameSet rather than IFrames**/
 
       Table Frame = new Table();
+
+
+
+
       Frame.setCellpadding(0);
       Frame.setCellspacing(0);
       IFrame ifList = new IFrame(MediaConstants.TARGET_MEDIA_TREE,MediaTreeViewer.class);
@@ -80,17 +82,9 @@ import com.idega.block.media.business.MediaConstants;
     public void setSessionSaveParameterName(String prmName){
       fileInSessionParameter = prmName;
     }
+
     public String getSessionSaveParameterName(){
       return fileInSessionParameter;
-    }
-     public void checkParameterName(IWContext iwc){
-       if(iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null){
-        fileInSessionParameter = iwc.getParameter(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
-        //add(fileInSessionParameter);
-        iwc.setSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME,fileInSessionParameter);
-      }
-      else if(iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME)!=null)
-        fileInSessionParameter = (String) iwc.getSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME);
     }
 
     public PresentationObject getLinkTable(IWBundle iwb){
