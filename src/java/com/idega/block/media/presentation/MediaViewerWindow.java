@@ -33,7 +33,7 @@ private IWResourceBundle iwrb;
     if(action==null) action = "";
 
     add(new MediaToolbar(mediaId));
-    if( !action.equals(MediaConstants.MEDIA_ACTION_USE) ){
+    if( !action.equals(MediaConstants.MEDIA_ACTION_USE) && !action.equals(MediaConstants.MEDIA_ACTION_DELETE) && !action.equals(MediaConstants.MEDIA_ACTION_DELETE_CONFIRM) ){
       add(new MediaViewer(mediaId));
     }
   }
