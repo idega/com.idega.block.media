@@ -33,13 +33,12 @@ private IWResourceBundle iwrb;
     private String fileInSessionParameter = "";
 
     public MediaUploaderWindow(){
+      setBackgroundColor( MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR );
+      setAllMargins( 0 );
     }
 
 
     public void main(IWContext iwc){
-      setBackgroundColor(MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR);
-      setAllMargins(0);
-
       iwrb = getResourceBundle(iwc);
       iwb = getBundle(iwc);
       fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
@@ -47,11 +46,9 @@ private IWResourceBundle iwrb;
     }
 
     private void handleEvents(IWContext iwc){
-      /* can only check this because of the multipart form*/
-      String contentType = iwc.getRequestContentType();
 
       /* Uploading and checking for a valid mimetype */
-      if( (contentType!=null) && contentType.indexOf("multipart")!=-1 ){
+      if( iwc.isMultipartFormData() ){
         MediaProperties mediaProps = MediaBusiness.uploadToDiskAndGetMediaProperties(iwc);
         iwc.setSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME,mediaProps);
 
@@ -82,13 +79,12 @@ private IWResourceBundle iwrb;
       }
       /*Saving to database or uploading a new file*/
       else{
+        MediaProperties mediaProps = ( MediaProperties ) iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME );
+        iwc.removeSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME );
         String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
+
         if( (action!=null) && action.equals(MediaConstants.MEDIA_ACTION_SAVE)  ){
           setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
-
-          MediaProperties mediaProps = ( MediaProperties ) iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME );
-          iwc.removeSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME );
-
           String parentId = MediaBusiness.getMediaId( iwc );
           int pId = -1;
           if( parentId!= null ) pId = Integer.parseInt(parentId);
@@ -101,8 +97,10 @@ private IWResourceBundle iwrb;
             MediaBusiness.saveMimeType(mimeType,mimeDescription,fileTypeId);
           }
 
+          //also deletes the file from disk and return a MediaViewer
           mediaProps = MediaBusiness.saveMediaToDB( mediaProps, pId, iwc);
-          add(new MediaViewer(mediaProps));//also deletes the file from disk and return a MediaViewer
+          MediaViewer viewer = new MediaViewer(mediaProps);
+          add(viewer);
         }
         else{//add a new file
           add(getMultiPartUploaderForm(iwc));
@@ -130,7 +128,9 @@ private IWResourceBundle iwrb;
     T.add(submitNew,1,1);
 
     T.add(submitSave,1,1);
+
     T.add(new MediaViewer(mediaProps),1,2);
+
     add(T);
   }
 

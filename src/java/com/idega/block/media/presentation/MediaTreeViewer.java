@@ -75,11 +75,6 @@ public class MediaTreeViewer extends Block {
     folder.setAsImageButton(true);
     add(folder);
 
-    Link reload = MediaBusiness.getReloadLink();
-    reload.setText("reload");
-    reload.setAsImageButton(true);
-    add(reload);
-
     add(T);
 
   }

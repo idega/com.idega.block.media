@@ -1,17 +1,15 @@
 package com.idega.block.media.presentation;
 
+import com.idega.presentation.*;
 import com.idega.block.media.business.*;
 import com.idega.block.media.data.MediaProperties;
 import com.idega.core.data.ICFile;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.idegaweb.IWResourceBundle;
-import com.idega.presentation.IWContext;
-import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.AbstractChooserWindow;
-import com.idega.presentation.ui.Window;
 import com.idega.util.caching.Cache;
 
 /**
@@ -24,7 +22,7 @@ import com.idega.util.caching.Cache;
  * @version    1.0
  */
 
-public class MediaViewer extends Window {
+public class MediaViewer extends Block {
   /*
    *  these are used for creating a chooser function that has a unique name for this chooser
    */
@@ -63,9 +61,6 @@ public class MediaViewer extends Window {
    */
   public void main( IWContext iwc ) throws Exception {
 
-    setBackgroundColor( MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR );
-    setAllMargins( 0 );
-
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession( iwc );
     String mediaId = null;
     String action = iwc.getParameter( MediaConstants.MEDIA_ACTION_PARAMETER_NAME );
@@ -87,7 +82,7 @@ public class MediaViewer extends Window {
       }
       else if( action.equals( MediaConstants.MEDIA_ACTION_DELETE ) ) {
         confirmDeleteMedia( mediaId, iwc );
-        setOnUnLoad( "parent.frames['" + MediaConstants.TARGET_MEDIA_TREE + "'].location.reload()" );
+        getParentPage().setOnUnLoad( "parent.frames['" + MediaConstants.TARGET_MEDIA_TREE + "'].location.reload()" );
       }
       else if( action.equals( MediaConstants.MEDIA_ACTION_DELETE_CONFIRM ) ) {
         int id = Integer.parseInt(mediaId);
@@ -99,7 +94,8 @@ public class MediaViewer extends Window {
          * @todo    localize*
          */
       }
-    } else if( props != null ) {
+    }
+    else if( props != null ) {
       viewFileFromDisk( iwc, props );
     }
   }
@@ -157,7 +153,7 @@ public class MediaViewer extends Window {
    */
   public void viewFileFromDisk( IWContext iwc, MediaProperties props ) {
     FileTypeHandler handler = MediaBusiness.getFileTypeHandler( iwc, props.getMimeType() );
-    add( handler.getPresentationObject( props, iwc ) );
+    add(handler.getPresentationObject( props, iwc ));
   }
 
 
@@ -171,15 +167,18 @@ public class MediaViewer extends Window {
   public void viewOrUse( IWContext iwc, String action, String mediaId ) {
     if( action.equals( MediaConstants.MEDIA_ACTION_USE ) ) {
       MediaBusiness.saveMediaIdToSession( iwc, mediaId );
-      setOnLoad( "top.window.close()" );
+      getParentPage().setOnLoad( "top.window.close()" );
     }
     else {
       iwc.removeSessionAttribute( fileInSessionParameter );
+
       IWCacheManager cm = iwc.getApplication().getIWCacheManager();
       int id = Integer.parseInt( mediaId );
       Cache cache = FileTypeHandler.getCachedFileInfo( id, iwc );
       ICFile file = ( ICFile ) cache.getEntity();
       FileTypeHandler handler = MediaBusiness.getFileTypeHandler( iwc, file.getMimeType() );
+
+
       Table T = new Table( 1, 2 );
       T.setVerticalAlignment( 1, 1, Table.VERTICAL_ALIGN_TOP );
       T.setHeight( 1, "15" );

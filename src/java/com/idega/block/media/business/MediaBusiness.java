@@ -79,13 +79,13 @@ public class MediaBusiness {
 
       id = file.getID();
       mediaProps.setId( id );
-/*
+
       try {
         FileUtil.delete(mediaProps.getRealPath() );
       }
       catch (Exception ex) {
         System.err.println("MediaBusiness: deleting the temporary file at "+mediaProps.getRealPath()+" failed.");
-      }*/
+      }
     }
     catch( Exception e ) {
       e.printStackTrace( System.err );
