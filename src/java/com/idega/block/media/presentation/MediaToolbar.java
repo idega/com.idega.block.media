@@ -80,7 +80,7 @@ public class MediaToolbar extends Block {
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession( iwc );
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
 
-    MediaBusiness.saveMediaIdToSession( iwc, mediaId );
+/**@ is this necessery**///    MediaBusiness.saveMediaIdToSession( iwc, mediaId );
 
 
     //use for filtering
@@ -109,7 +109,7 @@ public class MediaToolbar extends Block {
     if( mediaId!=-1 ) {
 
       if( action.equals( MediaConstants.MEDIA_ACTION_USE ) ){
-        /*selecting and closing the window*/
+        /*selecting and closing the window only reaches this state in the builder selecting images*/
         MediaBusiness.saveMediaIdToSession( iwc, mediaId );
         getParentPage().setOnLoad( "top.window.close()" );
       }
@@ -121,7 +121,7 @@ public class MediaToolbar extends Block {
       else if( action.equals( MediaConstants.MEDIA_ACTION_DELETE_CONFIRM ) ) {
         /*deleting*/
         MediaBusiness.deleteMedia( mediaId );
-        MediaBusiness.removeMediaIdFromSession( iwc );
+        MediaBusiness.removeMediaIdFromSession( iwc );//not really necessary
         addBreak();
         add( new Text(iwrb.getLocalizedString("mv.file.deleted","The file was deleted")) );
       }
@@ -184,13 +184,12 @@ public class MediaToolbar extends Block {
    * @exception  Exception  Description of the Exception
    */
   protected void viewFileFromDisk( IWContext iwc, MediaProperties props ) {
-    /**@todo: insert a generated localized generated button**/
+
     Link submitSave = new Link(iwrb.getLocalizedString("mv.save","save"));
     submitSave.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
     submitSave.setAsImageButton(true);
-    submitSave.addParameter(fileInSessionParameter,(String)props.getParameterMap().get(fileInSessionParameter));
-
-    /**@todo: insert a generated localized generated button**/
+    //submitSave.addParameter(fileInSessionParameter,(String)props.getParameterMap().get(fileInSessionParameter));
+submitSave.addParameter(fileInSessionParameter+"parent",iwc.getParameter(fileInSessionParameter+"parent"));//**@todo fix**/
     Link submitNew = new Link(iwrb.getLocalizedString("mv.cancel","cancel"));
     submitNew.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_NEW);
     submitNew.addParameter(fileInSessionParameter,(String)props.getParameterMap().get(fileInSessionParameter));
@@ -208,7 +207,6 @@ public class MediaToolbar extends Block {
    * @param  mediaId  The media id
    */
   protected void viewFileFromDB( IWContext iwc, int mediaId ) {
-    iwc.removeSessionAttribute( fileInSessionParameter );
 
     Cache cache = FileTypeHandler.getCachedFileInfo( mediaId, iwc );
     ICFile file = ( ICFile ) cache.getEntity();
@@ -245,7 +243,7 @@ public class MediaToolbar extends Block {
     Link newLink = new Link(iwrb.getLocalizedString("mv.upload","upload"), MediaUploaderWindow.class );
     newLink.setTarget( MediaConstants.TARGET_MEDIA_VIEWER );
     newLink.setAsImageButton( true );
-    newLink.addParameter( fileInSessionParameter, mediaId );
+    newLink.addParameter( fileInSessionParameter+"parent", mediaId );
     newLink.addParameter( MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_NEW );
     T.add( newLink, 1, 1 );
 

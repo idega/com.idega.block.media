@@ -86,7 +86,12 @@ private IWResourceBundle iwrb;
 
         if( (action!=null) && action.equals(MediaConstants.MEDIA_ACTION_SAVE)  ){
           setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
-          int pId = MediaBusiness.getParentMediaId( iwc );
+          int pId = -1;
+          String parentId = iwc.getParameter(fileInSessionParameter+"parent");
+
+          if(parentId!=null){
+            pId = Integer.parseInt(parentId);
+          }
 
           /* if saving a new mimetype */
           if( iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME)!=null ){
@@ -152,7 +157,7 @@ private IWResourceBundle iwrb;
     table.add(transparent,1,2);
     table.add(new FileInput(),1,3);
     table.add(new SubmitButton(),1,3);
-    table.add(new HiddenInput(fileInSessionParameter,String.valueOf(MediaBusiness.getMediaId(iwc))),1,3);
+    table.add(new HiddenInput(fileInSessionParameter+"parent",iwc.getParameter(fileInSessionParameter+"parent")),1,3);
 
     f.setOnSubmit("swapImage('"+transparent.getID()+"','','"+busy.getURL()+"',1);return true");
 
