@@ -1,11 +1,12 @@
 package com.idega.block.media.presentation;
 
-import com.idega.presentation.IWContext;
+import com.idega.block.media.business.MediaBusiness;
+import com.idega.block.media.business.MediaConstants;
+import com.idega.core.builder.business.BuilderConstants;
 import com.idega.core.data.ICFile;
-import com.idega.presentation.ui.AbstractChooser;
 import com.idega.idegaweb.IWBundle;
-import com.idega.builder.business.BuilderLogic;
-import com.idega.block.media.business.*;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.ui.AbstractChooser;
 
 /**
  * Title: com.idega.block.media.presentation.FileChooser
@@ -34,7 +35,7 @@ public class FileChooser extends AbstractChooser {
   }
 
   public void main(IWContext iwc){
-    IWBundle iwb = iwc.getApplication().getBundle(BuilderLogic.IW_BUNDLE_IDENTIFIER);
+    IWBundle iwb = iwc.getApplication().getBundle(BuilderConstants.STANDARD_IW_BUNDLE_IDENTIFIER);
     setChooseButtonImage(iwb.getImage("open.gif","Choose file"));
     addParameterToChooserLink(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME,MediaConstants.MEDIA_CHOOSER_FILE);
     if( getChooserValue()!= null ){
