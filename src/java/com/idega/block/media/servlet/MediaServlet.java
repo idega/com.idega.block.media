@@ -23,7 +23,9 @@ import com.idega.util.database.ConnectionBroker;
 
 public class MediaServlet extends IWCoreServlet{
 
-public static final String PARAMETER_NAME="media_id";
+public static final String PARAMETER_NAME = "media_id";
+public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
+
 
 public void doGet( HttpServletRequest _req, HttpServletResponse _res) throws IOException{
   doPost(_req,_res);
@@ -39,7 +41,9 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
   String sql = "select file_value,mime_type from ic_file where ic_file_id=";
   String mediaId = request.getParameter(PARAMETER_NAME);
 
-  //debug temporary backward compatability
+  /**@todo : remove temporary backward compatability when no longer needed
+   *
+   */
   if( mediaId == null){
      mediaId = request.getParameter("image_id");
      if( mediaId != null){

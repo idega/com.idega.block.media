@@ -16,6 +16,8 @@ import com.oreilly.servlet.multipart.*;
 import com.idega.io.ImageSave;
 import com.idega.block.media.business.ImageProperties;
 import com.idega.core.data.ICFileCategory;
+import com.idega.util.FileUtil;
+import com.idega.idegaweb.IWCacheManager;
 
 /**
  * Title: ImageBusiness
@@ -23,7 +25,7 @@ import com.idega.core.data.ICFileCategory;
  * Copyright:    Copyright (c) 2001
  * Company: idega
  * @author Eirikur Hrafnsson
- * @version 1.0
+ * @version 1.2
  *
  */
 
@@ -81,14 +83,14 @@ public static void handleEvent(ModuleInfo modinfo,ImageHandler handler) throws E
         }
         else if( action.equalsIgnoreCase("delete") ){
           try{
-            /**@todo : fix the delete function
-             *
-             */
 
-            /*
             ImageEntity image = new ImageEntity( imageId );
+            image.removeFrom(new ICFileCategory());
+            image.delete();
+            modinfo.removeSessionAttribute("image_in_session");
+            modinfo.removeSessionAttribute("handler");
 
-            ImageEntity parent = (ImageEntity) this.getParentNode();
+            /*ImageEntity parent = (ImageEntity) this.getParentNode();
             Iterator iter = (ImageEntity[]) image.getChildren();
 
             //brake childs from parent
@@ -111,9 +113,6 @@ public static void handleEvent(ModuleInfo modinfo,ImageHandler handler) throws E
             image.removeFrom(GenericEntity.getStaticInstance("com.idega.block.media.data.ImageCategory"));
 
             image.delete();
-
-            modinfo.removeSessionAttribute("image_in_session");
-            modinfo.removeSessionAttribute("handler");
 */
 
 
@@ -263,14 +262,16 @@ public static void makeDefaultSizes(ModuleInfo modinfo){
 
   public static int SaveImage(ImageProperties ip){
     int id = -1;
-    Connection Conn = null;
+  //  Connection Conn = null;
 
     try{
       FileInputStream input = new FileInputStream(ip.getRealPath());
+      System.out.println("ImageBusiness XXXXX FileSize:"+input.available());
       ImageEntity image = new ImageEntity();
       image.setName(ip.getName());
       image.setMimeType(ip.getContentType());
       image.setFileValue(input);
+      image.setFileSize((int)ip.getSize());
       image.insert();
 
       id = image.getID();
@@ -297,17 +298,23 @@ public static void makeDefaultSizes(ModuleInfo modinfo){
       return -1;
     }
     finally{
-      if(Conn != null ) GenericEntity.getStaticInstance("com.idega.block.media.data.ImageEntity").freeConnection(Conn);
+     // if(Conn != null ) GenericEntity.getStaticInstance("com.idega.block.media.data.ImageEntity").freeConnection(Conn);
     }
 
     return id;
   }
 
   public static ImageProperties doUpload(ModuleInfo modinfo) throws Exception{
-    String sep = System.getProperty("file.separator");
-    String realPath = modinfo.getServletContext().getRealPath(sep);
-    String webPath = sep+"pics"+sep;
-    String realFile = "";
+    String sep = FileUtil.getFileSeparator();
+    StringBuffer pathToFile = new StringBuffer();
+    pathToFile.append(modinfo.getApplication().getApplicationRealPath());
+    //pathToFile.append(sep);
+    pathToFile.append(IWCacheManager.IW_ROOT_CACHE_DIRECTORY);
+    pathToFile.append(sep);
+
+    FileUtil.createFolder(pathToFile.toString());
+
+
     ImageProperties  ip = null;
 
     MultipartParser mp = new MultipartParser(modinfo.getRequest(), 10*1024*1024); // 10MB
@@ -320,19 +327,31 @@ public static void makeDefaultSizes(ModuleInfo modinfo){
         ParamPart paramPart = (ParamPart) part;
         value = paramPart.getStringValue();
         //debug
-        System.out.println(name+" : "+value+Text.getBreak());
-
+        System.out.println("Image Business"+name+" : "+value+Text.getBreak());
       }
       else if (part.isFile()) {
         // it's a file part
         FilePart filePart = (FilePart) part;
         String fileName = filePart.getFileName();
+
         if (fileName != null) {
-          webPath += fileName;
-          realFile =  realPath+webPath;
-          File file = new File(realFile);
-          long size = filePart.writeTo(file);
-          ip = new ImageProperties(fileName,filePart.getContentType(),realFile,webPath,size);
+          pathToFile.append(fileName);
+          String filePath = pathToFile.toString();
+          StringBuffer webPath = new StringBuffer();
+          webPath.append('/');
+          webPath.append(IWCacheManager.IW_ROOT_CACHE_DIRECTORY);
+          webPath.append('/');
+          webPath.append(fileName);
+
+          File file = new File(filePath);
+          int size = (int) filePart.writeTo(file);
+                  //debug
+        System.out.println("ImageBusiness : File size"+size);
+        System.out.println("ImageBusiness : File filePath"+filePath);
+        System.out.println("ImageBusiness : File webPath"+webPath.toString());
+        System.out.println("ImageBusiness : File getContentType"+filePart.getContentType());
+        System.out.println("ImageBusiness : File fileName"+fileName);
+          ip = new ImageProperties(fileName,filePart.getContentType(),filePath,webPath.toString(),size);
         }
       }
     }
@@ -347,6 +366,9 @@ public static boolean deleteImageFile(String pathToImage){
 
 public static void setImageDimensions(ImageProperties ip) {
   try{
+    /**@todo optimize for memory
+     *
+     */
     ImageHandler handler =  new ImageHandler(ip.getId());
     handler.updateOriginalInfo();
   }
@@ -365,8 +387,8 @@ public static void setImageDimensions(ImageProperties ip) {
     if( (ip!=null) && !("cancel".equalsIgnoreCase(submit)) ){
       int imageId = SaveImage(ip);
       ip.setId(imageId);
-      setImageDimensions(ip);//adds width height and size in bytes to database
 
+      setImageDimensions(ip);//adds width height and size in bytes to database
       makeDefaultSizes(modinfo);
 
       try{
@@ -402,7 +424,7 @@ public static void setImageDimensions(ImageProperties ip) {
       if( imageText!=null ) image.setDescription(imageText);
       else update = false;
 
-      if( imageLink!=null ){
+      if( (imageLink!=null) && !"".equals(imageLink) ){
         image.setImageLink(imageLink);
         image.setImageLinkOwner("both");
       }

@@ -99,12 +99,11 @@ private void getImageFromFile(String fileName) throws Exception{
 }
 
 private void getImageFromDatabase() throws Exception{
-  //BlobWrapper wrapper = imageInfo.getImageValue();
-/* BlobWrapper wrapper = new BlobWrapper(imageInfo,"image_value");
-   if( wrapper== null)   System.out.println("ImageHandler: BlobWrapper is NULL!");
-  BlobInputStream inputStream = wrapper.getBlobInputStream();
-*/
 
+  ImageEntity image = new ImageEntity(getImageId());
+  InputStream inputStream = image.getFileValue();
+
+  /*
   Connection Conn = null;
   Statement Stmt;
   ResultSet RS;
@@ -112,13 +111,15 @@ private void getImageFromDatabase() throws Exception{
 
   Conn = GenericEntity.getStaticInstance("com.idega.block.media.data.ImageEntity").getConnection();
   Stmt = Conn.createStatement();
-  RS = Stmt.executeQuery("select image_value from image where image_id='"+getImageId()+"'");
+  RS = Stmt.executeQuery("select file_value from image where image_id='"+getImageId()+"'");
 
   while(RS.next()){
       inputStream = RS.getBinaryStream("image_value");
   }
+*/
 
   modifiedsize = inputStream.available();
+  System.out.print("IMAGE_HANDLER: modifiedsize"+modifiedsize);
   BufferedInputStream bufStream = getBufferedInputStream(inputStream);
   MemoryCacheSeekableStream memStream = getMemoryCacheSeekableStream(bufStream);
   originalImage = getPlanarImageFromStream(memStream);
@@ -127,17 +128,17 @@ private void getImageFromDatabase() throws Exception{
   setWidth(originalImage.getWidth());
   setHeight(originalImage.getHeight());
 
-  System.out.println("ImageHandler: Before closing memStream");
+ // System.out.println("ImageHandler: Before closing memStream");
   memStream.close();
-  System.out.println("ImageHandler: Before closing bufferstream");
+ // System.out.println("ImageHandler: Before closing bufferstream");
   bufStream.close();
-  System.out.println("ImageHandler: Before closing inputstream");
+ // System.out.println("ImageHandler: Before closing inputstream");
   inputStream.close();//closes the blobinputstream and closes misc stmt and connections
 
-  if( RS!=null ) RS.close();
+ /* if( RS!=null ) RS.close();
   if( Stmt!=null ) Stmt.close();
   if( Conn!=null ) GenericEntity.getStaticInstance("com.idega.block.media.data.ImageEntity").freeConnection(Conn);
-
+*/
   System.out.println("ImageHandler: DONE!");
 
 }
@@ -148,7 +149,7 @@ protected void updateOriginalInfo() throws SQLException{
   setImageName( imageInfo.getName() );
   imageInfo.setWidth(Integer.toString(originalImage.getWidth()));
   imageInfo.setHeight(Integer.toString(originalImage.getHeight()));
-  imageInfo.setFileSize(new Long((long)modifiedsize));
+  imageInfo.setFileSize(modifiedsize);
  // imageInfo.update();
 }
 

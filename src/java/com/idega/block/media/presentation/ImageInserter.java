@@ -10,7 +10,6 @@ package com.idega.block.media.presentation;
  *
  */
 
-
 import java.sql.*;
 import java.util.*;
 import java.io.*;
@@ -18,15 +17,15 @@ import com.idega.util.*;
 import com.idega.jmodule.object.textObject.*;
 import com.idega.jmodule.object.*;
 import com.idega.jmodule.object.interfaceobject.*;
-import com.idega.block.media.data.*;
-import com.idega.block.media.business.*;
+import com.idega.jmodule.image.data.*;
+import com.idega.jmodule.image.business.*;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
 
 public class ImageInserter extends JModuleObject{
 
-private final static String IW_BUNDLE_IDENTIFIER="com.idega.block.media";
+private final static String IW_BUNDLE_IDENTIFIER="com.idega.block.image";
 private int imageId = -1;
 private String imSessionImageName =null;
 private String sHiddenInputName = null;
@@ -39,6 +38,7 @@ private boolean hasUseBox = true;
 private boolean selected = false;
 private boolean openInWindow = false;
 private Class windowClass = ImageEditorWindow.class;
+private Image setImage;
 
 private IWBundle iwb;
 private IWResourceBundle iwrb;
@@ -46,6 +46,11 @@ private IWResourceBundle iwrb;
 public ImageInserter(){
   this.imSessionImageName="image_id";
   this.sHiddenInputName = "image_id";
+}
+
+public ImageInserter(Image setImage){
+  this();
+  this.setImage=setImage;
 }
 
 public ImageInserter(int imageId) {
@@ -74,6 +79,7 @@ public ImageInserter(Class WindowToOpen) {
 }
 
   public void main(ModuleInfo modinfo)throws Exception{
+      this.empty();
 
       iwb = getBundle(modinfo);
       iwrb = getResourceBundle(modinfo);
@@ -89,15 +95,17 @@ public ImageInserter(Class WindowToOpen) {
         modinfo.removeSessionAttribute(imSessionImageName);
       }
 
-      Image image;
-        if ( imageId == -1 ) {
-          image = iwrb.getImage("picture.gif",iwrb.getLocalizedString("new_image","New image"),138,90);
+      Image image=setImage;
+        if(image==null){
+          if ( imageId == -1 ) {
+            image = iwrb.getImage("picture.gif",iwrb.getLocalizedString("new_image","New image"),138,90);
+          }
+          else {
+            image = new Image(imageId);
+          }
+          image.setMaxImageWidth(this.maxImageWidth);
+          image.setNoImageLink();
         }
-        else {
-          image = new Image(imageId);
-        }
-        image.setMaxImageWidth(this.maxImageWidth);
-        image.setNoImageLink();
 
       Link imageAdmin = null;
       if(adminURL == null){
@@ -173,7 +181,7 @@ public ImageInserter(Class WindowToOpen) {
 
   public void setImSessionImageName(String imSessionImageName) {
     this.imSessionImageName=imSessionImageName;
-    this.sHiddenInputName = imSessionImageName;
+    this.sHiddenInputName=imSessionImageName;
   }
 
   public String getImSessionImageName() {

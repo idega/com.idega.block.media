@@ -21,27 +21,9 @@ public class ImageEntity extends ICFile{
   }
 
 
-   public void setDefaultValues() {
-    this.setImageLinkOwner("none");
+  public void setDefaultValues() {
     super.setCreationDate(new com.idega.util.idegaTimestamp().getTimestampRightNow());
   }
-
- /*
-
-  public BlobWrapper getImageValue(){
-
-    return (BlobWrapper) getColumnValue("image_value");
-
-  }
-
-  public BlobWrapper getImage(){
-    return (BlobWrapper) getImageValue();
-  }
-
-  public void setImageValue(BlobWrapper imageValue){
-          setColumn("image_value", imageValue);
-  }
-  */
 
   public String getImageLink(){
     return (String) this.getMetaData("image_link");
