@@ -38,17 +38,6 @@ public class MediaServlet extends IWCoreServlet{
   public final static String PRM_WRITABLE_CLASS = "wrcls";
   public final static String PRM_SESSION_MEMORY_BUFFER = MemoryFileBufferWriter.PRM_SESSION_BUFFER;
 
-
-  public static String getMediaURL(int iFileId){
-      StringBuffer URIBuffer = new StringBuffer(com.idega.idegaweb.IWMainApplication.MEDIA_SERVLET_URL);
-      URIBuffer.append(iFileId);
-      URIBuffer.append("media?");
-      URIBuffer.append(PARAMETER_NAME);
-      URIBuffer.append("=");
-      URIBuffer.append(iFileId);
-      return URIBuffer.toString();
-  }
-
   public static Parameter getParameter(int FileId){
     return new Parameter(PARAMETER_NAME,String.valueOf(FileId));
   }

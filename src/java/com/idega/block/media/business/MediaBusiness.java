@@ -1,5 +1,6 @@
 package com.idega.block.media.business;
 
+import com.idega.util.caching.Cache;
 import com.idega.idegaweb.IWMainApplication;
 import java.util.*;
 import java.sql.SQLException;
@@ -447,46 +448,17 @@ public class MediaBusiness {
   }
 
 
-
-
-  public static String getMediaURL(ICFile file) {
-    if( (file!=null) && (file.getID()!=-1) ){
-      StringBuffer url = new StringBuffer();
-      url.append(IWMainApplication.MEDIA_SERVLET_URL);
-      if(!IWMainApplication.MEDIA_SERVLET_URL.endsWith("/")){
-        url.append('/');
-      }
-      String name = file.getName();
-      if(name != null && name.length() > 0){
-        int indexOfDot = name.indexOf(".");
-        if(indexOfDot != -1){
-          url.append(name.substring(0,indexOfDot));
-        } else {
-          url.append(name);
-        }
-      } else {
-        url.append(file.getID());
-        url.append("media");
-      }
-      url.append('?');
-      url.append(com.idega.block.media.servlet.MediaServlet.PARAMETER_NAME);
-      url.append('=');
-      url.append(file.getID());
-
-      return url.toString();
-    }
-    return null;
+  public static Cache getCachedFileInfo(int icFileId, IWMainApplication iwma){
+    return (Cache) iwma.getIWCacheManager().getCachedBlobObject(ICFile.class.getName(),icFileId,iwma);
   }
 
-  public static String getMediaURL(int fileID) {
-    ICFile file = null;
-    try {
-      file = new ICFile(fileID);
-    }
-    catch (Exception e) {
-      file = null;
-    }
-    return getMediaURL(file);
+  public static String getMediaURL(ICFile file, IWMainApplication iwma) {
+   return getMediaURL(file.getID(),iwma);
+  }
+
+  public static String getMediaURL(int fileID, IWMainApplication iwma) {
+    Cache cache = getCachedFileInfo(fileID,iwma);
+    return cache.getVirtualPathToFile();
   }
 
 }

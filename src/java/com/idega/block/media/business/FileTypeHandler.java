@@ -41,7 +41,7 @@ public static FileTypeHandler getInstance(IWMainApplication iwma, Class handlerC
 }
 
 public static Cache getCachedFileInfo(int icFileId, IWContext iwc){
-  return (Cache) iwc.getApplication().getIWCacheManager().getCachedBlobObject(ICFile.class.getName(),icFileId,iwc.getApplication());
+  return MediaBusiness.getCachedFileInfo(icFileId,iwc.getApplication());
 }
 
 }

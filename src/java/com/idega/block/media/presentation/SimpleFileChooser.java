@@ -149,7 +149,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
       ICFile icFile = MediaBusiness.SaveMediaToDB(file,iwc);
       table.add(new HiddenInput(_name,Integer.toString(icFile.getID())),1,2);
       Link preview = new Link("Preview");
-      preview.setURL(MediaBusiness.getMediaURL(icFile));
+      preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
       preview.setTarget(Link.TARGET_NEW_WINDOW);
       table.add(preview,1,2);
       this.add(table);
@@ -175,7 +175,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
       //table.add(busy,1,2);
       table.add(new HiddenInput(_name,Integer.toString(_selectedFileId)),1,2);
       Link preview = new Link("Preview");
-      preview.setURL(MediaBusiness.getMediaURL(icFile));
+      preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
       preview.setTarget(Link.TARGET_NEW_WINDOW);
       table.add(preview,1,2);
       this.add(table);
