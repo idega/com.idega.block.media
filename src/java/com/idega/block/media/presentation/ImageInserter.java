@@ -95,7 +95,7 @@ public ImageInserter(int imageId, String imSessionImageName) {
 }
 
 public ImageInserter(Class WindowToOpen) {
-  this.imSessionImageName=imSessionImageName;
+//  this.imSessionImageName=imSessionImageName;
   this.sHiddenInputName = imSessionImageName;
   windowClass = WindowToOpen;
   openInWindow = true;
