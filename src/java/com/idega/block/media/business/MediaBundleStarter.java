@@ -70,7 +70,8 @@ public class MediaBundleStarter implements IWBundleStartable{
 			      "Javascript program  js ls mocha","text/javascript",
 			      "Javascript program  js ls mocha","application/x-javascript",
 			      "Gnu tar format gtar","application/x-gtar",
-			      "4.3BSD tar format tar","application/x-tar"
+			      "4.3BSD tar format tar","application/x-tar",
+                              "Adobe photoshop file", "image/psd"
 			      };
   private String[] image = {
 			    "GIF","image/gif",
@@ -89,13 +90,12 @@ public class MediaBundleStarter implements IWBundleStartable{
 			    "Microsoft Windows bitmap  bmp","image/x-ms-bmp",
 			    "Microsoft Windows bitmap  bmp","image/bmp",
 			    "Microsoft Windows bitmap  bmp","image/x-bmp",
-                "pcx", "image/pcx",
-		        "iff", "image/iff",
-                "ras", "image/ras",
-                "portable-bitmap", "image/x-portable-bitmap",
-                "portable-graymap", "image/x-portable-graymap",
-                "portable-pixmap", "image/x-portable-pixmap",
-                "Adobe photoshop file", "image/psd"
+                            "pcx image", "image/pcx",
+                            "iff image", "image/iff",
+                            "ras image", "image/ras",
+                            "portable-bitmap image", "image/x-portable-bitmap",
+                            "portable-graymap image", "image/x-portable-graymap",
+                            "portable-pixmap image", "image/x-portable-pixmap"
 			    };
 
   private String[] vector = {
@@ -119,7 +119,7 @@ public class MediaBundleStarter implements IWBundleStartable{
 
   public void start(IWBundle bundle){
      //add toolbar buttons
-    MediaToolbarButton separator = new MediaToolbarButton(bundle,true);
+//    MediaToolbarButton separator = new MediaToolbarButton(bundle,true);
     MediaToolbarButton button = new MediaToolbarButton(bundle,false);
 
     List l = (List)bundle.getApplication().getAttribute(IBApplication.TOOLBAR_ITEMS);
@@ -130,7 +130,7 @@ public class MediaBundleStarter implements IWBundleStartable{
 
 
     l.add(button);
-    l.add(separator);
+//    l.add(separator);
 
   }
 
