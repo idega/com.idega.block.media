@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.core.data.ICTreeNode;
 import com.idega.core.file.data.ICFile;
@@ -41,7 +42,7 @@ public class ICFileTree extends AbstractTreeViewer {
   private static final String _DEFAULT_ICON_SUFFIX = ".gif";
   private String iconFolder = _DEFAULT_ICON_PREFIX;
   private String icon_suffix = _DEFAULT_ICON_SUFFIX;
-  private static Hashtable _icFileIcons = null;
+  //private static Hashtable _icFileIcons = null;
 
   private Link _fileLink = new Link();
   private Link _folderLink = new Link();
@@ -93,7 +94,7 @@ public class ICFileTree extends AbstractTreeViewer {
   
   
 
-  public Image getIcon(ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode){
+  public Image getIcon(Map _icFileIcons,ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode){
     String mimeType = null;
     if(_isICFileTreeNode){
 			mimeType = ((ICFileTreeNode)node).getICFile().getMimeType();
@@ -113,14 +114,14 @@ public class ICFileTree extends AbstractTreeViewer {
       if(!node.isLeaf()){
         Object obj = _icFileIcons.get(mimeType+((nodeIsOpen)?_NODE_OPEN:_NODE_CLOSED));
         if(obj == null){
-          this.updateFileIcon(mimeType,iwc,false);
+          this.updateFileIcon(_icFileIcons,mimeType,iwc,false);
           obj = _icFileIcons.get(mimeType+((nodeIsOpen)?_NODE_OPEN:_NODE_CLOSED));
         }
         return (Image)obj;
       }else {
         Object obj = _icFileIcons.get(mimeType);
         if(obj == null){
-          this.updateFileIcon(mimeType,iwc,true);
+          this.updateFileIcon(_icFileIcons,mimeType,iwc,true);
           obj = _icFileIcons.get(mimeType);
         }
         return (Image)obj;
@@ -135,7 +136,7 @@ public class ICFileTree extends AbstractTreeViewer {
   	
       switch (colIndex) {
         case 1:
-          return getIcon(node, iwc, nodeIsOpen, nodeHasChild, isRootNode );
+          return getIcon(this.getIcons(iwc),node, iwc, nodeIsOpen, nodeHasChild, isRootNode );
         case 2:
         	
 
@@ -216,11 +217,12 @@ public class ICFileTree extends AbstractTreeViewer {
     _folderLink = link;
   }
 
-  protected void updateIconDimensions(){
-    super.updateIconDimensions();
+  
+  protected void updateIconDimensions(Map _icFileIcons){
+    //super.updateIconDimensions();
 
     if(_icFileIcons != null && _icFileIcons.values() != null){
-      Iterator iter = this._icFileIcons.values().iterator();
+      Iterator iter = _icFileIcons.values().iterator();
       while (iter.hasNext()) {
         Image item = (Image)iter.next();
         if(item != null){
@@ -230,13 +232,14 @@ public class ICFileTree extends AbstractTreeViewer {
     }
   }
 
-  public void initIcons(IWContext iwc){
-    super.initIcons(iwc);
+  public Map getIcons(IWContext iwc){
+  //public void initIcons(IWContext iwc){
+    //super.initIcons(iwc);
 
-    Object obj = iwc.getApplicationAttribute(_APP_FILE_ICONS + getUI());
-    if(obj == null){
+    //Object obj = iwc.getApplicationAttribute(_APP_FILE_ICONS + getUI());
+    //if(obj == null){
       IWBundle bundle = this.getBundle(iwc);
-      Hashtable tmp = new Hashtable();
+      Map tmp = new HashMap();
 
       HashMap mimeMap = (HashMap)MediaBusiness.getICMimeTypeMap(iwc);
 
@@ -250,16 +253,16 @@ public class ICFileTree extends AbstractTreeViewer {
       }
 
       iwc.setApplicationAttribute(_APP_FILE_ICONS + getUI(),tmp);
-      this._icFileIcons = tmp;
-    } else {
-      this._icFileIcons = (Hashtable)obj;
-    }
+      //this._icFileIcons = tmp;
+    //} else {
+    //  this._icFileIcons = (Hashtable)obj;
+    //}
 
-    updateIconDimensions();
-
+    updateIconDimensions(tmp);
+    return tmp;
   }
 
-  public void updateFileIcon(String mimeType, IWContext iwc, boolean isLeaf){
+  public void updateFileIcon(Map _icFileIcons,String mimeType, IWContext iwc, boolean isLeaf){
     IWBundle bundle = this.getBundle(iwc);
     if(isLeaf){
       _icFileIcons.put(mimeType,bundle.getImage(_DEFAULT_ICON_PREFIX+getUI()+mimeType+_DEFAULT_ICON_SUFFIX));
