@@ -225,6 +225,8 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 				zfile.setFileSize((int)entry.getSize());
 				zfile.setFileValue(zipFile.getInputStream(entry));
 				String mimeType = fileNameMap.getContentTypeFor(file);
+				if(mimeType == null)
+					mimeType = "application/octet";
 				//System.out.println("Save file "+file+ " of type "+mimeType+" under folder "+parentFolderID);
 				zfile.setMimeType(mimeType);
 				zfile = MediaBusiness.saveMediaToDB(zfile, parentFolderID);
