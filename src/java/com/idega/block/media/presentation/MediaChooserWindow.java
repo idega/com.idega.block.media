@@ -47,8 +47,11 @@ import com.idega.block.media.business.MediaBusiness;
   }
 
   public void displaySelection(IWContext iwc){
-    //MediaBusiness.getMediaParameterNameInSession(iwc);//store the parameter in session
-    MediaBusiness.getMediaParameterNameInSession(iwc);
+   //store the parameter in session
+    //MediaBusiness.getMediaParameterNameInSession(iwc);
+    MediaBusiness.saveMediaIdToSession(iwc,MediaBusiness.getMediaId(iwc));
+    
+    
     String chooserType = iwc.getParameter(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME);
     if( chooserType!=null ){
       iwc.setSessionAttribute(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME,chooserType);

@@ -28,7 +28,11 @@ private IWResourceBundle iwrb;
 
 
   public void main(IWContext iwc) throws Exception{
+  	//System.out.println("MEDIA param = "+MediaBusiness.getMediaParameterNameInSession(iwc));
     int mediaId = MediaBusiness.getMediaId(iwc);
+    
+    //System.out.println("MEDIA ID = "+mediaId);
+    
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
     if(action==null) action = "";
 

@@ -1,68 +1,47 @@
 package com.idega.block.media.business;
-
-import com.idega.io.*;
-import java.io.*;
-import com.idega.util.caching.Cache;
-import com.idega.idegaweb.IWMainApplication;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.sql.SQLException;
-
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import javax.ejb.FinderException;
-
 import com.idega.block.media.data.MediaProperties;
-import com.idega.block.media.presentation.MediaViewer;
 import com.idega.core.data.ICFile;
 import com.idega.core.data.ICFileHome;
 import com.idega.core.data.ICFileType;
 import com.idega.core.data.ICFileTypeHandler;
 import com.idega.core.data.ICMimeType;
-import com.idega.idegaweb.IWCacheManager;
-import com.idega.presentation.IWContext;
-import com.idega.idegaweb.IWApplicationContext;
-import com.idega.presentation.text.Link;
 import com.idega.data.IDOLookup;
+import com.idega.idegaweb.IWApplicationContext;
+import com.idega.idegaweb.IWCacheManager;
+import com.idega.idegaweb.IWMainApplication;
+import com.idega.io.MemoryFileBuffer;
+import com.idega.io.MemoryOutputStream;
+import com.idega.io.UploadFile;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.text.Link;
 import com.idega.util.FileUtil;
-//this package must be installed
-import com.oreilly.servlet.multipart.FilePart;
-import com.oreilly.servlet.multipart.MultipartParser;
-import com.oreilly.servlet.multipart.ParamPart;
-import com.oreilly.servlet.multipart.Part;
+import com.idega.util.caching.Cache;
 /**
-
  *  Title: com.idega.block.media.business.MediaBusiness Description: The main
-
  *  business class of the Media classes which does all the real work. Copyright:
-
  *  Copyright (c) 2001 Company: idega software
-
  *
-
  * @author     <a href="mailto:eiki@idega.is>Eirikur S. Hrafnsson</a>
-
  * @created    2001
-
  * @version    1.0
-
  */
 public class MediaBusiness {
 	/**
-	
 	 *  Description of the Method
-	
 	 *
-	
 	 * @param  mediaProps      The MediaProperties class containing the path to the media
-	
 	 * @param  icFileParentId  The id of the media's parent in the database.
-	
 	 * <br> A value of -1 sets the parent to the default parent directory of the IWDBFS
-	
 	 * <br> A value of 0 saves the media with no parent.
-	
 	 * @param  iwc             The IWContext
-	
 	 * @return                 Return the MediaProperties class setId(the new media id) -1 if failed
-	
 	 */
 	public static MediaProperties saveMediaToDB(MediaProperties mediaProps, int icFileParentId, IWContext iwc) {
 		//ICFile icFile = saveMediaToDB(mediaProps.getUploadFile(),icFileParentId,iwc);
@@ -155,7 +134,6 @@ public class MediaBusiness {
 		}
 		return file;
 	}
-	
 	public static ICFile saveMediaToDB(ICFile file, int parentId) {
 		try {
 			file.insert();
@@ -173,7 +151,6 @@ public class MediaBusiness {
 		}
 		return file;
 	}
-	
 	/**
 	
 	 * @param  iwc            The IWContext used to get the multipart form
@@ -251,7 +228,8 @@ public class MediaBusiness {
 		String fileInSessionParameter = getMediaParameterNameInSession(iwc);
 		int id = -1;
 		if (iwc.getParameter(fileInSessionParameter) != null) {
-			id = Integer.parseInt(iwc.getParameter(fileInSessionParameter)); //check parameters
+			id = Integer.parseInt(iwc.getParameter(fileInSessionParameter));
+			//check parameters
 		}
 		else if (iwc.getSessionAttribute(fileInSessionParameter) != null) {
 			id = Integer.parseInt((String) iwc.getSessionAttribute(fileInSessionParameter));
@@ -273,7 +251,7 @@ public class MediaBusiness {
 	}
 	/**
 	
-	 *  Description of the Method
+	 *  Saves the media id to session if not -1
 	
 	 *
 	
@@ -283,7 +261,9 @@ public class MediaBusiness {
 	
 	 */
 	public static void saveMediaIdToSession(IWContext iwc, int mediaId) {
-		iwc.setSessionAttribute(getMediaParameterNameInSession(iwc), String.valueOf(mediaId));
+		if (mediaId != -1) {
+			iwc.setSessionAttribute(getMediaParameterNameInSession(iwc), String.valueOf(mediaId));
+		}
 	}
 	/**
 	
@@ -688,39 +668,33 @@ public class MediaBusiness {
 		Cache cache = getCachedFileInfo(id, entityClass, iwma);
 		return cache.getVirtualPathToFile();
 	}
-	
-	public static ICFile createSubFolder(int parentId,String name) throws java.rmi.RemoteException,SQLException,FinderException{
+	public static ICFile createSubFolder(int parentId, String name)
+		throws java.rmi.RemoteException, SQLException, FinderException {
 		ICFile parent = ((ICFileHome) IDOLookup.getHome(ICFile.class)).findByPrimaryKey(parentId);
-		return createSubFolder(parent,name);
+		return createSubFolder(parent, name);
 	}
-	
-	public static ICFile createSubFolder(ICFile parent,String name) throws java.rmi.RemoteException,SQLException{
-		
+	public static ICFile createSubFolder(ICFile parent, String name) throws java.rmi.RemoteException, SQLException {
 		ICFile folder = ((ICFileHome) IDOLookup.getHome(ICFile.class)).createLegacy();
-        folder.setName(name);
-        folder.setMimeType(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
-        folder.store();
-        parent.addChild(folder);
-        return folder;        
-       
+		folder.setName(name);
+		folder.setMimeType(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
+		folder.store();
+		parent.addChild(folder);
+		return folder;
 	}
-	
-	public static MemoryFileBuffer getMediaBuffer(int fileId) throws Exception{
+	public static MemoryFileBuffer getMediaBuffer(int fileId) throws Exception {
 		ICFile file = ((ICFileHome) IDOLookup.getHome(ICFile.class)).findByPrimaryKey(fileId);
 		return getMediaBuffer(file);
 	}
-	
-	public static  MemoryFileBuffer getMediaBuffer(ICFile file) throws Exception{
+	public static MemoryFileBuffer getMediaBuffer(ICFile file) throws Exception {
 		BufferedInputStream bis = new BufferedInputStream(file.getFileValue());
 		MemoryFileBuffer buffer = new MemoryFileBuffer();
 		MemoryOutputStream bos = new MemoryOutputStream(buffer);
 		byte[] buff = new byte[2048];
-        int bytesRead;
-
-        // Simple read/write loop.
-        while(-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-            bos.write(buff, 0, bytesRead);
-        }
-        return buffer;
+		int bytesRead;
+		// Simple read/write loop.
+		while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+			bos.write(buff, 0, bytesRead);
+		}
+		return buffer;
 	}
 }
