@@ -150,8 +150,10 @@ public ImageInserter(Class WindowToOpen) {
         imageAdmin.addParameter(SimpleChooserWindow.prmReloadParent,"true");
       imageAdmin.addParameter("submit","new");
       imageAdmin.addParameter(sessionImageParameterName,imSessionImageName);
+			String sImageId = imageId > 0 ?String.valueOf(imageId):"";
       if ( imageId != -1 )
         imageAdmin.addParameter(imSessionImageName,imageId);
+
 
       HiddenInput hidden = new HiddenInput(sHiddenInputName,Integer.toString(imageId));
         hidden.keepStatusOnAction();
@@ -175,6 +177,7 @@ public ImageInserter(Class WindowToOpen) {
           imageTable.add(imageText,1,2);
           imageTable.add(insertImage,1,2);
         }
+
         imageTable.add(hidden,1,2);
 
       add(imageTable);
