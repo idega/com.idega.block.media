@@ -12,6 +12,7 @@ package com.idega.block.media.presentation;
 
 import com.idega.block.media.business.MediaConstants;
 import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWCacheManager;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWUserContext;
 import com.idega.presentation.Block;
@@ -53,6 +54,7 @@ private boolean setWindowToReloadParent = false;
 public static int IM_BROWSER_WIDTH = 800;
 public static int IM_BROWSER_HEIGHT = 600;
 public static int IM_MAX_WIDTH = 140;
+private String contextPath = "";
 
 
 private IWBundle iwb;
@@ -61,6 +63,8 @@ private IWResourceBundle iwrb;
 public ImageInserter(){
   this.imSessionImageName="image_id";
   this.sHiddenInputName = "image_id";
+
+  
 }
 
 public ImageInserter(Image setImage){
@@ -99,9 +103,14 @@ public ImageInserter(Class WindowToOpen) {
 }
 
   public void main(IWContext iwc)throws Exception{
-      // this.empty(); why the hell was this set??
+      this.empty();
       iwb = getBundle(iwc);
       iwrb = getResourceBundle(iwc);
+      
+      contextPath = iwb.getApplication().getApplicationContextURI();
+   
+		  if( contextPath== null ) contextPath = "";
+		  else if( !contextPath.endsWith("/") ) contextPath+="/"; 
 
       nameOfWindow = iwrb.getLocalizedString("new_image","New image");
       sUseBoxString = iwrb.getLocalizedString("use_image","Use image");
@@ -111,10 +120,10 @@ public ImageInserter(Class WindowToOpen) {
       //add(imSessionImageName + " "+imageSessionId);
 
       if ( imageSessionId != null ) {
-	imageId = Integer.parseInt(imageSessionId);
-	if(!maintainSessionParameter){
-	  iwc.removeSessionAttribute(imSessionImageName);
-	}
+				imageId = Integer.parseInt(imageSessionId);
+				if(!maintainSessionParameter){
+	  			iwc.removeSessionAttribute(imSessionImageName);
+				}
       }
 
 
@@ -216,7 +225,10 @@ public ImageInserter(Class WindowToOpen) {
     StringBuffer function = new StringBuffer("");//var imageName = \"rugl\"; \n");
     function.append("function setImageId(imageId,imagename) { \n \t");
     function.append("if (document.images) { \n \t\t");
-    function.append("document.images['im'+imagename].src = \"/servlet/MediaServlet/\"+imageId+\"media?media_id=\"+imageId; \n\t}\n\t");
+    function.append("document.images['im'+imagename].src = \"");
+    function.append(contextPath+"servlet/MediaServlet");
+    // does not always work function.append("\"+imageId+\"media?media_id=\"+imageId; \n\t}\n\t");
+    function.append("?media_id=\"+imageId; \n\t}\n\t");
     function.append("document.forms[0].elements[getElementIndex(imagename)].value = imageId \n}\n");
     function.append("function getElementIndex(elementname){ \n \t");
     function.append("len = document.forms[0].length \n \t");
