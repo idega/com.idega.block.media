@@ -118,7 +118,7 @@ import com.idega.presentation.ui.AbstractChooserWindow;
     }
 
    public void main(IWContext iwc) throws Exception{
-   	IWResourceBundle iwrb = getResourceBundle(iwc);
+   	//IWResourceBundle iwrb = getResourceBundle(iwc);
     Table headerTable = new Table();
     headerTable.setCellpadding(0);
     headerTable.setCellspacing(0);
