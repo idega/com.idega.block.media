@@ -29,7 +29,8 @@ import com.idega.presentation.ui.TextInput;
  */
 
 public class SimpleFileChooser extends InterfaceObjectContainer {
-  //private Stringstyle;
+  private boolean showChangeUploadedFileOption = true;
+	//private Stringstyle;
   private String name;
   private Form form;
   private int selectedFileId = -1;
@@ -48,6 +49,20 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
 
   private IWBundle coreBundle;
 	private IWResourceBundle iwrb;
+	/**
+	 * @return
+	 */
+	public boolean isShowChangeUploadedFileOption() {
+		return showChangeUploadedFileOption;
+	}
+
+	/**
+	 * @param showChangeUploadedFileOption
+	 */
+	public void setShowChangeUploadedFileOption(boolean showChangeUploadedFileOption) {
+		this.showChangeUploadedFileOption = showChangeUploadedFileOption;
+	}
+
 	public SimpleFileChooser(Form form, String chooserName) {
     this.form = form;
     name = chooserName;
@@ -130,65 +145,76 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
       this.add(table);
     } 
     else if(file != null){//uploaded
+			ICFile icFile = MediaBusiness.saveMediaToDBUploadFolder(file,iwc);
 
-
-      Table table = new Table(1,2);
-      table.setCellpadding(0);
-      table.setCellspacing(0);
-
-      TextInput tInput = new TextInput("ic_uploaded_file",file.getName());
-      tInput.setDisabled(true);
-      SubmitButton change = new SubmitButton("Change...","change_file","true");
-
-      String style = this.getStyleAttribute();
-      if(style != null){
-        tInput.setStyleAttribute(style);
-        change.setStyleAttribute(style);
-      }
-
-      table.add(tInput,1,1);
-      table.add(change,1,1);
-      //table.add(busy,1,2);
-      ICFile icFile = MediaBusiness.saveMediaToDBUploadFolder(file,iwc);
-      table.add(new HiddenInput(name,Integer.toString(icFile.getID())),1,2);
-      
-			if( showPreviewLink){
-		    Link preview = new Link("Preview");
-		    preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
-		    preview.setTarget(Link.TARGET_NEW_WINDOW);
-		    table.add(preview,1,2);
+			if( showChangeUploadedFileOption){
+	      Table table = new Table(1,2);
+	      table.setCellpadding(0);
+	      table.setCellspacing(0);
+	
+	      TextInput tInput = new TextInput("ic_uploaded_file",file.getName());
+	      tInput.setDisabled(true);
+	      SubmitButton change = new SubmitButton("Change...","change_file","true");
+	
+	      String style = this.getStyleAttribute();
+	      if(style != null){
+	        tInput.setStyleAttribute(style);
+	        change.setStyleAttribute(style);
+	      }
+	
+	      table.add(tInput,1,1);
+	      table.add(change,1,1);
+	      //table.add(busy,1,2);
+	     
+	      table.add(new HiddenInput(name,Integer.toString(icFile.getID())),1,2);
+	      
+				if( showPreviewLink){
+			    Link preview = new Link("Preview");
+			    preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
+			    preview.setTarget(Link.TARGET_NEW_WINDOW);
+			    table.add(preview,1,2);
+				}
+	      this.add(table);
 			}
-      this.add(table);
+			else{
+				add(new HiddenInput(name,Integer.toString(icFile.getID())));
+			}
       //this.add(new Image(file.getWebPath(),file.getName()));
     } else if(selectedFileId != -1) {
-      Table table = new Table(1,2);
-      table.setCellpadding(0);
-      table.setCellspacing(0);
-
-      ICFile icFile = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).findByPrimaryKeyLegacy(selectedFileId);
-      TextInput tInput = new TextInput("ic_uploaded_file",icFile.getName());
-      tInput.setDisabled(true);
-      SubmitButton change = new SubmitButton("Change...","change_file","true");
-
-      String style = this.getStyleAttribute();
-      if(style != null){
-        tInput.setStyleAttribute(style);
-        change.setStyleAttribute(style);
-      }
-
-      table.add(tInput,1,1);
-      table.add(change,1,1);
-      //table.add(busy,1,2);
-      table.add(new HiddenInput(name,Integer.toString(selectedFileId)),1,2);
-      
-      if( showPreviewLink){
-	      Link preview = new Link("Preview");
-	      preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
-	      preview.setTarget(Link.TARGET_NEW_WINDOW);
-	      table.add(preview,1,2);
-      }
-      
-      this.add(table);
+    	
+    	if( showChangeUploadedFileOption){
+	      Table table = new Table(1,2);
+	      table.setCellpadding(0);
+	      table.setCellspacing(0);
+	
+	      ICFile icFile = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).findByPrimaryKeyLegacy(selectedFileId);
+	      TextInput tInput = new TextInput("ic_uploaded_file",icFile.getName());
+	      tInput.setDisabled(true);
+	      SubmitButton change = new SubmitButton("Change...","change_file","true");
+	
+	      String style = this.getStyleAttribute();
+	      if(style != null){
+	        tInput.setStyleAttribute(style);
+	        change.setStyleAttribute(style);
+	      }
+	
+	      table.add(tInput,1,1);
+	      table.add(change,1,1);
+	      //table.add(busy,1,2);
+	      table.add(new HiddenInput(name,Integer.toString(selectedFileId)),1,2);
+	      
+	      if( showPreviewLink){
+		      Link preview = new Link("Preview");
+		      preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
+		      preview.setTarget(Link.TARGET_NEW_WINDOW);
+		      table.add(preview,1,2);
+	      }
+	      
+	      this.add(table);
+    	}
+    	else{
+    		add(new HiddenInput(name,Integer.toString(selectedFileId)));
+    	}
     }
   }
 
