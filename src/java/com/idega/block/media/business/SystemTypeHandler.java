@@ -1,8 +1,10 @@
 package com.idega.block.media.business;
 
 
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
 import com.idega.block.media.data.MediaProperties;
-import com.idega.block.reports.business.Content;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICMimeType;
 import com.idega.idegaweb.IWBundle;
@@ -12,11 +14,6 @@ import com.idega.presentation.PresentationObject;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
-import com.idega.presentation.ui.CheckBox;
-
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 
 
 /**
@@ -36,8 +33,6 @@ private static final String _NODE_CLOSED = "_closed";
 private static final String _DEFAULT_ICON_PREFIX = "icfileicons/ui/";
 
 private static final String _DEFAULT_ICON_SUFFIX = ".gif";
-private String iconFolder = _DEFAULT_ICON_PREFIX;
-private String icon_suffix = _DEFAULT_ICON_SUFFIX;
 
 public static final String _UI_WIN = "win/";
 public static final String _UI_MAC = "mac/";
@@ -170,7 +165,7 @@ public void initIcons(IWContext iwc){
 		if(mimeMap != null){
 			Iterator iter = mimeMap.keySet().iterator();
 			while (iter.hasNext()) {
-				ICMimeType item = (ICMimeType)(mimeMap.get((String)iter.next()));
+				ICMimeType item = (ICMimeType)(mimeMap.get(iter.next()));
 				String mimeType = item.getMimeType();
 				tmp.put(mimeType,bundle.getImage(_DEFAULT_ICON_PREFIX+getUI()+mimeType+_DEFAULT_ICON_SUFFIX));
 			}
@@ -257,19 +252,6 @@ public Image getIcon(ICFile file, IWContext iwc){
 
   public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc){
     return new Table();
-  }
-
-  private Content getContentObject(ICFile item){
-    Object[] objs = new Object[5];
-    objs[0] = new CheckBox(item.getPrimaryKey().toString());
-    objs[1] = (item.getName() != null ) ? item.getName() : "";
-    objs[2] = (item.getModificationDate() != null ) ? item.getModificationDate().toString() : item.getCreationDate().toString();
-    objs[3] = (item.getFileSize() != null ) ? item.getFileSize().toString() : "";
-    objs[4] = (item.getMimeType() != null ) ? item.getMimeType() : "";
-
-    Content C = new Content(objs);
-
-    return C;
   }
 
 }
