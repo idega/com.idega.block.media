@@ -87,7 +87,7 @@ private IWResourceBundle iwrb;
         if( (action!=null) && action.equals(MediaConstants.MEDIA_ACTION_SAVE)  ){
           setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
           int pId = -1;
-          String parentId = iwc.getParameter(fileInSessionParameter+"parent");
+          String parentId = iwc.getParameter(fileInSessionParameter+MediaConstants.PARENT_SUFFIX);
 
           if(parentId!=null){
             pId = Integer.parseInt(parentId);
@@ -157,8 +157,8 @@ private IWResourceBundle iwrb;
     table.add(transparent,1,2);
     table.add(new FileInput(),1,3);
     table.add(new SubmitButton(),1,3);
-    table.add(new HiddenInput(fileInSessionParameter+"parent",iwc.getParameter(fileInSessionParameter+"parent")),1,3);
-
+    String parentId = iwc.getParameter(fileInSessionParameter+"parent");
+    if( parentId!=null ) table.add(new HiddenInput(fileInSessionParameter+MediaConstants.PARENT_SUFFIX,parentId),1,3);
     f.setOnSubmit("swapImage('"+transparent.getID()+"','','"+busy.getURL()+"',1);return true");
 
     f.add(table);

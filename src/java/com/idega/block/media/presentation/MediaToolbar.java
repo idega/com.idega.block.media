@@ -35,7 +35,8 @@ public class MediaToolbar extends Block {
   private final static String FILE_ID_PARAMETER_NAME = "media_file_id";
   private final static String FILE_NAME_PARAMETER_NAME = "media_file_name";
 
-  private String fileInSessionParameter = "ic_file_id";
+  private String fileInSessionParameter = "";
+  private String parentParamName = "";
   private MediaProperties props = null;
   private IWResourceBundle iwrb;
 
@@ -78,6 +79,7 @@ public class MediaToolbar extends Block {
     iwrb = getResourceBundle(iwc);
     //get the mediaId parameter name
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession( iwc );
+    parentParamName = fileInSessionParameter+MediaConstants.PARENT_SUFFIX;
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
 
 /**@ is this necessery**///    MediaBusiness.saveMediaIdToSession( iwc, mediaId );
@@ -189,7 +191,8 @@ public class MediaToolbar extends Block {
     submitSave.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
     submitSave.setAsImageButton(true);
     //submitSave.addParameter(fileInSessionParameter,(String)props.getParameterMap().get(fileInSessionParameter));
-submitSave.addParameter(fileInSessionParameter+"parent",iwc.getParameter(fileInSessionParameter+"parent"));//**@todo fix**/
+    /**@todo fix to use iwc**/
+    submitSave.addParameter(parentParamName,iwc.getParameter(parentParamName));
     Link submitNew = new Link(iwrb.getLocalizedString("mv.cancel","cancel"));
     submitNew.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_NEW);
     submitNew.addParameter(fileInSessionParameter,(String)props.getParameterMap().get(fileInSessionParameter));
@@ -243,7 +246,7 @@ submitSave.addParameter(fileInSessionParameter+"parent",iwc.getParameter(fileInS
     Link newLink = new Link(iwrb.getLocalizedString("mv.upload","upload"), MediaUploaderWindow.class );
     newLink.setTarget( MediaConstants.TARGET_MEDIA_VIEWER );
     newLink.setAsImageButton( true );
-    newLink.addParameter( fileInSessionParameter+"parent", mediaId );
+    newLink.addParameter( parentParamName, mediaId );
     newLink.addParameter( MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_NEW );
     T.add( newLink, 1, 1 );
 
