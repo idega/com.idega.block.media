@@ -93,7 +93,6 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
 
      // table.setColumnColor(2,"#FCFCFC");
       //table.setColumnColor(4,"#FCFCFC");
-      table.setAlignment(Table.HORIZONTAL_ALIGN_LEFT);
 
 
 
