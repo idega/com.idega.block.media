@@ -3,11 +3,13 @@ package com.idega.block.media.presentation;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.idegaweb.IWBundle;
-import com.idega.idegaweb.presentation.IWAdminWindow;
+import com.idega.idegaweb.IWConstants;
+import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.FrameSet;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Page;
 import com.idega.presentation.Table;
+import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.AbstractChooserWindow;
 /**
  * Title: com.idega.block.media.presentation.MediaChooserWindow
@@ -38,7 +40,7 @@ import com.idega.presentation.ui.AbstractChooserWindow;
     frame = new FrameSet();
     frame.add(Top.class);
     frame.add(BottomFrameSet.class);
-    frame.setSpanPixels(1,24);
+    frame.setSpanPixels(1,50);
     frame.setScrollbar(false);
     frame.setScrolling(1,false);
     frame.setScrolling(2,false);
@@ -100,17 +102,26 @@ import com.idega.presentation.ui.AbstractChooserWindow;
 
     public Top(){
      setAllMargins(0);
-     setBackgroundColor(IWAdminWindow.HEADER_COLOR);
+     /**
+      * TODO: remove hack!!!
+      */
+     setBackgroundColor("#9DB308");//IWAdminWindow.HEADER_COLOR);
     }
 
    public void main(IWContext iwc) throws Exception{
+   	IWResourceBundle iwrb = getResourceBundle(iwc);
     Table headerTable = new Table();
     headerTable.setCellpadding(0);
     headerTable.setCellspacing(0);
     headerTable.setWidth("100%");
     headerTable.setHeight("100%");
-    headerTable.setAlignment(1,1,"right");
-    headerTable.add(iwc.getApplication().getCoreBundle().getImage("/editorwindow/idegaweb.gif","idegaWeb"),1,1);
+    headerTable.setAlignment(1,1,"left");//changed from right
+    headerTable.addText(iwrb.getLocalizedString("user_property_window", "User Property Window"), IWConstants.BUILDER_FONT_STYLE_TITLE);
+    /**
+     * TODO: remove hack!!! 
+     */
+    headerTable.add(getBundle(iwc).getImage("top.gif"));
+ //   headerTable.add(iwc.getApplication().getCoreBundle().getImage("/editorwindow/idegaweb.gif","idegaWeb"),1,1);
     add(headerTable);
    }
 
