@@ -674,7 +674,7 @@ public class MediaBusiness {
 	
 	public static ICFile getGroupHomeFolder(Group group, IWApplicationContext iwac) throws IBOLookupException, CreateException{
 		ICFile folder = group.getHomeFolder();
-		if(group.getHomeFolder() == null){
+		if(folder == null){
 			GroupBusiness b = (GroupBusiness)IBOLookup.getServiceInstance(iwac,GroupBusiness.class);
 			folder = b.createGroupHomeFolder(group);
 		}
