@@ -247,4 +247,11 @@ public class MediaBundleStarter implements IWBundleStartable{
   }
 
 
+	/**
+	 * @see com.idega.idegaweb.IWBundleStartable#stop(IWBundle)
+	 */
+	public void stop(IWBundle starterBundle) {
+		//does nothing...
+	}
+
 }
