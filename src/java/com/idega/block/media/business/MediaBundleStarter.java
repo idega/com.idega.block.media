@@ -106,12 +106,10 @@ public class MediaBundleStarter implements IWBundleStartable{
 
 
   public MediaBundleStarter() {
-  //java.lang.Runnable run = new java.lang.Runnable();
-
   }
 
   public void start(IWBundle bundle){
-    //start(bundle.getApplication());/**@todo remove from every server**/
+    bundle.removeProperty("iw_bundle_starter_class");/**@todo remove in the future**/
   }
 
   public void start(IWMainApplication iwma){
