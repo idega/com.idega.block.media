@@ -3,6 +3,7 @@
  */
 package com.idega.block.media.business;
 
+import java.rmi.RemoteException;
 import com.idega.business.IBOServiceBean;
 import com.idega.core.file.business.ICFileSystem;
 import com.idega.core.file.data.ICFile;
@@ -38,4 +39,18 @@ public class MediaFileSystemBean extends IBOServiceBean implements MediaFileSyst
 		starter.start(getIWApplicationContext().getIWMainApplication());
 	}
 
+	/* (non-Javadoc)
+	 * @see com.idega.core.file.business.ICFileSystem#getFileIconURI(com.idega.core.file.data.ICFile)
+	 */
+	public String getFileIconURI(ICFile file) throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	/* (non-Javadoc)
+	 * @see com.idega.core.file.business.ICFileSystem#getIconURIByMimeType(java.lang.String)
+	 */
+	public String getIconURIByMimeType(String mimeType) throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
