@@ -94,7 +94,7 @@ public ImageInserter(Class WindowToOpen) {
 
       nameOfWindow = iwrb.getLocalizedString("new_image","New image");
       sUseBoxString = iwrb.getLocalizedString("use_image","Use image");
-      System.err.println("Imageinserter : imSessionImageName "+imSessionImageName);
+      //System.err.println("Imageinserter : imSessionImageName "+imSessionImageName);
       String imageSessionId = (String) iwc.getSessionAttribute(imSessionImageName);
       // debug
       //add(imSessionImageName + " "+imageSessionId);
