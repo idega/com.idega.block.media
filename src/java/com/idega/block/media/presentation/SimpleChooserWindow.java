@@ -39,9 +39,9 @@ import com.idega.idegaweb.IWBundle;
       SC.setToIncludeLinks(false);
       add(SC);
       addHeaderObject(SC.getLinkTable(iwb));
-      setTitle("Image Chooser");
+      setTitle("Image Chooser Block Media");
       addTitle("Image Chooser" );
 
-      setParentToReload();
+      //setParentToReload();
     }
 }

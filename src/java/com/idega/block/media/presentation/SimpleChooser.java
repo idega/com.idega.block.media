@@ -52,7 +52,7 @@ import com.idega.idegaweb.IWBundle;
 
       getParentPage().getAssociatedScript().addFunction("callbim",getSaveImageFunction() );
 
-
+      add("block.media");
       Table Frame = new Table();
       Frame.setCellpadding(0);
       Frame.setCellspacing(0);

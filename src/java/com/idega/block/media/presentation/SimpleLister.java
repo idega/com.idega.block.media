@@ -23,12 +23,12 @@ import com.idega.presentation.PresentationObjectContainer;
 public class SimpleLister extends PresentationObjectContainer {
 
     private String target = "viewer";
-    public String viewUrl = "/image/singleview.jsp";
     public String prmImageView = "img_view_id";
     public String sessImageParameterName = "im_image_session_name";
     public String sessImageParameter = "image_id";
 
     public void  main(IWContext iwc){
+      add("block.media");
       getParentPage().setAllMargins(0);
       List L = listOfImages();
 
@@ -74,6 +74,7 @@ public class SimpleLister extends PresentationObjectContainer {
   public Link getImageLink(ImageEntity image,String target,String prm){
     Link L = new Link(image.getName(),SimpleViewer.class);
     L.setFontSize(1);
+    L.setOnClick("top.iImageId = "+image.getID() );
     L.addParameter(sessImageParameter,image.getID());
     L.setTarget(target);
     return L;
