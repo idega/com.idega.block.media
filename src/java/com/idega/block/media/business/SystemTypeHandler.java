@@ -59,7 +59,7 @@ protected String iconHeight = "16";
 
       ICFile file = (ICFile)this.getCachedFileInfo(icFileId,iwc).getEntity();
 
-      Iterator iter = file.getChildren();
+      Iterator iter = file.getChildrenIterator();
       int x = 1;
       int y = 1;
 
