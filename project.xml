@@ -3,7 +3,7 @@
     <pomVersion>3</pomVersion>
     <name>idegaWeb Media Block</name>
     <artifactId>com.idega.block.media</artifactId>
-    <currentVersion>2.0</currentVersion>
+    <currentVersion>1.0</currentVersion>
     <organization>
         <name>idega software</name>
         <url>http://www.idega.com</url>
