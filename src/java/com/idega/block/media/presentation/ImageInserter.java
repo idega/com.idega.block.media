@@ -37,7 +37,7 @@ private int maxImageWidth = 140;
 private boolean hasUseBox = true;
 private boolean selected = false;
 private boolean openInWindow = false;
-private Class windowClass = SimpleUploaderWindow.class;
+private Class windowClass = SimpleChooserWindow.class;
 private Image setImage;
 private boolean limitWidth = true;
 public final String sessionImageParameterName = "im_image_session_name";
