@@ -3,7 +3,6 @@ package com.idega.block.media.presentation;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.idegaweb.IWBundle;
-import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.FrameSet;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Page;
