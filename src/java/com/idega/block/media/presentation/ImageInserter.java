@@ -26,6 +26,7 @@ public class ImageInserter extends Block{
 
 private final static String IW_BUNDLE_IDENTIFIER="com.idega.block.image";
 private int imageId = -1;
+private boolean nullImageIDDefault = false;
 private String imSessionImageName =null;
 private String sHiddenInputName = null;
 //private String adminURL = "/image/insertimage.jsp";
@@ -45,6 +46,7 @@ public final String sessionImageParameterName = "im_image_session_name";
 private String prmUseBox = "insertImage";
 private boolean maintainSessionParameter = false;
 private boolean setWindowToReloadParent = false;
+
 
 private IWBundle iwb;
 private IWResourceBundle iwrb;
@@ -155,7 +157,14 @@ public ImageInserter(Class WindowToOpen) {
         imageAdmin.addParameter(imSessionImageName,imageId);
 
 
-      HiddenInput hidden = new HiddenInput(sHiddenInputName,Integer.toString(imageId));
+      String stringImageID = null;
+      if(nullImageIDDefault){
+        stringImageID = "";
+      }
+      else{
+        stringImageID = Integer.toString(imageId);
+      }
+      HiddenInput hidden = new HiddenInput(sHiddenInputName,stringImageID);
         hidden.keepStatusOnAction();
       CheckBox insertImage = new CheckBox(prmUseBox,"Y");
         insertImage.setChecked(selected);
@@ -275,4 +284,12 @@ public ImageInserter(Class WindowToOpen) {
   public void limitImageWidth(boolean limitWidth){
    this.limitWidth = limitWidth;
   }
+
+  /**
+   * Sets the instance so it has an empty string instead of the default -1 as the ImageID when nothing is selected
+   */
+  public void setNullImageIDDefault(){
+    nullImageIDDefault=true;
+  }
+
 }
