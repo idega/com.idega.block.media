@@ -79,6 +79,10 @@ public class MediaToolbar extends Block {
     //get the mediaId parameter name
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession( iwc );
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
+
+    MediaBusiness.saveMediaIdToSession( iwc, mediaId );
+
+
     //use for filtering
     String chooserType = (String)iwc.getSessionAttribute(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME);
     choosingImage = ( (chooserType!=null) && (chooserType.equals(MediaConstants.MEDIA_CHOOSER_IMAGE)) );

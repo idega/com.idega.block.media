@@ -86,7 +86,7 @@ private IWResourceBundle iwrb;
 
         if( (action!=null) && action.equals(MediaConstants.MEDIA_ACTION_SAVE)  ){
           setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
-          int pId = MediaBusiness.getMediaId( iwc );
+          int pId = MediaBusiness.getParentMediaId( iwc );
 
           /* if saving a new mimetype */
           if( iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME)!=null ){
