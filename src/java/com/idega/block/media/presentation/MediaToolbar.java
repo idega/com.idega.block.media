@@ -36,7 +36,6 @@ public class MediaToolbar extends Block {
   private final static String FILE_NAME_PARAMETER_NAME = "media_file_name";
 
   private String fileInSessionParameter = "";
-  private String parentParamName = "";
   private MediaProperties props = null;
   private IWResourceBundle iwrb;
 
@@ -79,7 +78,6 @@ public class MediaToolbar extends Block {
     iwrb = getResourceBundle(iwc);
     //get the mediaId parameter name
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession( iwc );
-    parentParamName = fileInSessionParameter+MediaConstants.PARENT_SUFFIX;
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
 
 /**@ is this necessery**///    MediaBusiness.saveMediaIdToSession( iwc, mediaId );
@@ -192,7 +190,7 @@ public class MediaToolbar extends Block {
     submitSave.setAsImageButton(true);
     //submitSave.addParameter(fileInSessionParameter,(String)props.getParameterMap().get(fileInSessionParameter));
     /**@todo fix to use iwc**/
-    submitSave.addParameter(parentParamName,iwc.getParameter(parentParamName));
+    submitSave.addParameter(fileInSessionParameter,iwc.getParameter(fileInSessionParameter));
     Link submitNew = new Link(iwrb.getLocalizedString("mv.cancel","cancel"));
     submitNew.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_NEW);
     submitNew.addParameter(fileInSessionParameter,(String)props.getParameterMap().get(fileInSessionParameter));
@@ -246,7 +244,7 @@ public class MediaToolbar extends Block {
     Link newLink = new Link(iwrb.getLocalizedString("mv.upload","upload"), MediaUploaderWindow.class );
     newLink.setTarget( MediaConstants.TARGET_MEDIA_VIEWER );
     newLink.setAsImageButton( true );
-    newLink.addParameter( parentParamName, mediaId );
+    newLink.addParameter( fileInSessionParameter, mediaId );
     newLink.addParameter( MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_NEW );
     T.add( newLink, 1, 1 );
 

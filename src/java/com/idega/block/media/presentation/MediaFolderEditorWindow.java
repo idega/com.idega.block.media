@@ -25,6 +25,7 @@ import com.idega.presentation.ui.Window;
 
 public class MediaFolderEditorWindow extends Window {
   private IWResourceBundle iwrb;
+  private String fileInSessionParameter = "";
 
   public MediaFolderEditorWindow() {
   }
@@ -41,6 +42,8 @@ public class MediaFolderEditorWindow extends Window {
     setAllMargins(0);
 
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
+    fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession( iwc );
+
     int mediaId = MediaBusiness.getMediaId(iwc);
 
     if( action.equals(MediaConstants.MEDIA_ACTION_NEW) ){

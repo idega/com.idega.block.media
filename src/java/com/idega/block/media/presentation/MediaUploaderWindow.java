@@ -51,10 +51,11 @@ private IWResourceBundle iwrb;
       /* Uploading and checking for a valid mimetype */
       if( iwc.isMultipartFormData() ){
         MediaProperties mediaProps = MediaBusiness.uploadToDiskAndGetMediaProperties(iwc);
-        iwc.setSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME,mediaProps);
+
 
         /*if the upload succeded*/
         if(mediaProps!=null){
+          iwc.setSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME,mediaProps);
           try {
             /*this will throw an exection if the mimetype does not exist*/
             FileTypeHandler handler = MediaBusiness.getFileTypeHandler( iwc, mediaProps.getMimeType() );
@@ -73,46 +74,50 @@ private IWResourceBundle iwrb;
         }
         //upload failed try again
         else{
-          add("Error in upload try again");
+          add(iwrb.getLocalizedString("uploader.window.select","You must select something to upload first"));
           add(getMultiPartUploaderForm(iwc));
         }
 
       }
       /*Saving to database or uploading a new file*/
       else{
-        MediaProperties mediaProps = ( MediaProperties ) iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME );
-        iwc.removeSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME );
         String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
-
-        if( (action!=null) && action.equals(MediaConstants.MEDIA_ACTION_SAVE)  ){
-          setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
-          int pId = -1;
-          String parentId = iwc.getParameter(fileInSessionParameter+MediaConstants.PARENT_SUFFIX);
-
-          if(parentId!=null){
-            pId = Integer.parseInt(parentId);
-          }
-
-          /* if saving a new mimetype */
-          if( iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME)!=null ){
-            String mimeType = iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME);
-            String mimeDescription = iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_DESCRIPTION_PARAMETER_NAME);
-            int fileTypeId = Integer.parseInt(iwc.getParameter(MediaConstants.MEDIA_FILE_TYPE_PARAMETER_NAME));
-            MediaBusiness.saveMimeType(mimeType,mimeDescription,fileTypeId);
-          }
-
-          //also deletes the file from disk and return a MediaViewer
-          mediaProps = MediaBusiness.saveMediaToDB( mediaProps, pId, iwc);
-          add(new MediaToolbar(mediaProps));
-          add(new MediaViewer(mediaProps));
-        }
-        else{//add a new file
+        if(action.equals(MediaConstants.MEDIA_ACTION_NEW)){
+          /*add a new file*/
           add(getMultiPartUploaderForm(iwc));
         }
+        else{
+          MediaProperties mediaProps = ( MediaProperties ) iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME );
+          if( mediaProps!=null ){
+            iwc.removeSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME );
+
+            if( (action!=null) && action.equals(MediaConstants.MEDIA_ACTION_SAVE)  ){
+              setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
+              int pId = -1;
+              String parentId = iwc.getParameter(fileInSessionParameter);
+
+              if(parentId!=null){
+                pId = Integer.parseInt(parentId);
+              }
+
+              /* if saving a new mimetype */
+              if( iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME)!=null ){
+                String mimeType = iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME);
+                String mimeDescription = iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_DESCRIPTION_PARAMETER_NAME);
+                int fileTypeId = Integer.parseInt(iwc.getParameter(MediaConstants.MEDIA_FILE_TYPE_PARAMETER_NAME));
+                MediaBusiness.saveMimeType(mimeType,mimeDescription,fileTypeId);
+              }
+
+              //also deletes the file from disk and return a MediaViewer
+              mediaProps = MediaBusiness.saveMediaToDB( mediaProps, pId, iwc);
+              add(new MediaToolbar(mediaProps));
+              add(new MediaViewer(mediaProps));
+            }
+
+        }
       }
-
-
     }
+  }
 
 
   protected void viewUploadedMedia(MediaProperties mediaProps){
@@ -120,6 +125,8 @@ private IWResourceBundle iwrb;
     T.setHeight(1,1,"16");
     T.setHeight(1,2,Table.HUNDRED_PERCENT);
     T.setWidthAndHeightToHundredPercent();
+    T.setVerticalAlignment(1,1,Table.VERTICAL_ALIGN_TOP);
+    T.setVerticalAlignment(1,2,Table.VERTICAL_ALIGN_TOP);
 
     T.add(new MediaToolbar(mediaProps),1,1);
     T.add(new MediaViewer(mediaProps),1,2);
@@ -157,8 +164,8 @@ private IWResourceBundle iwrb;
     table.add(transparent,1,2);
     table.add(new FileInput(),1,3);
     table.add(new SubmitButton(),1,3);
-    String parentId = iwc.getParameter(fileInSessionParameter+"parent");
-    if( parentId!=null ) table.add(new HiddenInput(fileInSessionParameter+MediaConstants.PARENT_SUFFIX,parentId),1,3);
+    String parentId = iwc.getParameter(fileInSessionParameter);
+    if( parentId!=null ) table.add(new HiddenInput(fileInSessionParameter,parentId),1,3);
     f.setOnSubmit("swapImage('"+transparent.getID()+"','','"+busy.getURL()+"',1);return true");
 
     f.add(table);

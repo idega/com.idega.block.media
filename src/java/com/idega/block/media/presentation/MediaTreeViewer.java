@@ -6,14 +6,12 @@ import com.idega.core.data.ICFile;
 import com.idega.data.EntityFinder;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.idegaweb.IWResourceBundle;
-import com.idega.presentation.Block;
-import com.idega.presentation.IWContext;
-import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
+import com.idega.presentation.*;
 
 /**
  * Title: com.idega.block.media.presentation.MediaTreeViewer
@@ -123,5 +121,12 @@ public class MediaTreeViewer extends Block {
   public String getBundleIdentifier(){
     return MediaConstants.IW_BUNDLE_IDENTIFIER ;
   }
+
+  protected String getCacheState(IWContext iwc, String cacheStatePrefix) {
+    /**@todo: Override this com.idega.presentation.Block method*/
+    return super.getCacheState( iwc,  cacheStatePrefix);
+  }
+
+
 
 }

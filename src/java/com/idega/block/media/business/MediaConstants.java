@@ -43,7 +43,6 @@ public class MediaConstants {
 
   public static final String MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME = "me_prop_in_sess_n";
   public static final String FILE_IN_SESSION_PARAMETER_NAME = "me_file_in_sess_n";
-  public static final String PARENT_SUFFIX = "_parent";
   public static final String MEDIA_FOLDER_NAME_PARAMETER_NAME = "me_fol_n";
 
   public static final String MEDIA_ID_IN_SESSION = "me_id_in_sess";
