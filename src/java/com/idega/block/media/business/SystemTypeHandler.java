@@ -30,7 +30,7 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
     ContentViewer listView = null;
     try {
 
-      ICFile file = this.getCachedFileInfo(icFileId,iwc).getEntity();
+      ICFile file = (ICFile)this.getCachedFileInfo(icFileId,iwc).getEntity();
       Vector V = new Vector();
 
       //**@todo debug only do this if not a folder**/

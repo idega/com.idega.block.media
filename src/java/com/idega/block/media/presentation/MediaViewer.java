@@ -87,7 +87,7 @@ public class MediaViewer extends  Window {
 
             SystemTypeHandler handler = new SystemTypeHandler();
 
-            add(handler.getPresentationObject(file.getID()));
+            add(handler.getPresentationObject(file.getID(),iwc));
 
 
           }
