@@ -7,7 +7,6 @@ import com.idega.core.file.data.ICFile;
 import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.AbstractChooser;
-import com.idega.presentation.ui.Form;
 
 /**
  * Title: com.idega.block.media.presentation.FileChooser
