@@ -453,7 +453,7 @@ public class MediaBusiness {
 
 
   public static ICFile saveMediaToDBUploadFolder(UploadFile uploadFile, IWContext iwc){
-    return saveMediaToDB(uploadFile, -1, iwc);
+    return saveMediaToDB(uploadFile, 0, iwc);
   }
 
 
