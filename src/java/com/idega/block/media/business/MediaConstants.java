@@ -19,6 +19,7 @@ public class MediaConstants {
   public static final String MEDIA_ACTION_SAVE = "media_action_save";
   public static final String MEDIA_ACTION_DELETE = "media_action_delete";
   public static final String MEDIA_ACTION_DELETE_CONFIRM = "media_action_delete_confirm";
+  public static final String MEDIA_ACTION_UPLOAD = "media_action_upload";
 
 
   public static final String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";

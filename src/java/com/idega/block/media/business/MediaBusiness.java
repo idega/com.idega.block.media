@@ -151,6 +151,32 @@ public class MediaBusiness  {
   }
 
 
+  public static MediaProperties uploadToDiskAndGetMediaProperties(IWContext iwc){
+    MediaProperties mediaProps = null;
+    try {
+      mediaProps = MediaBusiness.doUpload(iwc);
+      iwc.setSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME,mediaProps);
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+
+    return mediaProps;
+  }
+
+  public static FileTypeHandler getFileTypeHandler(IWContext iwc ,String mimeType){
+
+    IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+
+    ICMimeType mime = (ICMimeType) cm.getFromCachedTable(ICMimeType.class,mimeType);
+    ICFileType type = (ICFileType) cm.getFromCachedTable(ICFileType.class,Integer.toString(mime.getFileTypeID()));
+    ICFileTypeHandler typeHandler = (ICFileTypeHandler) cm.getFromCachedTable(ICFileTypeHandler.class,Integer.toString(type.getFileTypeHandlerID()));
+
+    FileTypeHandler handler = FileTypeHandler.getInstance(iwc.getApplication(),typeHandler.getHandlerClass());
+System.out.println("SELECTED HANDLER IS :"+typeHandler.getHandlerName());
+   return handler;
+  }
+
 
 }//end of class
 
