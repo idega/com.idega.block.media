@@ -129,7 +129,7 @@ public ImageInserter(Class WindowToOpen) {
 
       Image image=setImage;
 	if(image==null){
-	  if ( imageId == -1 ) {
+	  if ( imageId == -1) {
 	    image = iwrb.getImage("picture.gif",iwrb.getLocalizedString("new_image","Newimage"),138,90);
 	  }
 	  else {
