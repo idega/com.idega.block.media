@@ -1,6 +1,7 @@
 package com.idega.block.media.presentation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import com.idega.presentation.IWContext;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
+import com.idega.user.data.Group;
+import com.idega.user.data.User;
 
 /**
  * Title: com.idega.block.media.presentation.MediaTreeViewer
@@ -51,18 +54,40 @@ public class MediaTreeViewer extends Block {
     ICFileTree tree = new ICFileTree();
     tree.getLocation().setApplicationClass(MediaTreeViewer.class);
     tree.getLocation().setTarget("legacy_mediaviewer");
-
+    tree.setToShowRootNodeTreeIcons(true);
+	
+	
 //    Iterator it = publicRootNodeOld.getChildren();
 //    if(it!=null) tree.setFirstLevelNodes(it);
 	
 	List firstLevelNodes = new ArrayList();
 	if(publicRootNodeOld != null){
 		ICFileTreeNode node = new ICFileTreeNode(publicRootNodeOld);
+		node.setToCheckForLocalizationKey(true);
 		node.addVisibleMimeType(ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 		firstLevelNodes.add(node);
 	}
 	
 	// add user and group folders to publicRootNodeOld
+	
+	User user = iwc.getCurrentUser();
+	if(user != null){
+		ICFileTreeNode node = new ICFileTreeNode(MediaBusiness.getGroupHomeFolder(user,iwc));
+		node.setToCheckForLocalizationKey(true);
+		node.addVisibleMimeType(ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
+		firstLevelNodes.add(node);
+		
+		
+		List userGroups = user.getParentGroups();
+		Collection groupFolders = MediaBusiness.getGroupHomeFolders(userGroups,iwc);
+		for (Iterator iter = groupFolders.iterator(); iter.hasNext();) {
+			ICFile folder = (ICFile)iter.next();
+			node = new ICFileTreeNode(folder);
+			node.setToCheckForLocalizationKey(false);
+			node.addVisibleMimeType(ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
+			firstLevelNodes.add(node);
+		}
+	}
 	
 //	ICFileSystem fileSystem = ICFileSystemFactory.getFileSystem(iwc);
 	

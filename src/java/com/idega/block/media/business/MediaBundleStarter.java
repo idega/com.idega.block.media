@@ -20,12 +20,16 @@ import javax.ejb.FinderException;
 
 import com.idega.block.media.presentation.MediaToolbarButton;
 import com.idega.builder.app.IBApplication;
+import com.idega.core.data.ICApplicationBinding;
+import com.idega.core.data.ICApplicationBindingHome;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
 import com.idega.core.file.data.ICFileType;
 import com.idega.core.file.data.ICFileTypeHandler;
 import com.idega.core.file.data.ICMimeType;
 import com.idega.core.file.data.ICMimeTypeHome;
+import com.idega.data.IDOLookup;
+import com.idega.data.IDOStoreException;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWBundleStartable;
 import com.idega.idegaweb.IWCacheManager;
@@ -212,11 +216,25 @@ public class MediaBundleStarter implements IWBundleStartable {
 			try {
 				root = fileHome.findRootFolder();
 			} catch (FinderException e) {
-				ICFile file = fileHome.create();
-				file.setName(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_NAME);
-				file.setMimeType(com.idega.core.file.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
-				file.setDescription("This is the top level folder it shouldn't be visible");
-				file.store();
+				
+					ICFile file = fileHome.create();
+					file.setName(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_NAME);
+					file.setLocalizationKey(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_NAME);
+					file.setMimeType(com.idega.core.file.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
+					file.setDescription("This is the top level folder it shouldn't be visible");
+				try {
+					ICApplicationBinding b = ((ICApplicationBindingHome)IDOLookup.getHome(ICApplicationBinding.class)).create();
+					b.setKey(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_NAME);
+					b.setBindingType(com.idega.core.file.data.ICFileBMPBean.IC_APPLICATION_BINDING_TYPE_SYSTEM_FOLDER);
+					
+					file.store();
+					b.setValue(file.getPrimaryKey().toString());
+					b.store();
+				} catch (IDOStoreException e1) {
+					e1.printStackTrace();
+				} catch (EJBException e1) {
+					e1.printStackTrace();
+				}
 				root = file;
 			}
 

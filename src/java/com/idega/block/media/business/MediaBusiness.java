@@ -3,13 +3,18 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import com.idega.block.media.data.MediaProperties;
+import com.idega.business.IBOLookup;
+import com.idega.business.IBOLookupException;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
 import com.idega.core.file.data.ICFileType;
@@ -25,6 +30,8 @@ import com.idega.io.MemoryOutputStream;
 import com.idega.io.UploadFile;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.text.Link;
+import com.idega.user.business.GroupBusiness;
+import com.idega.user.data.Group;
 import com.idega.util.FileUtil;
 import com.idega.util.caching.Cache;
 /**
@@ -663,5 +670,35 @@ public class MediaBusiness {
 			bos.write(buff, 0, bytesRead);
 		}
 		return buffer;
+	}
+	
+	public static ICFile getGroupHomeFolder(Group group, IWApplicationContext iwac) throws IBOLookupException, CreateException{
+		ICFile folder = group.getHomeFolder();
+		if(group.getHomeFolder() == null){
+			GroupBusiness b = (GroupBusiness)IBOLookup.getServiceInstance(iwac,GroupBusiness.class);
+			folder = b.createGroupHomeFolder(group);
+		}
+		return folder;
+	}
+	
+	public static Collection getGroupHomeFolders(Collection groups, IWApplicationContext iwac) throws IBOLookupException, CreateException{
+		GroupBusiness b = null;
+		Collection toReturn = new ArrayList();
+		if(!groups.isEmpty()){
+			for (Iterator iter = groups.iterator(); iter.hasNext();) {
+				Group group = (Group)iter.next();
+				if(group != null){
+					ICFile folder = group.getHomeFolder();
+					if(folder == null){
+						if(b==null){
+							b=(GroupBusiness)IBOLookup.getServiceInstance(iwac,GroupBusiness.class);
+						}
+						folder = b.createGroupHomeFolder(group);
+					}
+					toReturn.add(folder);
+				}
+			}
+		}
+		return toReturn;
 	}
 }

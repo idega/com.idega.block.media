@@ -40,6 +40,7 @@ public class ICFileTreeNode implements ICTreeNode {
 	private String _orderBy=null;
 	private ICFileTreeNode _parent=null;
 	private List _children = null;
+	private boolean _checkForLocalizationKey = false;
 	
 	protected boolean _sortLeafs = true;
 	protected boolean _leafsFirst = false;
@@ -184,7 +185,12 @@ public class ICFileTreeNode implements ICTreeNode {
 	 * @see com.idega.core.data.ICTreeNode#getNodeName(java.util.Locale, com.idega.idegaweb.IWApplicationContext)
 	 */
 	public String getNodeName(Locale locale, IWApplicationContext iwac) {
-		return _file.getNodeName(locale,iwac);
+		if(_checkForLocalizationKey){
+			return _file.getNodeName(locale,iwac);
+		} else {
+			return _file.getNodeName(locale);
+		}
+		
 	}
 
 	/* (non-Javadoc)
@@ -239,6 +245,15 @@ public class ICFileTreeNode implements ICTreeNode {
 	
 	public void removeHiddenMimeTypes(Collection mimetypes){
 		_hiddenMimeTypes.removeAll(mimetypes);
+	}
+
+
+	public boolean checkForLocalizationKey() {
+		return _checkForLocalizationKey;
+	}
+
+	public void setToCheckForLocalizationKey(boolean value) {
+		_checkForLocalizationKey = value;
 	}
 
 }
