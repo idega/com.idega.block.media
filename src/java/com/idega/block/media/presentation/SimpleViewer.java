@@ -28,11 +28,12 @@ public class SimpleViewer extends PresentationObjectContainer{
 
     public void  main(IWContext iwc){
 
+
       String sImageId = getImageId(iwc);
       String sAction = iwc.getParameter(prmAction);
 
       if(sImageId != null){
-        saveImageId(iwc,sImageId);
+        //saveImageId(iwc,sImageId);
         if(sAction != null){
           if(sAction.equals(actSave)){
             saveImageId(iwc,sImageId);
@@ -60,6 +61,15 @@ public class SimpleViewer extends PresentationObjectContainer{
           }
         }
       }
+    }
+
+    public void checkParameterName(IWContext iwc){
+     if(iwc.getParameter(sessImageParameterName)!=null){
+      sessImageParameter = iwc.getParameter(sessImageParameterName);
+      iwc.setSessionAttribute(sessImageParameterName,sessImageParameter);
+    }
+    else if(iwc.getSessionAttribute(sessImageParameterName)!=null)
+      sessImageParameter = (String) iwc.getSessionAttribute(sessImageParameterName);
     }
 
     public boolean deleteImage(String sImageId){
