@@ -82,7 +82,7 @@ private IWResourceBundle iwrb;
       /*Saving to database or uploading a new file*/
       else{
         String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
-        if(action.equals(MediaConstants.MEDIA_ACTION_NEW)){
+        if(MediaConstants.MEDIA_ACTION_NEW.equals(action)){
           /*add a new file*/
           add(getMultiPartUploaderForm(iwc));
         }
@@ -91,7 +91,7 @@ private IWResourceBundle iwrb;
           if( mediaProps!=null ){
             iwc.removeSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME );
 
-            if( (action!=null) && action.equals(MediaConstants.MEDIA_ACTION_SAVE)  ){
+            if( MediaConstants.MEDIA_ACTION_SAVE.equals(action)  ){
               setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
               int pId = -1;
               String parentId = iwc.getParameter(fileInSessionParameter);
