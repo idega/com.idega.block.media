@@ -2,7 +2,7 @@ package com.idega.block.media;
 
 import com.idega.block.media.business.MediaFileSystemBean;
 import com.idega.block.media.presentation.FileChooser;
-import com.idega.block.media.presentation.ImageInserter;
+import com.idega.block.media.presentation.IBImageInserterImpl;
 import com.idega.builder.business.IBFileChooser;
 import com.idega.builder.business.IBImageInserter;
 import com.idega.business.IBOLookup;
@@ -26,7 +26,7 @@ public class IWBundleStarter implements IWBundleStartable {
 		
 		// implementors
 		ImplementorRepository repository = ImplementorRepository.getInstance();
-		repository.addImplementor(IBImageInserter.class, ImageInserter.class);
+		repository.addImplementor(IBImageInserter.class, IBImageInserterImpl.class);
 		repository.addImplementor(IBFileChooser.class, FileChooser.class);
 		
 		// services
