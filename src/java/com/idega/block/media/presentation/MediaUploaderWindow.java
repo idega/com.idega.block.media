@@ -38,7 +38,8 @@ private IWResourceBundle iwrb;
     }
 
 
-    public void main(IWContext iwc){
+    public void main(IWContext iwc) throws Exception{
+      super.main(iwc);
       iwrb = getResourceBundle(iwc);
       iwb = getBundle(iwc);
       fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
