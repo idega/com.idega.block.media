@@ -20,11 +20,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.*;
 import com.idega.servlet.IWCoreServlet;
 import com.idega.util.database.ConnectionBroker;
+import com.idega.idegaweb.IWMainApplication;
 
 public class MediaServlet extends IWCoreServlet{
 
 public static final String PARAMETER_NAME = "media_id";
 public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
+private boolean usesOldTables = false;
+private static IWMainApplication iwma;
 
 
 public static String getMediaURL(int iFileId){
@@ -47,6 +50,15 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
   Statement Stmt = null;
   ResultSet RS;
 
+  if( iwma == null ) iwma = IWMainApplication.getIWMainApplication(getServletContext());
+
+  String mmProp = iwma.getSettings().getProperty(MediaServlet.USES_OLD_TABLES);
+  if(mmProp!=null) {
+    usesOldTables = true;
+  }
+
+
+
   String contentType=null;
   String sql = "select file_value,mime_type from ic_file where ic_file_id=";
   String mediaId = request.getParameter(PARAMETER_NAME);
@@ -64,6 +76,9 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
       mediaId = request.getParameter("file_id");
       if(mediaId!=null) sql = "select file_value,content_type from file_ where file_id=";
      }
+  }
+  else if( usesOldTables ){//special case for the Image object
+    sql = "select image_value from image where image_id=";
   }
   //
 
