@@ -277,6 +277,24 @@ public ImageInserter(Class WindowToOpen) {
   public void setImageWidth(int imageWidth){
     this.imageWidth = imageWidth;
   }
+  
+	public void setHeight(String imageHeight){
+		try{
+		this.imageHeight = Integer.parseInt(imageHeight);
+		}
+		catch(NumberFormatException e){
+			e.printStackTrace();
+		}
+	}
+
+	public void setWidth(String imageWidth){
+		try{
+		this.imageWidth = Integer.parseInt(imageWidth);
+		}
+		catch(NumberFormatException e){
+			e.printStackTrace();
+		}
+	}
 
   public void setAdminURL(String adminURL) {
     this.adminURL=adminURL;
