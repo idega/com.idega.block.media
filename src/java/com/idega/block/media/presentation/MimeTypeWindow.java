@@ -2,7 +2,7 @@ package com.idega.block.media.presentation;
 
 import com.idega.presentation.ui.Window;
 import com.idega.block.media.business.MediaConstants;
-import com.idega.block.media.business.MediaProperties;
+import com.idega.block.media.data.MediaProperties;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.presentation.Table;
 import com.idega.presentation.ui.*;
@@ -33,7 +33,12 @@ public class MimeTypeWindow extends IWAdminWindow{
 private IWBundle iwb;
 private IWResourceBundle iwrb;
 
+  public MimeTypeWindow(){
+  }
+
   public void main(IWContext iwc){
+    setBackgroundColor(MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR);
+    setAllMargins(0);
     iwrb = getResourceBundle(iwc);
     iwb = getBundle(iwc);
     setBackgroundColor("white");

@@ -33,6 +33,9 @@ public class MediaFolderEditorWindow extends Window {
   }
 
   private void handleEvents(IWContext iwc) throws Exception {
+    setBackgroundColor(MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR);
+    setAllMargins(0);
+
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
     String mediaId = MediaBusiness.getMediaId(iwc);
 

@@ -2,7 +2,7 @@ package com.idega.block.media.presentation;
 
 import com.idega.presentation.ui.Window;
 import com.idega.block.media.business.MediaConstants;
-import com.idega.block.media.business.MediaProperties;
+import com.idega.block.media.data.MediaProperties;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.FileTypeHandler;
 import com.idega.presentation.ui.Form;
@@ -47,11 +47,12 @@ private IWResourceBundle iwrb;
     }
 
     public void main(IWContext iwc){
+      setBackgroundColor(MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR);
+      setAllMargins(0);
+
       iwrb = getResourceBundle(iwc);
       iwb = getBundle(iwc);
       fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
-      setBackgroundColor("white");
-      setTitle("idegaWeb uploader");
       handleEvents(iwc);
     }
 
@@ -76,25 +77,28 @@ private IWResourceBundle iwrb;
           submitNew.addParameter(fileInSessionParameter,(String)mediaProps.getParameterMap().get(fileInSessionParameter));
           submitNew.setAsImageButton(true);
 
-          T.add(submitNew,2,1);
+          T.add(submitNew,1,1);
 
 
           try {
-            FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,mediaProps.getContentType());
-            T.add(handler.getPresentationObject(mediaProps,iwc),1,2);
             T.add(submitSave,1,1);
+            T.add(new MediaViewer(mediaProps),1,2);
           }
           catch (Exception ex) {
+          /** @todo missing mimetype handling
+           *
+           */
+
             StringBuffer text = new StringBuffer();
             text.append(iwrb.getLocalizedString("uploader.window.nomimetype.firsthalf","The mimetype"));
             text.append(" ");
-            text.append(mediaProps.getContentType());
+            text.append(mediaProps.getMimeType());
             text.append(iwrb.getLocalizedString("uploader.window.nomimetype.secondhalf"," is not in the database."));
 
             Link mimeWindow = new Link(iwrb.getLocalizedString("uploader.window.mimewindowbutton","Add mimetype"));
             mimeWindow.setAsImageButton(true);
             mimeWindow.setWindowToOpen(MimeTypeWindow.class);
-            mimeWindow.addParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME,mediaProps.getContentType());
+            mimeWindow.addParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME,mediaProps.getMimeType());
             T.add(text.toString(),1,2);
             T.add(mimeWindow,2,2);
           }
@@ -113,7 +117,7 @@ private IWResourceBundle iwrb;
         if( (action!=null) && action.equals(MediaConstants.MEDIA_ACTION_SAVE)  ){
         /**@todo merge with mediaviewer???**/
           setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
-          add(MediaBusiness.saveMedia(iwc));//also deletes the file from disk and return a FileHandler made presentationobject
+          add(MediaBusiness.saveMedia(iwc));//also deletes the file from disk and return a MediaViewer
         }
         else{//add a new file
           add(getMultiPartUploaderForm(iwc));

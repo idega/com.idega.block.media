@@ -14,6 +14,7 @@ import com.idega.idegaweb.IWMainApplication;
 import com.idega.util.caching.Cache;
 import com.idega.presentation.IWContext;
 import com.idega.core.data.ICFile;
+import com.idega.block.media.data.MediaProperties;
 
 public abstract class FileTypeHandler extends java.lang.Object{
 

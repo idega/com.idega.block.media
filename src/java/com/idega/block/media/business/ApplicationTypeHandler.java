@@ -15,6 +15,7 @@ import java.util.Iterator;
 import com.idega.presentation.IWContext;
 import com.idega.util.caching.Cache;
 import com.idega.presentation.Image;
+import com.idega.block.media.data.MediaProperties;
 
 import com.idega.core.data.ICFile;
 public class ApplicationTypeHandler extends FileTypeHandler {

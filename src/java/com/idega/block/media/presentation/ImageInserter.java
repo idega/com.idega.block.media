@@ -17,7 +17,6 @@ import com.idega.util.*;
 import com.idega.presentation.text.*;
 import com.idega.presentation.*;
 import com.idega.presentation.ui.*;
-import com.idega.block.media.business.ImageBusiness;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
@@ -47,6 +46,10 @@ public final String sessionImageParameterName = MediaConstants.FILE_IN_SESSION_P
 private String prmUseBox = "insertImage";
 private boolean maintainSessionParameter = false;
 private boolean setWindowToReloadParent = false;
+
+public static int IM_BROWSER_WIDTH = 800;
+public static int IM_BROWSER_HEIGHT = 600;
+public static int IM_MAX_WIDTH = 140;
 
 
 private IWBundle iwb;
@@ -146,7 +149,7 @@ public ImageInserter(Class WindowToOpen) {
         imageAdmin.setWindowToOpen(windowClass);
       }
       else{
-        Window insertNewsImageWindow = new Window(nameOfWindow,ImageBusiness.IM_BROWSER_WIDTH,ImageBusiness.IM_BROWSER_HEIGHT,adminURL);
+        Window insertNewsImageWindow = new Window(nameOfWindow,IM_BROWSER_WIDTH,IM_BROWSER_HEIGHT,adminURL);
         imageAdmin = new Link(image,insertNewsImageWindow);
       }
 

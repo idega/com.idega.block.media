@@ -61,12 +61,16 @@ System.err.println(MediaBusiness.getMediaParameterNameInSession(iwc));
 
   public static class FileTree extends Page{
    public FileTree(){
+    setAllMargins(0);
+    setBackgroundColor(MediaConstants.MEDIA_TREE_VIEWER_BACKGROUND_COLOR);
     add(new MediaTreeViewer());
    }
   }
 
   public static class FileViewer extends Page{
    public FileViewer(){
+    setBackgroundColor(MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR);
+    setAllMargins(0);
     add(new MediaViewer());
    }
   }

@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Vector;
 import com.idega.util.caching.Cache;
 import com.idega.presentation.Image;
+import com.idega.block.media.data.MediaProperties;
 
 
 import com.idega.core.data.ICFile;

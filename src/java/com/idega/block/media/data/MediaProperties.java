@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class MediaProperties {
 
-  private String sName,sContentType,sRealPath,sWebPath;
+  private String sName,sMimeType,sRealPath,sWebPath;
   private Map parameterMap;
   private long lSize;
   private int iId;
@@ -21,7 +21,7 @@ public class MediaProperties {
 
   public MediaProperties(){
     this.sName = "";
-    this.sContentType = "";
+    this.sMimeType = "";
     this.sRealPath  = "";
     this.sWebPath = "";
     this.lSize = 0;
@@ -29,7 +29,7 @@ public class MediaProperties {
   }
   public MediaProperties(String name,String type,String realpath,String webpath ,long size){
     this.sName = name;
-    this.sContentType = type;
+    this.sMimeType = type;
     this.sRealPath  = realpath;
     this.sWebPath = webpath;
     this.lSize  = size;
@@ -46,11 +46,11 @@ public class MediaProperties {
   public void setName(String name){
     this.sName = name;
   }
-  public String getContentType(){
-    return this.sContentType;
+  public String getMimeType(){
+    return this.sMimeType;
   }
-  public void setContentType(String type){
-    this.sContentType = type;
+  public void setMimeType(String type){
+    this.sMimeType = type;
   }
   public String getRealPath(){
     return this.sRealPath;

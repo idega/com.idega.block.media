@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.Iterator;
 import com.idega.presentation.ui.TreeViewer;
 import com.idega.idegaweb.IWCacheManager;
-
-import com.idega.presentation.PresentationObjectContainer;
+import com.idega.presentation.Block;
 
 /**
  * Title: com.idega.block.media.presentation.MediaTreeViewer
@@ -26,17 +25,13 @@ import com.idega.presentation.PresentationObjectContainer;
  * @version 1.0
  */
 
-public class MediaTreeViewer extends PresentationObjectContainer {
+public class MediaTreeViewer extends Block {
 
   private String fileInSessionParameter = "";
   private IWCacheManager cm;
 
-
   public void  main(IWContext iwc){
     cm = iwc.getApplication().getIWCacheManager();
-
-    getParentPage().setAllMargins(0);
-
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
 
     Table T = new Table(1,2);
@@ -44,7 +39,7 @@ public class MediaTreeViewer extends PresentationObjectContainer {
     T.setCellpadding(2);
     T.setCellspacing(0);
 
-    T.add(formatText("BETA!"),1,1);
+    //T.add(formatText("BETA!"),1,1);
     Link proto = new Link(MediaViewer.class);
     proto.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
     ICFile rootNode = (ICFile)cm.getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
