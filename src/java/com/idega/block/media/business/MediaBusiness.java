@@ -47,13 +47,13 @@ public class MediaBusiness  {
       file.insert();
 
       if( (parentId==null) || (parentId.equals("-1")) ){
-        ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
-        rootNode.addChild(file);
+	ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
+	rootNode.addChild(file);
       }
       else {
-        int iParentId = Integer.parseInt(parentId);
-        ICFile rootNode = new ICFile(iParentId);
-        rootNode.addChild(file);
+	int iParentId = Integer.parseInt(parentId);
+	ICFile rootNode = new ICFile(iParentId);
+	rootNode.addChild(file);
       }
 
       id = file.getID();
@@ -89,44 +89,44 @@ public class MediaBusiness  {
     while ((part = mp.readNextPart()) != null) {
       String name = part.getName();
       if(part.isParam()){
-        ParamPart paramPart = (ParamPart) part;
-        parameters.put(paramPart.getName(),paramPart.getStringValue());
-        //System.out.println(" PARAMETERS "+paramPart.getName()+" : "+paramPart.getStringValue());
+	ParamPart paramPart = (ParamPart) part;
+	parameters.put(paramPart.getName(),paramPart.getStringValue());
+	//System.out.println(" PARAMETERS "+paramPart.getName()+" : "+paramPart.getStringValue());
       }
       else if (part.isFile()) {
-        // it's a file part
-        FilePart filePart = (FilePart) part;
-        String fileName = filePart.getFileName();
+	// it's a file part
+	FilePart filePart = (FilePart) part;
+	String fileName = filePart.getFileName();
 
-        if (fileName != null) {
-          pathToFile.append(fileName);
-          String filePath = pathToFile.toString();
-          StringBuffer webPath = new StringBuffer();
-          webPath.append('/');
-          webPath.append(IWCacheManager.IW_ROOT_CACHE_DIRECTORY);
-          webPath.append('/');
-          webPath.append(fileName);
+	if (fileName != null) {
+	  pathToFile.append(fileName);
+	  String filePath = pathToFile.toString();
+	  StringBuffer webPath = new StringBuffer();
+	  webPath.append('/');
+	  webPath.append(IWCacheManager.IW_ROOT_CACHE_DIRECTORY);
+	  webPath.append('/');
+	  webPath.append(fileName);
 
-          File file = new File(filePath);
-          int size = (int) filePart.writeTo(file);
+	  File file = new File(filePath);
+	  int size = (int) filePart.writeTo(file);
 
-        // Opera mimetype fix ( aron@idega.is )
-        String mimetype = filePart.getContentType();
-        if(mimetype!=null){
-          StringTokenizer tokenizer = new StringTokenizer(mimetype," ;:");
-          if(tokenizer.hasMoreTokens())
-            mimetype = tokenizer.nextToken();
-        }
+	// Opera mimetype fix ( aron@idega.is )
+	String mimetype = filePart.getContentType();
+	if(mimetype!=null){
+	  StringTokenizer tokenizer = new StringTokenizer(mimetype," ;:");
+	  if(tokenizer.hasMoreTokens())
+	    mimetype = tokenizer.nextToken();
+	}
 
       /*
-        System.out.println("MediaBusiness : File size"+size);
-        System.out.println("MediaBusiness : File filePath"+filePath);
-        System.out.println("MediaBusiness : File webPath"+webPath.toString());
-        System.out.println("MediaBusiness : File getContentType"+filePart.getContentType());
+	System.out.println("MediaBusiness : File size"+size);
+	System.out.println("MediaBusiness : File filePath"+filePath);
+	System.out.println("MediaBusiness : File webPath"+webPath.toString());
+	System.out.println("MediaBusiness : File getContentType"+filePart.getContentType());
        System.out.println("MediaBusiness : File fileName"+fileName);
-        */
-          mediaProps = new MediaProperties(fileName,mimetype,filePath,webPath.toString(),size,parameters);
-        }
+	*/
+	  mediaProps = new MediaProperties(fileName,mimetype,filePath,webPath.toString(),size,parameters);
+	}
       }
     }
 
@@ -189,6 +189,7 @@ public class MediaBusiness  {
     MediaProperties mediaProps = null;
     try {
       mediaProps = MediaBusiness.doUpload(iwc);
+      System.out.println("MediaBusiness : Uploading file with mimetype = "+mediaProps.getMimeType());
       iwc.setSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME,mediaProps);
     }
     catch (Exception ex) {
