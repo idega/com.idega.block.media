@@ -49,7 +49,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
   private IWBundle coreBundle;
 	private IWResourceBundle iwrb;
 	public SimpleFileChooser(Form form, String chooserName) {
-    form = form;
+    this.form = form;
     name = chooserName;
     form.setMultiPart();
     busy = new BusyBar("busy_uploading");
