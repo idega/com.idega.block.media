@@ -1,5 +1,7 @@
 package com.idega.block.media.business;
 
+import com.idega.idegaweb.IWMainApplication;
+import java.util.*;
 import java.sql.SQLException;
 import com.idega.block.media.data.MediaProperties;
 import com.idega.block.media.presentation.MediaViewer;
@@ -19,9 +21,6 @@ import com.oreilly.servlet.multipart.ParamPart;
 import com.oreilly.servlet.multipart.Part;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  *  Title: com.idega.block.media.business.MediaBusiness Description: The main
@@ -418,18 +417,6 @@ public class MediaBusiness {
 
     return file;
 
-  }
-
-
-  public static boolean deleteMedia(int mediaId){
-    try {
-      new ICFile(mediaId).delete();
-      return true;
-    }
-    catch (SQLException ex) {
-      ex.printStackTrace(System.err);
-      return false;
-    }
   }
 
   public static boolean moveMedia(ICFile media, ICFile newParent){
