@@ -269,7 +269,11 @@ public static void makeDefaultSizes(IWContext iwc){
       System.out.println("ImageBusiness XXXXX FileSize:"+input.available());
       ImageEntity image = new ImageEntity();
       image.setName(ip.getName());
-      image.setMimeType(ip.getContentType());
+      /**@todo make this non image specific*/
+
+
+    //    image.setMimeType(ip.getContentType());
+
       image.setFileValue(input);
       image.setFileSize((int)ip.getSize());
       image.insert();
