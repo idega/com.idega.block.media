@@ -56,8 +56,8 @@ public class MediaServlet extends IWCoreServlet{
     }
     else if(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS)!=null){
       try{
-      		IWContext iwc = new IWContext(request, response);
-      		iwc.setServletContext(request.getSession().getServletContext());
+      		IWContext iwc = new IWContext(request, response, getServletContext());
+      	
       		
         MediaWritable mw = (MediaWritable) Class.forName(IWMainApplication.decryptClassName(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS))).newInstance();
         mw.init(request,iwc);
