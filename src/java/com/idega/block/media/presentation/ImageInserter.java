@@ -131,7 +131,7 @@ public ImageInserter(Class WindowToOpen) {
           }
           image.setNoImageLink();
         }
-        image.setName("image");
+        image.setName("rugl");
         Page P = getParentPage();
         if(P!=null){
           Script S = P.getAssociatedScript();
