@@ -19,6 +19,9 @@ import com.idega.idegaweb.IWCacheManager;
 import com.idega.block.media.presentation.*;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.text.*;
+import com.idega.io.UploadFile;
+import com.idega.block.media.servlet.MediaServlet;
+import com.idega.idegaweb.IWMainApplication;
 
 /**
  * Title: com.idega.block.media.business.MediaBusiness
@@ -69,69 +72,142 @@ public class MediaBusiness  {
 
   }
 
+  /**
+   * @deprecated : tempImplementation
+   * @param uplaodFile
+   * @param iwc
+   * @return
+   */
+  public static ICFile SaveMediaToDB(UploadFile uplaodFile, IWContext iwc){
+    String parentId = getMediaId(iwc);
+    ICFile file = null;
+    int id = -1;
+    try{
+      FileInputStream input = new FileInputStream(uplaodFile.getRealPath());
+      file = new ICFile();
+      file.setName(uplaodFile.getName());
+      file.setMimeType(uplaodFile.getMimeType() );
+
+      System.out.println("MIMETYPE: "+uplaodFile.getMimeType());
+
+      file.setFileValue(input);
+      file.setFileSize((int)uplaodFile.getSize());
+      file.insert();
+
+      if( (parentId==null) || (parentId.equals("-1")) ){
+        ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
+        rootNode.addChild(file);
+      }
+      else {
+        int iParentId = Integer.parseInt(parentId);
+        ICFile rootNode = new ICFile(iParentId);
+        rootNode.addChild(file);
+      }
+
+      id = file.getID();
+      uplaodFile.setId(id);
+    }
+    catch(Exception e){
+      e.printStackTrace(System.err);
+      uplaodFile.setId(-1);
+      return file;
+    }
+
+    return file;
+
+  }
+
+
   public static MediaProperties doUpload(IWContext iwc) throws Exception{
-    String sep = FileUtil.getFileSeparator();
-    StringBuffer pathToFile = new StringBuffer();
-    pathToFile.append(iwc.getApplication().getApplicationRealPath());
-    pathToFile.append(IWCacheManager.IW_ROOT_CACHE_DIRECTORY);
-    pathToFile.append(sep);
-
-    FileUtil.createFolder(pathToFile.toString());
-
     MediaProperties  mediaProps = null;
 
-    MultipartParser mp = new MultipartParser(iwc.getRequest(),MediaConstants.FILE_UPLOAD_MAXIMUM_SIZE);/**@todo the maximum size should be flexible could just match the filesiz we have? or don't we**/
-    Part part;
-    File dir = null;
-    String value = null;
     HashMap parameters = new HashMap();
 
-    while ((part = mp.readNextPart()) != null) {
-      String name = part.getName();
-      if(part.isParam()){
-	ParamPart paramPart = (ParamPart) part;
-	parameters.put(paramPart.getName(),paramPart.getStringValue());
-	//System.out.println(" PARAMETERS "+paramPart.getName()+" : "+paramPart.getStringValue());
-      }
-      else if (part.isFile()) {
-	// it's a file part
-	FilePart filePart = (FilePart) part;
-	String fileName = filePart.getFileName();
-
-	if (fileName != null) {
-	  pathToFile.append(fileName);
-	  String filePath = pathToFile.toString();
-	  StringBuffer webPath = new StringBuffer();
-	  webPath.append('/');
-	  webPath.append(IWCacheManager.IW_ROOT_CACHE_DIRECTORY);
-	  webPath.append('/');
-	  webPath.append(fileName);
-
-	  File file = new File(filePath);
-	  int size = (int) filePart.writeTo(file);
-
-	// Opera mimetype fix ( aron@idega.is )
-	String mimetype = filePart.getContentType();
-	if(mimetype!=null){
-	  StringTokenizer tokenizer = new StringTokenizer(mimetype," ;:");
-	  if(tokenizer.hasMoreTokens())
-	    mimetype = tokenizer.nextToken();
-	}
-
-      /*
-	System.out.println("MediaBusiness : File size"+size);
-	System.out.println("MediaBusiness : File filePath"+filePath);
-	System.out.println("MediaBusiness : File webPath"+webPath.toString());
-	System.out.println("MediaBusiness : File getContentType"+filePart.getContentType());
-       System.out.println("MediaBusiness : File fileName"+fileName);
-	*/
-	  mediaProps = new MediaProperties(fileName,mimetype,filePath,webPath.toString(),size,parameters);
-	}
+    Enumeration enum = iwc.getParameterNames();
+    if(enum != null){
+      while (enum.hasMoreElements()) {
+        String name = (String)enum.nextElement();
+        String value = iwc.getParameter(name);
+        if(value != null){
+          parameters.put(name,value);
+        }
       }
     }
 
+    UploadFile file = iwc.getUploadedFile();
+
+    if(file != null){
+      mediaProps = new MediaProperties(file.getName(),file.getMimeType(),file.getRealPath(),file.getWebPath(),(int)file.getSize(),parameters);
+    }
+
+
     return mediaProps;
-}
+  }
+
+
+//  public static MediaProperties doUpload(IWContext iwc) throws Exception{
+//    String sep = FileUtil.getFileSeparator();
+//    StringBuffer pathToFile = new StringBuffer();
+//    pathToFile.append(iwc.getApplication().getApplicationRealPath());
+//    pathToFile.append(IWCacheManager.IW_ROOT_CACHE_DIRECTORY);
+//    pathToFile.append(sep);
+//
+//    FileUtil.createFolder(pathToFile.toString());
+//
+//    MediaProperties  mediaProps = null;
+//
+//    MultipartParser mp = new MultipartParser(iwc.getRequest(),MediaConstants.FILE_UPLOAD_MAXIMUM_SIZE);/**@todo the maximum size should be flexible could just match the filesiz we have? or don't we**/
+//    Part part;
+//    File dir = null;
+//    String value = null;
+//    HashMap parameters = new HashMap();
+//
+//    while ((part = mp.readNextPart()) != null) {
+//      String name = part.getName();
+//      if(part.isParam()){
+//	ParamPart paramPart = (ParamPart) part;
+//	parameters.put(paramPart.getName(),paramPart.getStringValue());
+//	//System.out.println(" PARAMETERS "+paramPart.getName()+" : "+paramPart.getStringValue());
+//      }
+//      else if (part.isFile()) {
+//	// it's a file part
+//	FilePart filePart = (FilePart) part;
+//	String fileName = filePart.getFileName();
+//
+//	if (fileName != null) {
+//	  pathToFile.append(fileName);
+//	  String filePath = pathToFile.toString();
+//	  StringBuffer webPath = new StringBuffer();
+//	  webPath.append('/');
+//	  webPath.append(IWCacheManager.IW_ROOT_CACHE_DIRECTORY);
+//	  webPath.append('/');
+//	  webPath.append(fileName);
+//
+//	  File file = new File(filePath);
+//	  int size = (int) filePart.writeTo(file);
+//
+//	// Opera mimetype fix ( aron@idega.is )
+//	String mimetype = filePart.getContentType();
+//	if(mimetype!=null){
+//	  StringTokenizer tokenizer = new StringTokenizer(mimetype," ;:");
+//	  if(tokenizer.hasMoreTokens())
+//	    mimetype = tokenizer.nextToken();
+//	}
+//
+//      /*
+//	System.out.println("MediaBusiness : File size"+size);
+//	System.out.println("MediaBusiness : File filePath"+filePath);
+//	System.out.println("MediaBusiness : File webPath"+webPath.toString());
+//	System.out.println("MediaBusiness : File getContentType"+filePart.getContentType());
+//       System.out.println("MediaBusiness : File fileName"+fileName);
+//	*/
+//	  mediaProps = new MediaProperties(fileName,mimetype,filePath,webPath.toString(),size,parameters);
+//	}
+//      }
+//    }
+//
+//    return mediaProps;
+//}
 
 
 
@@ -309,10 +385,96 @@ public class MediaBusiness  {
   public static boolean isFolder(ICFile file){
    if(file.getMimeType().equals(ICMimeType.IC_MIME_TYPE_FOLDER)) return true;
    else return false;
- }
+  }
 
   public static boolean reloadOnClose(IWContext iwc){
     if(iwc.getParameter(MediaConstants.MEDIA_ACTION_RELOAD)!=null ) return true;
     else return false;
- }
+  }
+
+  public static boolean deleteMedia(int mediaId){
+    try {
+      new ICFile(mediaId).delete();
+      return true;
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace(System.err);
+      return false;
+    }
+  }
+
+  public static boolean moveMedia(ICFile media, ICFile newParent){
+    try {
+      ICFile currentParent = (ICFile)media.getParentEntity();
+      if(currentParent != null && currentParent.getID() != -1){
+        currentParent.removeChild(media);
+      }
+      newParent.addChild(media);
+      return true;
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace(System.err);
+      return false;
+    }
+  }
+
+  public static boolean moveMedia(int mediaId, int newParentId){
+    try {
+      ICFile media = new ICFile(mediaId);
+      ICFile newParent = new ICFile(newParentId);
+      return moveMedia(media,newParent);
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace(System.err);
+      return false;
+    }
+  }
+
+
+
+
+  public static String getMediaURL(ICFile file) {
+    if( (file!=null) && (file.getID()!=-1) ){
+      StringBuffer url = new StringBuffer();
+      url.append(IWMainApplication.MEDIA_SERVLET_URL);
+      if(!IWMainApplication.MEDIA_SERVLET_URL.endsWith("/")){
+        url.append('/');
+      }
+      String name = file.getName();
+      if(name != null && name.length() > 0){
+        int indexOfDot = name.indexOf(".");
+        if(indexOfDot != -1){
+          url.append(name.substring(0,indexOfDot));
+        } else {
+          url.append(name);
+        }
+      } else {
+        url.append(file.getID());
+        url.append("media");
+      }
+      url.append('?');
+      url.append(com.idega.block.media.servlet.MediaServlet.PARAMETER_NAME);
+      url.append('=');
+      url.append(file.getID());
+
+      return url.toString();
+    }
+    return null;
+  }
+
+  public static String getMediaURL(int fileID) {
+    ICFile file = null;
+    try {
+      file = new ICFile(fileID);
+    }
+    catch (Exception e) {
+      file = null;
+    }
+    return getMediaURL(file);
+  }
+
+
+
+
+
 }//end of class
