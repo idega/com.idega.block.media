@@ -93,7 +93,6 @@ public ImageInserter(Class WindowToOpen) {
 
   public void main(IWContext iwc)throws Exception{
       this.empty();
-
       iwb = getBundle(iwc);
       iwrb = getResourceBundle(iwc);
 
@@ -153,8 +152,8 @@ public ImageInserter(Class WindowToOpen) {
         imageAdmin.addParameter(SimpleChooserWindow.prmReloadParent,"true");
       imageAdmin.addParameter("submit","new");
       imageAdmin.addParameter(sessionImageParameterName,imSessionImageName);
-      imageAdmin.addParameter("image_name",image.getName());
-      System.err.println(imSessionImageName);
+      //imageAdmin.addParameter("image_name",image.getName());
+      //System.err.println(imSessionImageName);
       String sImageId = imageId > 0 ?String.valueOf(imageId):"";
       if ( imageId != -1 )
         imageAdmin.addParameter(imSessionImageName,imageId);
@@ -209,7 +208,7 @@ public ImageInserter(Class WindowToOpen) {
     function.append("len = document.forms[0].length \n \t");
     function.append("for(i=0; i<len; i++){ \n \t \t");
     function.append("if(document.forms[0].elements[i].name == elementname.toString()){ \n\t\t ");
-    function.append("return i; \n \t \t} \n  \t} \n }");
+    function.append("return i; \n \t \t} \n  \t} \n }\n");
 
     return function.toString();
   }
