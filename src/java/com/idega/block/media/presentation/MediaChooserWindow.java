@@ -35,9 +35,7 @@ import com.idega.block.media.business.MediaConstants;
     public void  displaySelection(IWContext iwc){
       iwb = getBundle(iwc);
       MediaChooser SC = new MediaChooser();
-      SC.setToIncludeLinks(false);
       add(SC);
-      addHeaderObject(SC.getLinkTable(iwb));
       setTitle("Media chooser");
       if(iwc.getParameter(prmReloadParent )!= null)
         setParentToReload();

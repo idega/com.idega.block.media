@@ -15,6 +15,9 @@ import com.idega.core.data.ICMimeType;
 import com.idega.block.media.business.MediaProperties;
 import com.idega.util.FileUtil;
 import com.idega.idegaweb.IWCacheManager;
+import com.idega.block.media.presentation.*;
+import com.idega.presentation.PresentationObject;
+import com.idega.presentation.text.*;
 
 /**
  * Title: com.idega.block.media.business.MediaBusiness
@@ -27,6 +30,7 @@ import com.idega.idegaweb.IWCacheManager;
 
 
 public class MediaBusiness  {
+
 
   public static int SaveMediaToDB(MediaProperties mediaProps, IWContext iwc){
 
@@ -136,7 +140,7 @@ public class MediaBusiness  {
   public static String getMediaId(IWContext iwc){
     String fileInSessionParameter = getMediaParameterNameInSession(iwc);
 
-    String id = "-1";
+    String id = null;
     if(iwc.getParameter(fileInSessionParameter)!=null){
       id = iwc.getParameter(fileInSessionParameter);
       //used for viewing the last thing used
@@ -178,21 +182,104 @@ public class MediaBusiness  {
   public static FileTypeHandler getFileTypeHandler(IWContext iwc ,String mimeType) throws NullPointerException{
 
     IWCacheManager cm = iwc.getApplication().getIWCacheManager();
-
     ICMimeType mime = (ICMimeType) cm.getFromCachedTable(ICMimeType.class,mimeType);
-
-    System.out.println("type id "+mimeType);
-
+    //System.out.println("type id "+mimeType);
     ICFileType type = (ICFileType) cm.getFromCachedTable(ICFileType.class,Integer.toString(mime.getFileTypeID()));
-
-    System.out.println("handler id : "+type.getFileTypeHandlerID());
+    //System.out.println("handler id : "+type.getFileTypeHandlerID());
     ICFileTypeHandler typeHandler = (ICFileTypeHandler) cm.getFromCachedTable(ICFileTypeHandler.class,Integer.toString(type.getFileTypeHandlerID()));
-
     FileTypeHandler handler = FileTypeHandler.getInstance(iwc.getApplication(),typeHandler.getHandlerClass());
-    System.out.println("SELECTED HANDLER IS : "+typeHandler.getHandlerName());
+    //System.out.println("SELECTED HANDLER IS : "+typeHandler.getHandlerName());
    return handler;
+
   }
 
 
+  //presentation helper stuff
+
+  public static Link getNewFileLink(){
+    Link L = (Link) MediaConstants.MEDIA_UPLOADER_LINK.clone();
+    L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_NEW);
+    L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+    return L;
+  }
+
+  public static Link getNewFolderLink(){
+    Link L = (Link) MediaConstants.MEDIA_FOLDER_EDITOR_LINK.clone();
+    L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_NEW);
+    L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+    return L;
+  }
+
+  public static Link getUseImageLink(){
+    Link L = (Link) MediaConstants.MEDIA_VIEWER_LINK.clone();
+    L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
+    L.setOnClick(getSaveImageFunctionName());
+    L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+    return L;
+  }
+
+  public static Link getUseFileLink(){
+    Link L = (Link) MediaConstants.MEDIA_VIEWER_LINK.clone();
+    L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
+    L.setOnClick(getSaveImageFunctionName());
+    L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+    return L;
+  }
+
+  public static Link getDeleteLink(){
+    Link L = (Link) MediaConstants.MEDIA_VIEWER_LINK.clone();
+    L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_DELETE);
+    L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+    return L;
+  }
+
+  public static Link getReloadLink(){
+    Link L = (Link) MediaConstants.MEDIA_TREE_VIEWER_LINK.clone();
+    L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_RELOAD);
+    L.setTarget(MediaConstants.TARGET_MEDIA_TREE);
+    return L;
+  }
+
+  public static String getSaveImageFunctionName(){
+    return MediaConstants.SAVE_IMAGE_FUNCTION_NAME;
+  }
+
+  public static String getSaveImageFunction(){
+    if( MediaConstants.IMAGE_SAVE_JS_FUNCTION == null ){
+      StringBuffer function = new StringBuffer("");
+      function.append(" var iImageId = -1 ; \n");
+      function.append("function "+getSaveImageFunctionName()+" {\n \t");
+      function.append("top.window.opener.setImageId(iImageId) ; \n \t");
+      function.append("top.window.close(); \n }");
+      MediaConstants.IMAGE_SAVE_JS_FUNCTION = function.toString();
+    }
+
+    return MediaConstants.IMAGE_SAVE_JS_FUNCTION;
+
+  }
+
+  public static String getFunction(int id){
+    return "setImageId("+id+")";
+  }
+
+  public static String getImageChangeJSFunction(String imageName){
+    if( MediaConstants.IMAGE_CHANGE_JS_FUNCTION == null ){
+
+      StringBuffer function = new StringBuffer("");//var imageName = \"rugl\"; \n");
+      function.append("function setImageId(imageId,imagename) { \n \t");
+      function.append("if (document.images) { \n \t\t");
+      function.append("document.images['im'+imagename].src = \"/servlet/MediaServlet/\"+imageId+\"media?media_id=\"+imageId; \n\t}\n\t");
+      function.append("document.forms[0].elements[getElementIndex(imagename)].value = imageId \n}\n");
+      function.append("function getElementIndex(elementname){ \n \t");
+      function.append("len = document.forms[0].length \n \t");
+      function.append("for(i=0; i<len; i++){ \n \t \t");
+      function.append("if(document.forms[0].elements[i].name == elementname.toString()){ \n\t\t ");
+      function.append("return i; \n \t \t} \n  \t} \n }\n");
+
+      MediaConstants.IMAGE_CHANGE_JS_FUNCTION = function.toString();
+    }
+
+    return MediaConstants.IMAGE_CHANGE_JS_FUNCTION;
+  }
 }//end of class
 

@@ -22,27 +22,8 @@ import com.idega.block.media.business.MediaBusiness;
 
     private String fileInSessionParameter = "ic_file_id";
 
-    private boolean includeLinks;
-
-    public void setToIncludeLinks(boolean includeLinks){
-      this.includeLinks = includeLinks;
-    }
-
     public String getBundleIdentifier(){
       return MediaConstants.IW_BUNDLE_IDENTIFIER ;
-    }
-
-    public static String getSaveImageFunctionName(){
-      return "saveImageId()";
-    }
-
-    public static String getSaveImageFunction(){
-      StringBuffer function = new StringBuffer("");
-      function.append(" var iImageId = -1 ; \n");
-      function.append("function "+getSaveImageFunctionName()+" {\n \t");
-      function.append("top.window.opener.setImageId(iImageId) ; \n \t");
-      function.append("top.window.close(); \n }");
-      return function.toString();
     }
 
     public void  main(IWContext iwc){
@@ -52,10 +33,6 @@ import com.idega.block.media.business.MediaBusiness;
 /**@todo make a FrameSet rather than IFrames**/
 
       Table Frame = new Table();
-
-
-
-
       Frame.setCellpadding(0);
       Frame.setCellspacing(0);
       IFrame ifList = new IFrame(MediaConstants.TARGET_MEDIA_TREE,MediaTreeViewer.class);
@@ -73,8 +50,6 @@ import com.idega.block.media.business.MediaBusiness;
       Frame.add(ifList,1,1);
       Frame.add(ifViewer,2,1);
       Frame.setBorderColor("#00FF00");
-      if(includeLinks)
-        Frame.add(getLinkTable(iwb),2,2);
 
       add(Frame);
     }
@@ -86,7 +61,7 @@ import com.idega.block.media.business.MediaBusiness;
     public String getSessionSaveParameterName(){
       return fileInSessionParameter;
     }
-
+/*
     public PresentationObject getLinkTable(IWBundle iwb){
       Table T = new Table();
 
@@ -120,39 +95,5 @@ import com.idega.block.media.business.MediaBusiness;
       T.add(btnReload,4,1);
 
       return T;
-    }
-
-    public Link getNewImageLink(PresentationObject mo){
-      Class C = MediaUploaderWindow.class;
-      Link L = new Link(mo,C);/*
-      L.addParameter("action","upload");
-      L.addParameter("submit","new");*/
-      L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
-      return L;
-    }
-
-    public Link getSaveLink(PresentationObject mo){
-      Class C = MediaViewer.class;
-      Link L = new Link(mo,C);
-      L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
-      L.setOnClick(getSaveImageFunctionName());
-      L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
-      return L;
-    }
-
-    public Link getDeleteLink(PresentationObject mo){
-      Class C = MediaViewer.class;
-      Link L = new Link(mo,C);
-      L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_DELETE);
-      L.setOnClick("top.setTimeout('top.frames.lister.location.reload()',150)");
-      L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
-      return L;
-    }
-
-    public Link getReloadLink(PresentationObject mo){
-      Class C = MediaTreeViewer.class;
-      Link L = new Link(mo,C);
-      L.setTarget(MediaConstants.TARGET_MEDIA_TREE);
-      return L;
-    }
+    }*/
 }

@@ -11,6 +11,7 @@ import com.idega.block.media.business.MediaConstants;
 import com.idega.block.media.business.MediaBusiness;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Iterator;
 import com.idega.presentation.ui.TreeViewer;
 import com.idega.idegaweb.IWCacheManager;
 
@@ -42,47 +43,46 @@ public class MediaTreeViewer extends PresentationObjectContainer {
     T.setWidth("100%");
     T.setCellpadding(2);
     T.setCellspacing(0);
-    //        T.setHorizontalZebraColored("#CBCFD3","#ECEEF0");
-    //T.add(formatText(new idegaTimestamp(file.getCreationDate() ).getISLDate()),2,row);
-    //getMediaLink(file,MediaConstants.TARGET_MEDIA_VIEWER),1,row);
 
     T.add(formatText("BETA!"),1,1);
-    Link proto = new Link("",MediaViewer.class);
+    Link proto = new Link(MediaViewer.class);
     proto.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
     ICFile rootNode = (ICFile)cm.getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
 
     ICFileTree tree = new ICFileTree();
-    tree.setRootNode(rootNode);
+
+    tree.setFirstLevelNodes(rootNode.getChildren());
+
     tree.setNodeActionParameter(fileInSessionParameter);
     tree.setFileLinkPrototype(proto);
-    tree.setUI(tree._UI_MAC);
 
-    //viewer.setLinkProtototype(proto);
-
+    tree.setFolderLinkPrototype(proto);
 
 
-    //viewer.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
-
+    //tree.setUI(tree._UI_MAC);
 
     T.add(tree,1,2);
-//    viewer.setToMaintainParameter(fileInSessionParameter,file.getID());
-/*
-    viewer.setToMaintainParameter(SCRIPT_PREFIX_PARAMETER,iwc);
-    viewer.setToMaintainParameter(SCRIPT_SUFFIX_PARAMETER,iwc);
-    viewer.setToMaintainParameter(DISPLAYSTRING_PARAMETER_NAME,iwc);
-    viewer.setToMaintainParameter(VALUE_PARAMETER_NAME,iwc);
-
-    Link prototype = new Link();
-    viewer.setToUseOnClick();
-    //sets the hidden input and textinput of the choosing page
-    viewer.setOnClick(SELECT_FUNCTION_NAME+"("+viewer.ONCLICK_DEFAULT_NODE_NAME_PARAMETER_NAME+","+viewer.ONCLICK_DEFAULT_NODE_ID_PARAMETER_NAME+")");
-*/
 
 
     /**@todo: localize
     *
     */
 
+    Link upload = MediaBusiness.getNewFileLink();
+    upload.setText("New");
+    upload.setAsImageButton(true);
+    add(upload);
+
+
+    Link folder = MediaBusiness.getNewFolderLink();
+    folder.setText("folder");
+    folder.setAsImageButton(true);
+    add(folder);
+
+    Link reload = MediaBusiness.getReloadLink();
+    reload.setText("reload");
+    reload.setAsImageButton(true);
+    add(reload);
 
     add(T);
 
