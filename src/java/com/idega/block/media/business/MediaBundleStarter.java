@@ -91,7 +91,8 @@ public class MediaBundleStarter implements IWBundleStartable{
 
   private String[] vector = {
                             "FutureSplash vector animation (FutureWave)  spl","application/futuresplash",
-                            "Macromedia Shockwave (Macromedia)","application/x-director"
+                            "Macromedia Shockwave (Macromedia)","application/x-director",
+                            "Macromedia Shockwave (Macromedia)","application/x-shockwave-flash"
                             };
 
   private String[] video = {
