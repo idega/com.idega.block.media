@@ -21,6 +21,7 @@ import java.sql.*;
 import com.idega.servlet.IWCoreServlet;
 import com.idega.util.database.ConnectionBroker;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.presentation.ui.Parameter;
 
 public class MediaServlet extends IWCoreServlet{
 
@@ -28,6 +29,7 @@ public static final String PARAMETER_NAME = "media_id";
 public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
 private boolean usesOldTables = false;
 private static IWMainApplication iwma;
+public static boolean debug = false;
 
 
 public static String getMediaURL(int iFileId){
@@ -38,6 +40,10 @@ public static String getMediaURL(int iFileId){
     URIBuffer.append("=");
     URIBuffer.append(iFileId);
     return URIBuffer.toString();
+}
+
+public static Parameter getParameter(int FileId){
+	return new Parameter(PARAMETER_NAME,String.valueOf(FileId));
 }
 
 public void doGet( HttpServletRequest _req, HttpServletResponse _res) throws IOException{
@@ -88,11 +94,12 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
         conn = ConnectionBroker.getConnection();
 
         if( conn!=null ){
-          Stmt = conn.createStatement();
+					if(debug)
+						System.out.println("Mediaservlet debug:"+sql+mediaId);
 
+          Stmt = conn.createStatement();
           RS = Stmt.executeQuery(sql+mediaId);
 
-          //System.err.println("Mediaservlet debug:"+sql+mediaId);
           InputStream myInputStream = null;
 
          // while(RS.next()){
