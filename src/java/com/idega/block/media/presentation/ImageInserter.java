@@ -25,7 +25,7 @@ import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.HiddenInput;
 import com.idega.presentation.ui.Window;
 
-public class ImageInserter extends Block implements IBImageInserter {
+public class ImageInserter extends Block  {
 
 	private final static String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
 	private int imageId = -1;
