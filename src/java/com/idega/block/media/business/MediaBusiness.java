@@ -9,12 +9,10 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import com.idega.block.media.data.MediaProperties;
 import com.idega.business.IBOLookup;
-import com.idega.business.IBOLookupException;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
 import com.idega.core.file.data.ICFileType;
@@ -672,7 +670,7 @@ public class MediaBusiness {
 		return buffer;
 	}
 	
-	public static ICFile getGroupHomeFolder(Group group, IWApplicationContext iwac) throws IBOLookupException, CreateException{
+	public static ICFile getGroupHomeFolder(Group group, IWApplicationContext iwac) throws RemoteException, CreateException{
 		ICFile folder = group.getHomeFolder();
 		if(folder == null){
 			GroupBusiness b = (GroupBusiness)IBOLookup.getServiceInstance(iwac,GroupBusiness.class);
@@ -681,7 +679,7 @@ public class MediaBusiness {
 		return folder;
 	}
 	
-	public static Collection getGroupHomeFolders(Collection groups, IWApplicationContext iwac) throws IBOLookupException, CreateException{
+	public static Collection getGroupHomeFolders(Collection groups, IWApplicationContext iwac) throws RemoteException, CreateException{
 		GroupBusiness b = null;
 		Collection toReturn = new ArrayList();
 		if(!groups.isEmpty()){
