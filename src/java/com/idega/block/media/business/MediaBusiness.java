@@ -449,7 +449,11 @@ public class MediaBusiness {
 
 
   public static Cache getCachedFileInfo(int icFileId, IWMainApplication iwma){
-    return (Cache) iwma.getIWCacheManager().getCachedBlobObject(ICFile.class.getName(),icFileId,iwma);
+    return (Cache) getCachedFileInfo(icFileId,ICFile.class,iwma);
+  }
+
+  public static Cache getCachedFileInfo(int id, Class entityClass, IWMainApplication iwma){
+    return (Cache) iwma.getIWCacheManager().getCachedBlobObject(entityClass.getName(),id,iwma);
   }
 
   public static String getMediaURL(ICFile file, IWMainApplication iwma) {
@@ -458,6 +462,11 @@ public class MediaBusiness {
 
   public static String getMediaURL(int fileID, IWMainApplication iwma) {
     Cache cache = getCachedFileInfo(fileID,iwma);
+    return cache.getVirtualPathToFile();
+  }
+
+  public static String getMediaURL(int id, Class entityClass, IWMainApplication iwma) {
+    Cache cache = getCachedFileInfo(id,entityClass,iwma);
     return cache.getVirtualPathToFile();
   }
 

@@ -22,7 +22,7 @@ public class VideoTypeHandler extends FileTypeHandler {
     Quicktime qt = new Quicktime(cache.getVirtualPathToFile(),cache.getEntity().getName());
     qt.setWidth("100%");
     qt.setHeight("100%");
-    qt.setAUTOPLAY(true);
+    qt.setAUTOPLAY(false);
     return qt;
   }
 
@@ -30,7 +30,7 @@ public class VideoTypeHandler extends FileTypeHandler {
     Quicktime qt = new Quicktime(props.getWebPath(),props.getName());
     qt.setWidth("100%");
     qt.setHeight("100%");
-    qt.setAUTOPLAY(true);
+    qt.setAUTOPLAY(false);
     return qt;
   }
 
