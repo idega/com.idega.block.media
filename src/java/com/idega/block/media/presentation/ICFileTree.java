@@ -2,7 +2,6 @@ package com.idega.block.media.presentation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import com.idega.block.media.business.MediaBusiness;
