@@ -36,8 +36,9 @@ public class FileChooser extends AbstractChooser {
   public void main(IWContext iwc){
     IWBundle iwb = iwc.getApplication().getBundle(BuilderLogic.IW_BUNDLE_IDENTIFIER);
     setChooseButtonImage(iwb.getImage("open.gif","Choose file"));
+    addParameterToChooserLink(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME,MediaConstants.MEDIA_CHOOSER_FILE);
     if( getChooserValue()!= null ){
-      iwc.setSessionAttribute(MediaBusiness.getMediaParameterNameInSession(iwc),getChooserValue());
+      addParameterToChooserLink(MediaBusiness.getMediaParameterNameInSession(iwc),getChooserValue());
     }
   }
 

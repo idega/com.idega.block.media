@@ -19,7 +19,10 @@ public class MediaConstants {
   public static final String TARGET_MEDIA_TREE = "tree";
   public static final String TARGET_MEDIA_VIEWER = "viewer";
 
-  public static final String target3 = "buttons";
+  public static final String MEDIA_CHOOSER_PARAMETER_NAME = "me_ch";
+  public static final String MEDIA_CHOOSER_IMAGE = "me_im_ch";
+  public static final String MEDIA_CHOOSER_FILE = "me_f_ch";
+
 
   public static final String MEDIA_ACTION_VIEW = "me_act_v";
   public static final String MEDIA_ACTION_FOLDER_SAVE = "me_act_fs";

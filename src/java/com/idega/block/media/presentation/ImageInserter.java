@@ -10,18 +10,21 @@ package com.idega.block.media.presentation;
  *
  */
 
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import com.idega.util.*;
-import com.idega.presentation.text.*;
-import com.idega.presentation.*;
-import com.idega.presentation.ui.*;
-import com.idega.idegaweb.IWResourceBundle;
+import com.idega.block.media.business.MediaConstants;
 import com.idega.idegaweb.IWBundle;
-import com.idega.idegaweb.IWMainApplication;
+import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWUserContext;
-import com.idega.block.media.business.*;
+import com.idega.presentation.Block;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Image;
+import com.idega.presentation.Page;
+import com.idega.presentation.Script;
+import com.idega.presentation.Table;
+import com.idega.presentation.text.Link;
+import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.CheckBox;
+import com.idega.presentation.ui.HiddenInput;
+import com.idega.presentation.ui.Window;
 
 public class ImageInserter extends Block{
 
@@ -30,7 +33,6 @@ private int imageId = -1;
 private boolean nullImageIDDefault = false;
 private String imSessionImageName =null;
 private String sHiddenInputName = null;
-//private String adminURL = "/image/insertimage.jsp";
 private String adminURL = null;
 private String nameOfWindow;
 private String sUseBoxString;
@@ -97,7 +99,7 @@ public ImageInserter(Class WindowToOpen) {
 }
 
   public void main(IWContext iwc)throws Exception{
-      this.empty();
+      // this.empty(); why the hell was this set??
       iwb = getBundle(iwc);
       iwrb = getResourceBundle(iwc);
 
@@ -161,6 +163,9 @@ public ImageInserter(Class WindowToOpen) {
 
       imageAdmin.addParameter("submit","new");
       imageAdmin.addParameter(sessionImageParameterName,imSessionImageName);
+      //filter only images
+      imageAdmin.addParameter(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME,MediaConstants.MEDIA_CHOOSER_IMAGE);
+
       //imageAdmin.addParameter("image_name",image.getName());
       //System.err.println(imSessionImageName);
       String sImageId = imageId > 0 ?String.valueOf(imageId):"";

@@ -27,8 +27,10 @@ import com.idega.block.media.business.MediaBusiness;
 
   public MediaChooserWindow(){
     super();
+    //frameset fixes
     setEmpty();//for IWAdminWindow
     setOnlyScript(true);//for AbstractChooserWindow
+    //
     setWidth(640);
     setHeight(480);
     setResizable(true);
@@ -46,7 +48,12 @@ import com.idega.block.media.business.MediaBusiness;
 
   public void displaySelection(IWContext iwc){
     //MediaBusiness.getMediaParameterNameInSession(iwc);//store the parameter in session
-System.err.println(MediaBusiness.getMediaParameterNameInSession(iwc));
+    MediaBusiness.getMediaParameterNameInSession(iwc);
+    String chooserType = iwc.getParameter(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME);
+    if( chooserType!=null ){
+      iwc.setSessionAttribute(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME,chooserType);
+    }
+
     if( MediaBusiness.reloadOnClose(iwc) ){
       frame.setParentToReload();
     }

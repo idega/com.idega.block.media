@@ -20,6 +20,7 @@ import com.idega.util.caching.Cache;
  *  it can be extended by registering extra MediaToolbarItem(s) your bundle. The button<br>
  *  will get the icfile_id of the media from the db that is being viewed or a <br>
  *  MediaProperties object for an uploaded file.
+ *  @todo move some action to mediaviewerwindow?
  *
  * @author     Eirikur S. Hrafnsson eiki@idega.is
  * @created    16. mars 2002
@@ -39,6 +40,7 @@ public class MediaToolbar extends Block {
   private IWResourceBundle iwrb;
 
   private int mediaId = -1;
+  private boolean choosingImage = false;
 
 
   /**
@@ -77,8 +79,13 @@ public class MediaToolbar extends Block {
     //get the mediaId parameter name
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession( iwc );
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
+    //use for filtering
+    String chooserType = (String)iwc.getSessionAttribute(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME);
+    choosingImage = ( (chooserType!=null) && (chooserType.equals(MediaConstants.MEDIA_CHOOSER_IMAGE)) );
+
     if(action==null) action = "";
 
+//for extra toolbar items
 //    List extension = (List)iwc.getApplicationAttribute(TOOLBAR_ITEMS);
 //	if (extension != null) {
 //	  Iterator it = extension.iterator();
@@ -214,14 +221,17 @@ public class MediaToolbar extends Block {
     getAssociatedScript().addToFunction( ONCLICK_FUNCTION_NAME, "top." + AbstractChooserWindow.SELECT_FUNCTION_NAME + "(" + FILE_NAME_PARAMETER_NAME + "," + FILE_ID_PARAMETER_NAME + ")" );
 
     Link use = MediaBusiness.getUseImageLink();
-    use.setTextOnLink( "Use" );
+    use.setTextOnLink( iwrb.getLocalizedString("mv.use","use") );
     use.setAsImageButton( true );
     use.addParameter( fileInSessionParameter, mediaId );
-    //use.setURL( "#" );
-    //javascript
-    use.setOnClick( "top.window.opener.setImageId('" + file.getID() + "','" + fileInSessionParameter + "');"+ONCLICK_FUNCTION_NAME + "('" + file.getName() + "','" + file.getID() + "'); ");
 
-  //  use.setOnClick( ONCLICK_FUNCTION_NAME + "('" + file.getName() + "','" + file.getID() + "');top.window.close()" );
+    if(choosingImage){
+      use.setOnClick( "top.window.opener.setImageId('" + file.getID() + "','" + fileInSessionParameter + "');");
+    }
+    else{
+      use.setURL( "#" );
+      use.setOnClick( ONCLICK_FUNCTION_NAME + "('" + file.getName() + "','" + file.getID() + "');top.window.close()" );
+    }
 
     T.add( use, 1, 1 );
 

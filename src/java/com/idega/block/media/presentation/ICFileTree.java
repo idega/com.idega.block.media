@@ -1,5 +1,7 @@
 package com.idega.block.media.presentation;
 
+import com.idega.block.media.business.MediaBusiness;
+import java.util.*;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.ui.*;
 import com.idega.core.ICTreeNode;
@@ -11,15 +13,8 @@ import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.Image;
 import com.idega.core.data.ICMimeType;
 import com.idega.data.EntityFinder;
-
 import com.idega.core.data.ICFile;
-
-
 import java.sql.SQLException;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Iterator;
-import java.util.Collection;
 
 /**
  * Title:        IW Project
@@ -48,6 +43,8 @@ public class ICFileTree extends AbstractTreeViewer {
 
   private String nodeNameTarget = null;
   private String nodeActionPrm = null;
+
+  private ArrayList icFileTypeArrayList = null;
 
   public ICFileTree(){
     super();
@@ -93,35 +90,39 @@ public class ICFileTree extends AbstractTreeViewer {
   }
 
   public PresentationObject getObjectToAddToColumn(int colIndex, ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode) {
-    switch (colIndex) {
-      case 1:
-        return getIcon(node, iwc, nodeIsOpen, nodeHasChild, isRootNode );
-      case 2:
-        if(!node.isLeaf()){
-          Link l = this.getFolderLinkClone(node.getNodeName());
-          this.setLinkToOpenOrCloseNode(l,node,nodeIsOpen);
-          if( nodeNameTarget != null ){
-           l.setTarget(nodeNameTarget);
-          }
-          if( nodeActionPrm!=null ){
-            l.addParameter(nodeActionPrm,node.getNodeID());
-          }
+    if( filter(node) ){//return null if this
+      switch (colIndex) {
+        case 1:
+          return getIcon(node, iwc, nodeIsOpen, nodeHasChild, isRootNode );
+        case 2:
 
-          return l;
-        }
-        else {
-          Link l = this.getFileLinkClone(node.getNodeName());
-          this.setLinkToMaintainOpenAndClosedNodes(l);
+          if(!node.isLeaf()){
+            Link l = this.getFolderLinkClone(node.getNodeName());
 
-          if( nodeNameTarget != null ){
-           l.setTarget(nodeNameTarget);
-          }
-          if( nodeActionPrm!=null ){
-            l.addParameter(nodeActionPrm,node.getNodeID());
-          }
+            this.setLinkToOpenOrCloseNode(l,node,nodeIsOpen);
+            if( nodeNameTarget != null ){
+             l.setTarget(nodeNameTarget);
+            }
+            if( nodeActionPrm!=null ){
+              l.addParameter(nodeActionPrm,node.getNodeID());
+            }
 
-          return l;
-        }
+            return l;
+          }
+          else {
+            Link l = this.getFileLinkClone(node.getNodeName());
+            this.setLinkToMaintainOpenAndClosedNodes(l);
+
+            if( nodeNameTarget != null ){
+             l.setTarget(nodeNameTarget);
+            }
+            if( nodeActionPrm!=null ){
+              l.addParameter(nodeActionPrm,node.getNodeID());
+            }
+
+            return l;
+          }
+      }
     }
     return null;
   }
@@ -162,8 +163,8 @@ public class ICFileTree extends AbstractTreeViewer {
     _folderLink = link;
   }
 
-  protected void updateIconDimansions(){
-    super.updateIconDimansions();
+  protected void updateIconDimensions(){
+    super.updateIconDimensions();
 
     if(_icFileIcons != null && _icFileIcons.values() != null){
       Iterator iter = this._icFileIcons.values().iterator();
@@ -183,19 +184,13 @@ public class ICFileTree extends AbstractTreeViewer {
     if(obj == null){
       IWBundle bundle = this.getBundle(iwc);
       Hashtable tmp = new Hashtable();
-      List mimitypeList = null;
-      try {
-        mimitypeList = EntityFinder.findAll(ICMimeType.getStaticInstance(ICMimeType.class));
-      }
-      catch (SQLException ex) {
-        System.err.println("ICFIleIcons not initialized");
-        ex.printStackTrace();
-      }
 
-      if(mimitypeList != null){
-        Iterator iter = mimitypeList.iterator();
+      HashMap mimeMap = (HashMap)MediaBusiness.getICMimeTypeMap(iwc);
+
+      if(mimeMap != null){
+        Iterator iter = mimeMap.keySet().iterator();
         while (iter.hasNext()) {
-          ICMimeType item = (ICMimeType)iter.next();
+          ICMimeType item = (ICMimeType)(mimeMap.get((String)iter.next()));
           String mimeType = item.getMimeType();
           tmp.put(mimeType,bundle.getImage(_DEFAULT_ICON_PREFIX+getUI()+mimeType+_DEFAULT_ICON_SUFFIX));
         }
@@ -207,7 +202,7 @@ public class ICFileTree extends AbstractTreeViewer {
       this._icFileIcons = (Hashtable)obj;
     }
 
-    updateIconDimansions();
+    updateIconDimensions();
 
   }
 
@@ -241,4 +236,22 @@ public class ICFileTree extends AbstractTreeViewer {
 
   }
 */
+
+/**
+ *
+ * @param fileType An ArrayList of ICFileType entities
+ */
+  public void setICFileTypeFilterArrayList(ArrayList icFileTypeArrayList){
+    this.icFileTypeArrayList = icFileTypeArrayList;
+  }
+
+  protected boolean filter(ICTreeNode node){
+    //store mimetype result
+    //check in store
+    //else get type from cache
+    //return if not of filter type
+return true;
+    //return ((ICFile)node).getMimeType().equals(ICMimeType.IC_MIME_TYPE_FOLDER);
+  }
+
 }

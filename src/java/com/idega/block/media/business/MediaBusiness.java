@@ -240,11 +240,7 @@ public class MediaBusiness {
   public static FileTypeHandler getFileTypeHandler( IWContext iwc, String mimeType ) throws MissingMimeTypeException {
     try {
       IWCacheManager cm = iwc.getApplication().getIWCacheManager();
-      ICMimeType mime = ( ICMimeType ) cm.getFromCachedTable( ICMimeType.class, mimeType );
-      //System.out.println("type id "+mimeType);
-      ICFileType type = ( ICFileType ) cm.getFromCachedTable( ICFileType.class, Integer.toString( mime.getFileTypeID() ) );
-      //System.out.println("handler id : "+type.getFileTypeHandlerID());
-      ICFileTypeHandler typeHandler = ( ICFileTypeHandler ) cm.getFromCachedTable( ICFileTypeHandler.class, Integer.toString( type.getFileTypeHandlerID() ) );
+      ICFileTypeHandler typeHandler = ( ICFileTypeHandler ) cm.getFromCachedTable( ICFileTypeHandler.class, String.valueOf(getFileType(iwc,mimeType).getFileTypeHandlerID() ) );
       FileTypeHandler handler = FileTypeHandler.getInstance( iwc.getApplication(), typeHandler.getHandlerClass() );
       //System.out.println("SELECTED HANDLER IS : "+typeHandler.getHandlerName());
       return handler;
@@ -259,6 +255,27 @@ public class MediaBusiness {
 
   }
 
+  public static ICFileType getFileType( IWContext iwc, String mimeType ) throws MissingMimeTypeException {
+    try {
+      IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+      ICFileType type = ( ICFileType ) cm.getFromCachedTable( ICFileType.class,String.valueOf(getFileTypeId(iwc,mimeType)) );
+      return type;
+    }
+    catch( NullPointerException x ) {
+      throw new MissingMimeTypeException( "The mimetype is missing", mimeType );
+    }
+  }
+
+  public static int getFileTypeId( IWContext iwc, String mimeType ) throws MissingMimeTypeException {
+    try {
+      IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+      ICMimeType mime = ( ICMimeType ) cm.getFromCachedTable( ICMimeType.class, mimeType );
+      return mime.getFileTypeID();
+    }
+    catch( NullPointerException x ) {
+      throw new MissingMimeTypeException( "The mimetype is missing", mimeType );
+    }
+  }
 
    public static void saveMimeType(String mimeType, String description, int fileTypeId){
     try{
@@ -272,16 +289,39 @@ public class MediaBusiness {
     }
   }
 
-  /**
-   *  Gets the cached FileType entity Map
+
+    /**
+   *  Gets the cached getICMimeType entity Map
    * @todo implement
    * @param  iwc  The IWContext
-   * @return      The fileTypeMap value
+   * @return      The ICMimeTypeMap value
    */
-  public static Map getFileTypeMap( IWContext iwc ) {
-    return null;
+  public static Map getICMimeTypeMap( IWContext iwc ) {
+    IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+    return cm.getCachedTableMap(ICMimeType.class);
   }
 
+  /**
+   *  Gets the cached ICFileType entity Map
+   * @todo implement
+   * @param  iwc  The IWContext
+   * @return      The ICFileTypeMap value
+   */
+  public static Map getICFileTypeMap( IWContext iwc ) {
+    IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+    return cm.getCachedTableMap(ICFileType.class);
+  }
+
+    /**
+   *  Gets the cached ICFileTypeHandler entity Map
+   * @todo implement
+   * @param  iwc  The IWContext
+   * @return      The ICFileTypeHandlerMap value
+   */
+  public static Map getICFileTypeHandlerMap( IWContext iwc ) {
+    IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+    return cm.getCachedTableMap(ICFileTypeHandler.class);
+  }
 
 
   /**
