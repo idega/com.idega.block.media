@@ -70,7 +70,7 @@ System.err.println("Mediaservlet debug:"+sql+mediaId);
           InputStream myInputStream = null;
 
          // while(RS.next()){
-          if( RS.next() ){
+          if( (RS!=null) &&  (RS.next()) ){
             myInputStream = RS.getBinaryStream(1);
           // debug
            // contentType = RS.getString(2);
