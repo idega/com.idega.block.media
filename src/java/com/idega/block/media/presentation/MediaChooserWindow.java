@@ -31,7 +31,7 @@ import com.idega.presentation.ui.AbstractChooserWindow;
   public MediaChooserWindow(){
     super();
     //frameset fixes
-//    setEmpty();//for IWAdminWindow
+    setEmpty();//for IWAdminWindow
     setOnlyScript(true);//for AbstractChooserWindow
     //
     setWidth(640);
@@ -39,8 +39,7 @@ import com.idega.presentation.ui.AbstractChooserWindow;
     setResizable(true);
     
 		frame = new FrameSet();
-		
-		
+				
 		frame.add(Top.class);
 		frame.add(BottomFrameSet.class);
 		frame.setSpanPixels(1,50);
