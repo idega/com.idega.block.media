@@ -20,6 +20,7 @@ import com.idega.presentation.ui.*;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.idegaweb.IWUserContext;
 import com.idega.block.media.business.*;
 
 public class ImageInserter extends Block{
@@ -108,53 +109,53 @@ public ImageInserter(Class WindowToOpen) {
       //add(imSessionImageName + " "+imageSessionId);
 
       if ( imageSessionId != null ) {
-        imageId = Integer.parseInt(imageSessionId);
-        if(!maintainSessionParameter){
-          iwc.removeSessionAttribute(imSessionImageName);
-        }
+	imageId = Integer.parseInt(imageSessionId);
+	if(!maintainSessionParameter){
+	  iwc.removeSessionAttribute(imSessionImageName);
+	}
       }
 
 
       Image image=setImage;
-        if(image==null){
-          if ( imageId == -1 ) {
-            image = iwrb.getImage("picture.gif",iwrb.getLocalizedString("new_image","Newimage"),138,90);
-          }
-          else {
-            image = new Image(imageId);//,"rugl");
-          }
-          if( limitWidth ) {
-            image.setMaxImageWidth(this.maxImageWidth);
-          }
-          if(imageWidth > 0 ){
-            image.setWidth(imageWidth);
-          }
-          if(imageHeight > 0){
-            image.setHeight(imageHeight );
-          }
-          image.setNoImageLink();
-        }
-        image.setName("im"+imSessionImageName);
-        //System.err.println("image_name is "+image.getName());
-        Page P = getParentPage();
-        if(P!=null){
-          Script S = P.getAssociatedScript();
-          if(S!=null)
-            S.addFunction("imchange",getImageChangeJSFunction(image.getName()));
-        }
+	if(image==null){
+	  if ( imageId == -1 ) {
+	    image = iwrb.getImage("picture.gif",iwrb.getLocalizedString("new_image","Newimage"),138,90);
+	  }
+	  else {
+	    image = new Image(imageId);//,"rugl");
+	  }
+	  if( limitWidth ) {
+	    image.setMaxImageWidth(this.maxImageWidth);
+	  }
+	  if(imageWidth > 0 ){
+	    image.setWidth(imageWidth);
+	  }
+	  if(imageHeight > 0){
+	    image.setHeight(imageHeight );
+	  }
+	  image.setNoImageLink();
+	}
+	image.setName("im"+imSessionImageName);
+	//System.err.println("image_name is "+image.getName());
+	Page P = getParentPage();
+	if(P!=null){
+	  Script S = P.getAssociatedScript();
+	  if(S!=null)
+	    S.addFunction("imchange",getImageChangeJSFunction(image.getName()));
+	}
 
       Link imageAdmin = null;
       if(adminURL == null){
-        imageAdmin = new Link(image);
-        imageAdmin.setWindowToOpen(windowClass);
+	imageAdmin = new Link(image);
+	imageAdmin.setWindowToOpen(windowClass);
       }
       else{
-        Window insertNewsImageWindow = new Window(nameOfWindow,IM_BROWSER_WIDTH,IM_BROWSER_HEIGHT,adminURL);
-        imageAdmin = new Link(image,insertNewsImageWindow);
+	Window insertNewsImageWindow = new Window(nameOfWindow,IM_BROWSER_WIDTH,IM_BROWSER_HEIGHT,adminURL);
+	imageAdmin = new Link(image,insertNewsImageWindow);
       }
 
       if(setWindowToReloadParent){
-        imageAdmin.addParameter(MediaConstants.MEDIA_ACTION_RELOAD,"true");
+	imageAdmin.addParameter(MediaConstants.MEDIA_ACTION_RELOAD,"true");
       }
 
       imageAdmin.addParameter("submit","new");
@@ -163,40 +164,40 @@ public ImageInserter(Class WindowToOpen) {
       //System.err.println(imSessionImageName);
       String sImageId = imageId > 0 ?String.valueOf(imageId):"";
       if ( imageId != -1 )
-        imageAdmin.addParameter(imSessionImageName,imageId);
+	imageAdmin.addParameter(imSessionImageName,imageId);
 
 
       String stringImageID = null;
       if(nullImageIDDefault){
-        stringImageID = "";
+	stringImageID = "";
       }
       else{
-        stringImageID = Integer.toString(imageId);
+	stringImageID = Integer.toString(imageId);
       }
       HiddenInput hidden = new HiddenInput(sHiddenInputName,stringImageID);
-        hidden.keepStatusOnAction();
+	hidden.keepStatusOnAction();
       CheckBox insertImage = new CheckBox(prmUseBox,"Y");
-        insertImage.setChecked(selected);
+	insertImage.setChecked(selected);
 
       Text imageText = new Text(sUseBoxString+":&nbsp;");
-        imageText.setFontSize(1);
+	imageText.setFontSize(1);
 
       Table borderTable = new Table(1,1);
-        borderTable.setWidth("100%");
-        borderTable.setCellspacing(1);
-        borderTable.setCellpadding(0);
-        borderTable.setColor("#000000");
-        borderTable.add(imageAdmin);
+	borderTable.setWidth("100%");
+	borderTable.setCellspacing(1);
+	borderTable.setCellpadding(0);
+	borderTable.setColor("#000000");
+	borderTable.add(imageAdmin);
 
       Table imageTable = new Table(1,2);
-        imageTable.setAlignment(1,2,"right");
-        imageTable.add(borderTable,1,1);
-        if(hasUseBox){
-          imageTable.add(imageText,1,2);
-          imageTable.add(insertImage,1,2);
-        }
+	imageTable.setAlignment(1,2,"right");
+	imageTable.add(borderTable,1,1);
+	if(hasUseBox){
+	  imageTable.add(imageText,1,2);
+	  imageTable.add(insertImage,1,2);
+	}
 
-        imageTable.add(hidden,1,2);
+	imageTable.add(hidden,1,2);
 
       add(imageTable);
   }
@@ -305,5 +306,11 @@ public ImageInserter(Class WindowToOpen) {
   public void setNullImageIDDefault(){
     nullImageIDDefault=true;
   }
+
+  public String getBuilderName(IWUserContext iwc) {
+    return iwc.getApplicationContext().getApplication().getCoreBundle().getComponentName(Image.class,iwc.getCurrentLocale());
+  }
+
+
 
 }
