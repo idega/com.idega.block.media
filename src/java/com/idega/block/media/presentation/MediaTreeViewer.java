@@ -51,7 +51,8 @@ public class MediaTreeViewer extends PresentationObjectContainer {
 
     ICFileTree tree = new ICFileTree();
 
-    tree.setFirstLevelNodes(rootNode.getChildren());
+    Iterator it = rootNode.getChildren();
+    if(it!=null) tree.setFirstLevelNodes(it);
 
     tree.setNodeActionParameter(fileInSessionParameter);
     tree.setFileLinkPrototype(proto);
