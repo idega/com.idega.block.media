@@ -3,13 +3,12 @@ package com.idega.block.media.presentation;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.idegaweb.IWBundle;
-import com.idega.idegaweb.IWConstants;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.FrameSet;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Page;
 import com.idega.presentation.Table;
-import com.idega.presentation.ui.StyledAbstractChooserWindow;
+import com.idega.presentation.ui.AbstractChooserWindow;
 /**
  * Title: com.idega.block.media.presentation.MediaChooserWindow
  * Description: The frame window that displays the filesystem
@@ -20,7 +19,7 @@ import com.idega.presentation.ui.StyledAbstractChooserWindow;
  */
 
  //public class MediaChooserWindow extends FrameSet {
- public class MediaChooserWindow extends StyledAbstractChooserWindow {
+ public class MediaChooserWindow extends AbstractChooserWindow {
  	
 	private static final String IW_BUNDLE_IDENTIFIER = "com.idega.user";
 	
@@ -69,7 +68,7 @@ import com.idega.presentation.ui.StyledAbstractChooserWindow;
       frame.setParentToReload();
     }
 
-    add(frame,iwc);
+    add(frame);
   }
 
   public String getBundleIdentifier(){
