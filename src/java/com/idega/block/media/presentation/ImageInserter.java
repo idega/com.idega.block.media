@@ -9,7 +9,6 @@ package com.idega.block.media.presentation;
  */
 
 import com.idega.block.media.business.MediaConstants;
-import com.idega.builder.business.IBImageInserter;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWUserContext;
