@@ -51,6 +51,7 @@ private IWResourceBundle iwrb;
 
       /* Uploading and checking for a valid mimetype */
       if( iwc.isMultipartFormData() ){
+      	System.out.println("handling multipart form");
         MediaProperties mediaProps = MediaBusiness.uploadToDiskAndGetMediaProperties(iwc);
 
 
@@ -59,6 +60,9 @@ private IWResourceBundle iwrb;
           iwc.setSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME,mediaProps);
           try {
             /*this will throw an exection if the mimetype does not exist*/
+            // added by aron, or else the missingmimeTypeException is never thrown otherwise than runtime exception
+            MediaBusiness.getFileType(iwc,mediaProps.getMimeType());
+            
             viewUploadedMedia(mediaProps);
           }
           catch (MissingMimeTypeException ex) {

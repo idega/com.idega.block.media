@@ -75,6 +75,7 @@ private String mimeType = null;
     int fileTypeId = Integer.parseInt(iwc.getParameter(MediaConstants.MEDIA_FILE_TYPE_PARAMETER_NAME));
 
     try{
+    	System.out.println("storing new mimetype");
       ICMimeType mime = ((com.idega.core.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
       mime.setMimeTypeAndDescription(mimeType,mimeDescription);
       mime.setFileTypeId(fileTypeId);
@@ -118,8 +119,8 @@ private String mimeType = null;
     table.add(typemenu,2,3);
 
 
-    SubmitButton save = new SubmitButton(iwb.getImageButton(iwrb.getLocalizedString("mimetype.window.save","SAVE")),MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
-
+    SubmitButton save = new SubmitButton(iwb.getImageButton(iwrb.getLocalizedString("mimetype.window.save","SAVE")));
+	table.add(new HiddenInput(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE));
     Link close = new Link(iwrb.getLocalizedString("mimetype.window.close","CLOSE"));
     close.setOnClick("window.close()");
     close.setAsImageButton(true);
@@ -128,7 +129,6 @@ private String mimeType = null;
     table.add(save,2,4);
 
     form.add(table);
-
     add(form);
   }
 
