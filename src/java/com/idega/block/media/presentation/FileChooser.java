@@ -2,8 +2,8 @@ package com.idega.block.media.presentation;
 
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
+import com.idega.builder.business.BuilderConstants;
 import com.idega.builder.business.IBFileChooser;
-import com.idega.core.builder.business.BuilderConstants;
 import com.idega.core.file.data.ICFile;
 import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.IWContext;
