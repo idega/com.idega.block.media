@@ -19,7 +19,6 @@ import com.idega.presentation.IWContext;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
-import com.idega.user.data.Group;
 import com.idega.user.data.User;
 
 /**
