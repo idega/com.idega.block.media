@@ -11,6 +11,7 @@ import com.idega.core.data.ICFile;
 import com.idega.util.idegaTimestamp;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.block.media.business.MediaBusiness;
+import com.idega.block.media.business.SystemTypeHandler;
 import java.sql.*;
 import com.idega.block.media.servlet.MediaServlet;
 import com.idega.presentation.ui.AbstractChooserWindow;
@@ -78,6 +79,11 @@ public class MediaViewer extends  Window {
 
 
             add(T);
+
+            SystemTypeHandler handler = new SystemTypeHandler();
+
+            add(handler.getPresentationObject(file.getID()));
+
 
           }
           catch (SQLException ex) {
