@@ -1,6 +1,5 @@
 package com.idega.block.media.presentation;
 
-import com.idega.block.media.business.FileTypeHandler;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.block.media.business.MissingMimeTypeException;
@@ -60,7 +59,6 @@ private IWResourceBundle iwrb;
           iwc.setSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME,mediaProps);
           try {
             /*this will throw an exection if the mimetype does not exist*/
-            FileTypeHandler handler = MediaBusiness.getFileTypeHandler( iwc, mediaProps.getMimeType() );
             viewUploadedMedia(mediaProps);
           }
           catch (MissingMimeTypeException ex) {

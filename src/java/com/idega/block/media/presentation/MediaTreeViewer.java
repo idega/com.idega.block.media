@@ -33,10 +33,6 @@ public class MediaTreeViewer extends Block {
     cm = iwc.getApplication().getIWCacheManager();
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
 
-    //use for filtering
-    String chooserType = (String)iwc.getSessionAttribute(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME);
-
-
     Table T = new Table(1,2);
     T.setWidth("100%");
     T.setCellpadding(2);

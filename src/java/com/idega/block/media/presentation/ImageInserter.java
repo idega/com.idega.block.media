@@ -176,7 +176,6 @@ public ImageInserter(Class WindowToOpen) {
 
       //imageAdmin.addParameter("image_name",image.getName());
       //System.err.println(imSessionImageName);
-      String sImageId = imageId > 0 ?String.valueOf(imageId):"";
       if ( imageId != -1 )
 	imageAdmin.addParameter(imSessionImageName,imageId);
 

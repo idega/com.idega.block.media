@@ -424,9 +424,6 @@ public class MediaToolbar extends Block {
 
     ICFile file = ( ICFile ) cache.getEntity();
 
-    FileTypeHandler handler = MediaBusiness.getFileTypeHandler( iwc, file.getMimeType() );
-
-
 
 
 
