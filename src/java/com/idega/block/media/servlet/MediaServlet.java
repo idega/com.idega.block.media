@@ -108,7 +108,6 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
           if( (RS!=null) &&  (RS.next()) ){
             myInputStream = RS.getBinaryStream(1);
           // debug
-
            contentType = RS.getString(2);
           }
 
