@@ -1,6 +1,4 @@
-
 package com.idega.block.media.servlet;
-
 
 /**
  * Title: MediaServlet
@@ -24,169 +22,75 @@ import com.idega.servlet.IWCoreServlet;
 import com.idega.util.database.ConnectionBroker;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.presentation.ui.Parameter;
+import com.idega.block.media.servlet.MediaOutputWriter;
+import com.idega.io.MemoryFileBufferWriter;
+import com.idega.io.MediaWritable;
+
 
 public class MediaServlet extends IWCoreServlet{
 
-public static final String PARAMETER_NAME = "media_id";
-public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
-private boolean usesOldTables = false;
-private static IWMainApplication iwma;
-public static boolean debug = false;
+  public static final String PARAMETER_NAME = "media_id";
+  public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
+  private boolean usesOldTables = false;
+  private static IWMainApplication iwma;
+  public static boolean debug = false;
+
+  public final static String PRM_WRITABLE_CLASS = "wrcls";
+  public final static String PRM_SESSION_MEMORY_BUFFER = MemoryFileBufferWriter.PRM_SESSION_BUFFER;
 
 
-public static String getMediaURL(int iFileId){
-    StringBuffer URIBuffer = new StringBuffer(com.idega.idegaweb.IWMainApplication.MEDIA_SERVLET_URL);
-    URIBuffer.append(iFileId);
-    URIBuffer.append("media?");
-    URIBuffer.append(PARAMETER_NAME);
-    URIBuffer.append("=");
-    URIBuffer.append(iFileId);
-    return URIBuffer.toString();
-}
-
-public static Parameter getParameter(int FileId){
-	return new Parameter(PARAMETER_NAME,String.valueOf(FileId));
-}
-
-public void doGet( HttpServletRequest _req, HttpServletResponse _res) throws IOException{
-  doPost(_req,_res);
-}
-
-public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException{
-
-  Connection conn = null;
-  Statement Stmt = null;
-  ResultSet RS;
-
-  if( iwma == null ) iwma = IWMainApplication.getIWMainApplication(getServletContext());
-
-  String mmProp = iwma.getSettings().getProperty(MediaServlet.USES_OLD_TABLES);
-  if(mmProp!=null) {
-    usesOldTables = true;
+  public static String getMediaURL(int iFileId){
+      StringBuffer URIBuffer = new StringBuffer(com.idega.idegaweb.IWMainApplication.MEDIA_SERVLET_URL);
+      URIBuffer.append(iFileId);
+      URIBuffer.append("media?");
+      URIBuffer.append(PARAMETER_NAME);
+      URIBuffer.append("=");
+      URIBuffer.append(iFileId);
+      return URIBuffer.toString();
   }
 
-
-
-  String contentType=null;
-  String sql = "select file_value,mime_type from ic_file where ic_file_id=";
-  String mediaId = request.getParameter(PARAMETER_NAME);
-
-  /**@todo : remove temporary backward compatability when no longer needed
-   *
-   */
-  if( mediaId == null){
-     mediaId = request.getParameter("image_id");
-     if( mediaId != null){
-      //sql = "select image_value,content_type from image where image_id=";
-      sql = "select image_value from image where image_id=";
-     }
-     else{
-      mediaId = request.getParameter("file_id");
-      if(mediaId!=null) sql = "select file_value,content_type from file_ where file_id=";
-     }
+  public static Parameter getParameter(int FileId){
+    return new Parameter(PARAMETER_NAME,String.valueOf(FileId));
   }
-  else if( usesOldTables ){//special case for the Image object
-    sql = "select image_value from image where image_id=";
+
+  public void doGet( HttpServletRequest _req, HttpServletResponse _res) throws IOException{
+    doPost(_req,_res);
   }
-  //
 
-  try{
-    if( (mediaId!=null) && (!mediaId.equalsIgnoreCase("-1")) ){
+  public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException{
+    //////
+    java.util.Enumeration enum = request.getParameterNames();
+    System.err.println("media servlet usage");
+    while(enum.hasMoreElements()){
+      String name = (String) enum.nextElement();
+      System.err.println("prm: "+name+" val: "+request.getParameter(name));
+    }
+    System.err.println("media servlet usage");
 
-        conn = ConnectionBroker.getConnection();
+    //(((((
+    if( iwma == null )
+      iwma = IWMainApplication.getIWMainApplication(getServletContext());
 
-        if( conn!=null ){
-					if(debug)
-						System.out.println("Mediaservlet debug:"+sql+mediaId);
+    if(request.getParameter(PARAMETER_NAME)!=null || request.getParameter("image_id")!=null){
+      new MediaOutputWriter().doPost(request,response,iwma);
+    }
+    else if(request.getParameter(PRM_SESSION_MEMORY_BUFFER)!=null){
+      new MemoryFileBufferWriter().doPost(request,response);
+    }
+    else if(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS)!=null){
+      try{
+        System.err.println("reporting");
+        MediaWritable mw = (MediaWritable) Class.forName(IWMainApplication.decryptClassName(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS))).newInstance();
+        mw.init(request);
+        response.setContentType(mw.getMimeType());
+        ServletOutputStream out = response.getOutputStream();
+        mw.writeTo(out);
+        out.flush();
 
-          Stmt = conn.createStatement();
-          RS = Stmt.executeQuery(sql+mediaId);
-
-          InputStream myInputStream = null;
-
-         // while(RS.next()){
-          if( (RS!=null) &&  (RS.next()) ){
-						contentType = RS.getString(2);
-						System.err.println("MediaServlet: contenttype: "+contentType);
-            myInputStream = RS.getBinaryStream(1);
-
-          }
-          // debug
-          if(myInputStream!=null){
-
-            if (!RS.wasNull()){
-
-							if(contentType!=null)
-							  response.setContentType(contentType);
-
-							/* // Using BytArrayOutputStream
-							ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-								// Read the entire contents of the file.
-							while (myInputStream.available() > 0)
-							{
-									baos.write(myInputStream.read());
-							}
-
-							// write ByteArrayOutputStream to the ServletOutputStream
-							response.setContentLength(baos.size());
-							ServletOutputStream out = response.getOutputStream();
-							baos.writeTo(out);
-							out.flush();
-							*/
-							/// using DataOutputStream
-							DataOutputStream output = new DataOutputStream( response.getOutputStream() );
-
-              byte buffer[]= new byte[1024];
-              int	noRead	= 0;
-
-           // check something!!!
-
-              noRead = myInputStream.read( buffer, 0, 1024 );
-
-              //Write out the file to the browser
-              while ( noRead != -1 ){
-                output.write( buffer, 0, noRead );
-                noRead = myInputStream.read( buffer, 0, 1024 );
-              }
-
-              output.flush();
-              output.close();
-							myInputStream.close();
-
-              RS.close();
-
-            }
-            else System.err.println("MediaServlet: Was null");
-
-          }
-          else System.err.println("InputStream is null");
       }
-
-  }
-
-
-  }
-  catch (Exception E) {
-      E.printStackTrace(System.err);
-  }
-  finally{
-    try{
-     if(Stmt != null){
-      Stmt.close();
+      catch(Exception ex){
+        ex.printStackTrace();
       }
     }
-    catch(SQLException ex){
-      System.err.println("Exception in "+this.getClass().getName()+" streaming data to browser "+ex.getMessage());
-      ex.printStackTrace(System.err);
-    }
-    if(conn!=null){
-      ConnectionBroker.freeConnection(conn);
-    }
   }
-
-
-}//end service
-
-
-}//end
+}
