@@ -1,9 +1,9 @@
-package com.idega.block.media.business;
+package com.idega.block.media.data;
 
 import java.util.Map;
 
 /**
- * Title: com.idega.block.media.business.MediaProperties
+ * Title: com.idega.block.media.data.MediaProperties
  * Description: A wrapper class for known file information after uploading to disk
  * Copyright:    Copyright (c) 2001
  * Company:      idega software
