@@ -84,14 +84,15 @@ import com.idega.idegaweb.IWBundle;
     public ModuleObject getLinkTable(IWBundle iwb){
       Table T = new Table();
 
-      Link btnAdd = getNewImageLink("add");
+      Link btnAdd = getNewImageLink(new Text("add"));
         btnAdd.setFontStyle("text-decoration: none");
         btnAdd.setFontColor("#FFFFFF");
         btnAdd.setBold();
-      Link btnDelete = getDeleteLink(iwb.getImage("sdelete.gif","sdelete.gif","Delete"));//"delete");
-        //btnDelete.setFontStyle("text-decoration: none");
-        //btnDelete.setFontColor("#FFFFFF");
-        //btnDelete.setBold();
+      //Link btnDelete = getDeleteLink(iwb.getImage("sdelete.gif","sdelete.gif","Delete"));//"delete");
+      Link btnDelete = getDeleteLink(new Text("delete"));
+        btnDelete.setFontStyle("text-decoration: none");
+        btnDelete.setFontColor("#FFFFFF");
+        btnDelete.setBold();
       Link btnSave = getSaveLink("save");
         btnSave.setFontStyle("text-decoration: none");
         btnSave.setFontColor("#FFFFFF");
@@ -108,7 +109,7 @@ import com.idega.idegaweb.IWBundle;
       return T;
     }
 
-    public Link getNewImageLink(String mo){
+    public Link getNewImageLink(ModuleObject mo){
       Link L = new Link(mo,SimpleUploaderWindow.class);
       L.addParameter("action","upload");
       L.addParameter("submit","new");
