@@ -1,8 +1,21 @@
-#Tue Sep 09 17:03:07 CEST 2003
+#Fri Oct 24 11:46:24 CEST 2003
 case_status_key.FLYT=
 me.uploadtext=V\u00E4lj fil att ladda upp
 mediafoldereditwindow.folder.saved=Mapp skapad
 mediafoldereditwindow.name.the.folder=Namn till mapp
+mediafoldereditwindow.properties=Properties
+mediafoldereditwindow.properties.created=Created
+mediafoldereditwindow.properties.description=Description
+mediafoldereditwindow.properties.filename=Name
+mediafoldereditwindow.properties.location=Location
+mediafoldereditwindow.properties.metadata=Metadata
+mediafoldereditwindow.properties.metadata.key=Key
+mediafoldereditwindow.properties.metadata.remove=Remove
+mediafoldereditwindow.properties.metadata.value=Value
+mediafoldereditwindow.properties.mimetype=Mimetype
+mediafoldereditwindow.properties.modified=Modified
+mediafoldereditwindow.properties.size=Size
+mediafoldereditwindow.properties.type=Type
 mv.cancel=Avbryt
 mv.delete=Ta bort
 mv.file.are.you.sure=\u00C4r du s\u00E4ker p\u00E5 att du vill ta bort denna fil?

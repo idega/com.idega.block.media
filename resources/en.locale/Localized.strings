@@ -1,14 +1,14 @@
-#Thu Mar 27 18:40:38 CET 2003
-mv.folder=folder
-use_image=Use image
-mv.file.deleted=The file was deleted
-mv.use=use
-new_image=New image
-mv.file.are.you.sure=Are you sure you want to delete this file?
+#Fri Oct 24 09:44:56 CEST 2003
+me.uploadtext=Select a file to upload.
 mediafoldereditwindow.folder.saved=Folder created
 mediafoldereditwindow.name.the.folder=Name the folder
-mv.delete=delete
 mv.cancel=cancel
-mv.upload=upload
-me.uploadtext=Select a file to upload.
+mv.delete=delete
+mv.file.are.you.sure=Are you sure you want to delete this file?
+mv.file.deleted=The file was deleted
+mv.folder=folder
 mv.save=save
+mv.upload=upload
+mv.use=use
+new_image=New image
+use_image=Use image

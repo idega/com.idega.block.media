@@ -1,8 +1,21 @@
-#Tue Sep 09 17:03:07 CEST 2003
+#Fri Oct 24 12:54:49 CEST 2003
 case_status_key.FLYT=
 me.uploadtext=Select a file to upload.
 mediafoldereditwindow.folder.saved=Folder created
 mediafoldereditwindow.name.the.folder=Name the folder
+mediafoldereditwindow.properties=
+mediafoldereditwindow.properties.created=
+mediafoldereditwindow.properties.description=
+mediafoldereditwindow.properties.filename=
+mediafoldereditwindow.properties.location=
+mediafoldereditwindow.properties.metadata=
+mediafoldereditwindow.properties.metadata.key=
+mediafoldereditwindow.properties.metadata.remove=
+mediafoldereditwindow.properties.metadata.value=
+mediafoldereditwindow.properties.mimetype=
+mediafoldereditwindow.properties.modified=
+mediafoldereditwindow.properties.size=
+mediafoldereditwindow.properties.type=
 mv.cancel=cancel
 mv.delete=delete
 mv.file.are.you.sure=Are you sure you want to delete this file
