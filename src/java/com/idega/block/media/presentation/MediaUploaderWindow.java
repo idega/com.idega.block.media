@@ -68,7 +68,7 @@ private IWResourceBundle iwrb;
 
           Link submitNew = new Link("New");
           /**@todo: insert a generated localized generated button**/
-          submitNew.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_UPLOAD);
+          submitNew.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_NEW);
           submitNew.setAsImageButton(true);
 
           T.add(submitNew,2,1);
