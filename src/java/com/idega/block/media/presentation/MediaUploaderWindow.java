@@ -13,6 +13,7 @@ import com.idega.presentation.IWContext;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.Table;
 import com.idega.presentation.Image;
+import com.idega.presentation.Script;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.ui.IFrame;
 import com.idega.util.*;
@@ -123,14 +124,27 @@ private IWResourceBundle iwrb;
     }
 
   private Form getMultiPartUploaderForm(IWContext iwc){
+    /**@todo make the busy image toggle
+     * Script script = getAssociatedScript();
+    script.addFunction("iwToggleBusy(*/
+
     Form f = new Form();
     f.setMultiPart();
    // String s = iwc.getRequestURI()+"?"+com.idega.+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass());
     String s = com.idega.idegaweb.IWMainApplication.getObjectInstanciatorURL(this.getClass());
     f.setAction(s);
+    Image busy = iwc.getApplication().getCoreBundle().getImage("transparentcell.gif");
 
+    f.add(busy);
     f.add(new FileInput());
-    f.add(new SubmitButton());
+
+    Link submit = new Link("Submit");
+    submit.setToFormSubmit(f);
+   // submit.setAsImageButton(true);
+
+    submit.setOnClick("javascript:document.images['"+busy.getID()+"'].src='"+iwc.getApplication().getCoreBundle().getImage("busy.gif").getURL()+"';"+submit.getOnClick());
+
+    f.add(submit);
 
     f.add(new HiddenInput(fileInSessionParameter,MediaBusiness.getMediaId(iwc)));
 
