@@ -38,7 +38,7 @@ import com.idega.block.media.business.MediaConstants;
       SC.setToIncludeLinks(false);
       add(SC);
       //addHeaderObject(SC.getLinkTable(iwb));
-      setTitle("idegaWeb media chooser");
+      setTitle("Media chooser");
       if(iwc.getParameter(prmReloadParent )!= null)
         setParentToReload();
     }
