@@ -11,6 +11,8 @@ import com.idega.block.media.business.MediaConstants;
 import com.idega.block.media.business.MediaBusiness;
 import java.sql.SQLException;
 import java.util.List;
+import com.idega.presentation.ui.TreeViewer;
+import com.idega.idegaweb.IWCacheManager;
 
 import com.idega.presentation.PresentationObjectContainer;
 
@@ -25,42 +27,59 @@ import com.idega.presentation.PresentationObjectContainer;
 
 public class MediaTreeViewer extends PresentationObjectContainer {
 
-    private String fileInSessionParameter = "ic_file_id";
+  private String fileInSessionParameter = "";
+  private IWCacheManager cm;
 
-    public void  main(IWContext iwc){
-      getParentPage().setAllMargins(0);
-      List L = listOfMedia();
 
-      fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
+  public void  main(IWContext iwc){
+    cm = iwc.getApplication().getIWCacheManager();
 
-      if(L!= null){
-        Table Frame = new Table();
-          Frame.setWidth("100%");
-        Frame.setCellpadding(0);
-        Frame.setCellspacing(0);
-        Table T = new Table();
-          T.setWidth("100%");
-        int len = L.size();
-        int row = 1;
-        T.add(formatText("Media Trainus"),1,row++);
+    getParentPage().setAllMargins(0);
 
-        for (int i = 0; i < len; i++) {
-          ICFile file = (ICFile) L.get(i);
-          T.add(getMediaLink(file,MediaConstants.TARGET_MEDIA_VIEWER),1,row);
-          /**@todo: localize
-           *
-           */
-          T.add(formatText(new idegaTimestamp(file.getCreationDate() ).getISLDate()),2,row);
-          row++;
-        }
-        T.setCellpadding(2);
-        T.setCellspacing(0);
+    fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
 
-        T.setHorizontalZebraColored("#CBCFD3","#ECEEF0");
-        Frame.add(T,1,1);
-        add(Frame);
-      }
-    }
+    Table T = new Table(1,2);
+    T.setWidth("100%");
+    T.setCellpadding(2);
+    T.setCellspacing(0);
+    //        T.setHorizontalZebraColored("#CBCFD3","#ECEEF0");
+    //T.add(formatText(new idegaTimestamp(file.getCreationDate() ).getISLDate()),2,row);
+    //getMediaLink(file,MediaConstants.TARGET_MEDIA_VIEWER),1,row);
+
+    T.add(formatText("BETA!"),1,1);
+    Link proto = new Link("",MediaViewer.class);
+    proto.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+    ICFile rootNode = (ICFile)cm.getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
+
+    TreeViewer viewer = TreeViewer.getTreeViewerInstance(rootNode ,iwc);
+    viewer.setLinkProtototype(proto);
+    viewer.setNodeActionParameter(fileInSessionParameter);
+    //viewer.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+
+
+    T.add(viewer,1,2);
+//    viewer.setToMaintainParameter(fileInSessionParameter,file.getID());
+/*
+    viewer.setToMaintainParameter(SCRIPT_PREFIX_PARAMETER,iwc);
+    viewer.setToMaintainParameter(SCRIPT_SUFFIX_PARAMETER,iwc);
+    viewer.setToMaintainParameter(DISPLAYSTRING_PARAMETER_NAME,iwc);
+    viewer.setToMaintainParameter(VALUE_PARAMETER_NAME,iwc);
+
+    Link prototype = new Link();
+    viewer.setToUseOnClick();
+    //sets the hidden input and textinput of the choosing page
+    viewer.setOnClick(SELECT_FUNCTION_NAME+"("+viewer.ONCLICK_DEFAULT_NODE_NAME_PARAMETER_NAME+","+viewer.ONCLICK_DEFAULT_NODE_ID_PARAMETER_NAME+")");
+*/
+
+
+    /**@todo: localize
+    *
+    */
+
+
+    add(T);
+
+  }
 
 
   public Link getMediaLink(ICFile file,String target){

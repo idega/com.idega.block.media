@@ -20,28 +20,7 @@ import com.idega.core.data.ICFile;
 public class ApplicationTypeHandler extends FileTypeHandler {
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
-    Table table = new Table();
-
-    table.setWidth("100%");
-    table.setHeight("100%");
-
-    try {
-      ICFile file = new ICFile(icFileId);
-      Link link;
-
-      Iterator iter = file.getChildren();
-      while (iter.hasNext()) {
-        ICFile item = (ICFile) iter.next();
-        link = new Link();
-        link.setFile(item);
-        table.add(link);
-      }
-    }
-    catch (Exception ex) {
-      ex.printStackTrace(System.err);
-    }
-    return table;
-
+    return ((SystemTypeHandler) FileTypeHandler.getInstance(iwc.getApplication(),SystemTypeHandler.class) ).getPresentationObject(icFileId,iwc);
   }
 
   public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc){
@@ -50,8 +29,8 @@ public class ApplicationTypeHandler extends FileTypeHandler {
     table.setWidth("100%");
     table.setHeight("100%");
 
-    Image image = new Image(props.getWebPath(),props.getName());
-    table.add(image);
+    Link link = new Link(props.getName(),props.getWebPath());
+    table.add(link);
 
     return table;
   }

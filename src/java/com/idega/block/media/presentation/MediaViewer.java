@@ -44,7 +44,7 @@ public class MediaViewer extends  Window {
       String sMediaId = MediaBusiness.getMediaId(iwc);
       String sAction = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
 
-      if(sMediaId != null){
+      if(!sMediaId.equalsIgnoreCase("-1")){
         //saveMediaId(iwc,sMediaId);
         if(sAction != null){
           if(sAction.equals(MediaConstants.MEDIA_ACTION_SAVE)){
@@ -66,7 +66,6 @@ public class MediaViewer extends  Window {
           Table T = new Table();
           T.add(file.getName(),1,1);
 
-          /** @todo insert fileHandler */
           FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,file.getMimeType());
           T.add(handler.getPresentationObject(id,iwc),1,2);
 
@@ -87,10 +86,6 @@ public class MediaViewer extends  Window {
           add(L);
 
           add(T);
-
-          SystemTypeHandler listview = new SystemTypeHandler();
-
-          add(listview.getPresentationObject(file.getID(),iwc));
         }
       }
     }

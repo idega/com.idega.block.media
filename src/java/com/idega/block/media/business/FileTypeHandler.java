@@ -35,6 +35,10 @@ public static FileTypeHandler getInstance(IWMainApplication iwma, String handler
   return handler;
 }
 
+public static FileTypeHandler getInstance(IWMainApplication iwma, Class handlerClass){
+  return getInstance(iwma,handlerClass.getName());
+}
+
 public static Cache getCachedFileInfo(int icFileId, IWContext iwc){
   return (Cache) iwc.getApplication().getIWCacheManager().getCachedBlobObject(ICFile.class.getName(),icFileId,iwc.getApplication());
 }

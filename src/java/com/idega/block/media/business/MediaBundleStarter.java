@@ -16,8 +16,12 @@ import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.core.data.ICMimeType;
 import com.idega.core.data.ICFileType;
+import com.idega.core.data.ICFile;
 import com.idega.core.data.ICFileTypeHandler;
+import com.idega.data.EntityFinder;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Iterator;
 
 import java.util.HashMap;
 
@@ -114,7 +118,7 @@ public class MediaBundleStarter implements IWBundleStartable{
     ICFileType images = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_IMAGE);
     ICFileType vectors = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_VECTOR_GRAPHICS);
     ICFileType videos = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_VIDEO);
-    ICFileType system = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_SYSTEM);
+    ICFileType systems = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_SYSTEM);
 
     //cache
     ICMimeType mimes = new ICMimeType();
@@ -122,6 +126,7 @@ public class MediaBundleStarter implements IWBundleStartable{
 
     try {
       //insert the mimetypes
+      registerMimeType(system,systems);
       registerMimeType(application,applications);
       registerMimeType(audio,audios);
       registerMimeType(document,documents);
@@ -139,6 +144,30 @@ public class MediaBundleStarter implements IWBundleStartable{
 
     cm.removeTableFromCache(ICFileType.class);
     types.cacheEntityByID();
+
+    try {
+      //**insert the Root folder if it doesn't exist yet**/
+      ICFile file = new ICFile();
+      List root = EntityFinder.findAllByColumn(file,file.getColumnNameName(),ICFile.IC_ROOT_FOLDER_NAME,file.getColumnNameMimeType(),ICMimeType.IC_MIME_TYPE_FOLDER);
+      if( root == null ){
+       file.setName(ICFile.IC_ROOT_FOLDER_NAME);
+       file.setMimeType(ICMimeType.IC_MIME_TYPE_FOLDER);
+       file.setDescription("This is the top level folder it shouldn't be visible");
+       file.insert();
+      }
+      else{
+       Iterator iter = root.iterator();
+       while(iter.hasNext()){
+        file = (ICFile)iter.next();//there is only one root
+       }
+      }
+      //cache it!
+      cm.cacheEntity(file,ICFile.IC_ROOT_FOLDER_CACHE_KEY);
+
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace(System.err);
+    }
 
   }
 
@@ -166,4 +195,6 @@ public class MediaBundleStarter implements IWBundleStartable{
     }
 
   }
+
+
 }

@@ -28,7 +28,10 @@ import com.idega.idegaweb.IWCacheManager;
 
 public class MediaBusiness  {
 
-  public static int SaveMediaToDB(MediaProperties mediaProps){
+  public static int SaveMediaToDB(MediaProperties mediaProps, IWContext iwc){
+
+    int parentId = Integer.parseInt(getMediaId(iwc));
+
     int id = -1;
 
     try{
@@ -36,10 +39,17 @@ public class MediaBusiness  {
       ICFile file = new ICFile();
       file.setName(mediaProps.getName());
       file.setMimeType(mediaProps.getContentType());
+
       System.out.println("MIMETYPE"+mediaProps.getContentType());
+
       file.setFileValue(input);
       file.setFileSize((int)mediaProps.getSize());
       file.insert();
+
+      if(parentId==-1){
+        ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
+        rootNode.addChild(file);
+      }
 
       id = file.getID();
     }
@@ -126,14 +136,15 @@ public class MediaBusiness  {
   public static String getMediaId(IWContext iwc){
     String fileInSessionParameter = getMediaParameterNameInSession(iwc);
 
-    String id = null;
+    String id = "-1";
     if(iwc.getParameter(fileInSessionParameter)!=null){
       id = iwc.getParameter(fileInSessionParameter);
+      //used for viewing the last thing used
       iwc.setSessionAttribute(fileInSessionParameter+"_2",id);
     }
     else if(iwc.getSessionAttribute(fileInSessionParameter)!=null){
       id = (String) iwc.getSessionAttribute(fileInSessionParameter);
-    }
+    }//used for viewing the last thing used
     else if(iwc.getSessionAttribute(fileInSessionParameter+"_2")!=null){
       id = (String) iwc.getSessionAttribute(fileInSessionParameter+"_2");
     }
@@ -174,11 +185,11 @@ public class MediaBusiness  {
 
     ICFileType type = (ICFileType) cm.getFromCachedTable(ICFileType.class,Integer.toString(mime.getFileTypeID()));
 
-    System.out.println("handler id"+type.getFileTypeHandlerID());
+    System.out.println("handler id : "+type.getFileTypeHandlerID());
     ICFileTypeHandler typeHandler = (ICFileTypeHandler) cm.getFromCachedTable(ICFileTypeHandler.class,Integer.toString(type.getFileTypeHandlerID()));
 
     FileTypeHandler handler = FileTypeHandler.getInstance(iwc.getApplication(),typeHandler.getHandlerClass());
-    System.out.println("SELECTED HANDLER IS :"+typeHandler.getHandlerName());
+    System.out.println("SELECTED HANDLER IS : "+typeHandler.getHandlerName());
    return handler;
   }
 

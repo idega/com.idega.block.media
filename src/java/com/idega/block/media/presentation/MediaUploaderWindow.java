@@ -136,7 +136,7 @@ private IWResourceBundle iwrb;
         iwc.removeSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME);
       }
       if(mediaProps !=null){
-        int i = MediaBusiness.SaveMediaToDB(mediaProps);
+        int i = MediaBusiness.SaveMediaToDB(mediaProps,iwc);
         iwc.setSessionAttribute(fileInSessionParameter,String.valueOf(i));
          FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,mediaProps.getContentType());
          add(handler.getPresentationObject(i,iwc));
