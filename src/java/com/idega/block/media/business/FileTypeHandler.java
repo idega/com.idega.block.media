@@ -4,6 +4,7 @@ import com.idega.block.media.data.MediaProperties;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.PresentationObject;
+import com.idega.repository.data.Singleton;
 import com.idega.util.caching.Cache;
 
 /**
@@ -15,7 +16,7 @@ import com.idega.util.caching.Cache;
  * @version 1.0
  */
 
-public abstract class FileTypeHandler extends java.lang.Object{
+public abstract class FileTypeHandler extends java.lang.Object implements Singleton {
 
 public abstract PresentationObject getPresentationObject(int icFileId, IWContext iwc);
 
