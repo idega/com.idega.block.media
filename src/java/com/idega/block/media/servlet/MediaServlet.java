@@ -102,13 +102,14 @@ System.err.println("Mediaservlet debug:"+sql+mediaId);
               output.flush();
               output.close();
              // myInputStream.close();
+              RS.close();
+
             }
             else System.err.println("MediaServlet: Was null");
 
           }
           else System.err.println("InputStream is null");
 
-          RS.close();
 
       }
 
