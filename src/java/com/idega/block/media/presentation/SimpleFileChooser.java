@@ -146,7 +146,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
       table.add(tInput,1,1);
       table.add(change,1,1);
       //table.add(busy,1,2);
-      ICFile icFile = MediaBusiness.SaveMediaToDB(file,iwc);
+      ICFile icFile = MediaBusiness.SaveMediaToDBUploadFolder(file,iwc);
       table.add(new HiddenInput(_name,Integer.toString(icFile.getID())),1,2);
       Link preview = new Link("Preview");
       preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
