@@ -152,9 +152,9 @@ public void main(ModuleInfo modinfo)throws Exception{
   reload = new Image("/pics/jmodules/image/"+language+"/refresh.gif","Refresh everything");
 
 
-  Window window = new Window("IdegaWeb : Image",800,600,"/image/editWindow.jsp");
-  window.setResizable(true);
-  Link uploadLink = new Link(newImage,window);
+  Link uploadLink = new Link(newImage);
+  uploadLink.setWindowToOpen(EditWindow.class);
+
   uploadLink.addParameter("action","upload");
 
   Link reloads = new Link(reload);
@@ -437,10 +437,8 @@ private Table displayImage( ImageEntity image ) throws SQLException
     imageEdit6.addParameter("image_id",imageId);
     imageEdit6.addParameter("edit","true");
 
-    Window window = new Window("IdegaWeb : Image",350,230,"/image/editWindow.jsp");
-    window.setAllMargins(0);
-    window.setResizable(true);
-    Link imageEdit7 = new Link(text,window);
+    Link imageEdit7 = new Link(text);
+    imageEdit7.setWindowToOpen(EditWindow.class);
     imageEdit7.addParameter("image_id",imageId);
     imageEdit7.addParameter("action","text");
 

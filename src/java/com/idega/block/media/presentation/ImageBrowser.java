@@ -11,6 +11,7 @@ import com.idega.block.media.data.*;
 import com.idega.block.media.presentation.*;
 import com.idega.data.*;
 import com.idega.util.text.*;
+import com.idega.core.data.ICFileCategory;
 
 public class ImageBrowser extends JModuleObject{
 
@@ -116,12 +117,12 @@ private ImageViewer viewer = new ImageViewer();
       imageTable.add(viewer,3,1);
       //debug because of refresh problem could solve with an invisible businenss class that is added first
       if( (!"delete".equalsIgnoreCase(action)) && (!"save".equalsIgnoreCase(action)) && (!"savenew".equalsIgnoreCase(action)) && (!"savecategories".equalsIgnoreCase(action)) ){
-        imageTable.add(tree,1,1);
+        //imageTable.add(tree,1,1);
       }
     }
     else if( mode.equalsIgnoreCase("search") ){
       imageTable.add(getSearchResults(modinfo),3,1);
-      imageTable.add(tree,1,1);
+      //imageTable.add(tree,1,1);
     }
 
     myTable.add(getToolbar(),1,1);
@@ -148,12 +149,12 @@ private ImageViewer viewer = new ImageViewer();
    Form categoryForm = new Form();
     categoryForm.setMethod("get");
 
-   ImageCatagory[] category = (ImageCatagory[]) (new ImageCatagory()).findAll();
+   ICFileCategory[] category = (ICFileCategory[]) (new ICFileCategory()).findAll();
 
    Image searchImage = new Image("/pics/jmodules/image/myndamodule/topp/topp2.gif");
    Image searchWord = new Image("/pics/jmodules/image/myndamodule/topp/topp3.gif");
 
-   DropdownMenu categoryMenu = new DropdownMenu(category,"catagory_id");
+   DropdownMenu categoryMenu = new DropdownMenu(category,"category_id");
     categoryMenu.addMenuElement(0,"Allir myndaflokkar");
     categoryMenu.setSelectedElement("0");
     categoryMenu.keepStatusOnAction();
@@ -188,7 +189,7 @@ private ImageViewer viewer = new ImageViewer();
     boolean isQuery = true;
     boolean allCategories = false;
 
-    String category_id = modinfo.getParameter("catagory_id");
+    String category_id = modinfo.getParameter("category_id");
       if ( category_id.equalsIgnoreCase("0") ) {
         allCategories = true;
       }
@@ -198,15 +199,15 @@ private ImageViewer viewer = new ImageViewer();
         searchString = "";
         isQuery = false;
       }
-    String queryString = "select * from image,image_image_catagory where image.image_id=image_image_catagory.image_id and image_image_catagory.image_catagory_id="+category_id+" and ";
+    String queryString = "select * from ic_file,ic_file_file_category where ic_file.ic_file_id=ic_file_file_category.ic_file_id and ic_file_file_category.ic_file_category_id="+category_id+" and ";
     if ( allCategories ) {
-      queryString = "select * from image where ";
+      queryString = "select * from ic_file where ";
     }
 
     StringTokenizer tokens = new StringTokenizer(searchString);
     while ( tokens.hasMoreTokens() ) {
       String token = tokens.nextToken();
-      queryString += "(image_text like '%"+token+"%' or image_name like'%"+token+"%' or image_link like'%"+token+"%')";
+      queryString += "(description like '%"+token+"%' or name like'%"+token+"%')";
       if ( tokens.hasMoreTokens() ) {
         queryString += " and ";
       }

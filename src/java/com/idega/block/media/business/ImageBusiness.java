@@ -266,8 +266,17 @@ public static void makeDefaultSizes(ModuleInfo modinfo){
     Connection Conn = null;
 
     try{
-      FileInputStream input = new FileInputStream(ip.getRealPath() );
-      String dataBaseType = "";
+      FileInputStream input = new FileInputStream(ip.getRealPath());
+      ImageEntity image = new ImageEntity();
+      image.setName(ip.getName());
+      image.setMimeType(ip.getContentType());
+      image.setFileValue(input);
+      image.insert();
+
+      id = image.getID();
+
+
+/*      String dataBaseType = "";
       Conn = GenericEntity.getStaticInstance("com.idega.block.media.data.ImageEntity").getConnection();
 
       if (Conn!=null) dataBaseType = com.idega.data.DatastoreInterface.getDataStoreType(Conn);
@@ -279,6 +288,8 @@ public static void makeDefaultSizes(ModuleInfo modinfo){
       else {
         id = ImageSave.saveImageToDB(-1,-1,input,ip.getContentType(),ip.getName(),"-1","-1", true);
       }
+
+      */
     }
     catch(Exception e){
       e.printStackTrace(System.err);

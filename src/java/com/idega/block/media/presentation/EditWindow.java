@@ -27,6 +27,11 @@ public class EditWindow extends Window {
 
   public EditWindow(){
     super();
+    setTitle("IdegaWeb : Image");
+    setWidth(800);
+    setHeight(600);
+    setAllMargins(0);
+    setResizable(true);
   }
 
   public EditWindow(String name){
@@ -160,6 +165,15 @@ public class EditWindow extends Window {
   private Form getUploadForm(ModuleInfo modinfo) throws Exception{
     Form form = new Form();
     form.setMultiPart();
+    //workaround
+    String uri = modinfo.getRequestURI();
+    if(uri.indexOf("Instanciator")==-1){
+      form.setAction(uri+"?"+Page.IW_FRAME_CLASS_PARAMETER+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass()));
+    }
+    else{
+      form.setAction(uri+"?"+com.idega.idegaweb.IWMainApplication.classToInstanciateParameter+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass()));
+    }
+
     Table table = new Table(2,2);
     Text texti = new Text("Veldu mynd með því að ýta á \"Browse\" og smelltu svo á \"Submit\".");
     texti.setFontColor("#FFFFFF");
