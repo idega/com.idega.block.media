@@ -1,7 +1,6 @@
 package com.idega.block.media.business;
 
 import com.idega.block.media.data.MediaProperties;
-import com.idega.core.data.ICFile;
 import com.idega.presentation.Flash;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.PresentationObject;

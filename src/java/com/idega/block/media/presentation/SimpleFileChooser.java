@@ -1,19 +1,22 @@
 package com.idega.block.media.presentation;
 
-import com.idega.presentation.IWContext;
+import java.util.Iterator;
+import java.util.List;
+
+import com.idega.block.media.business.MediaBusiness;
 import com.idega.core.data.ICFile;
-import com.idega.presentation.ui.AbstractChooser;
-import com.idega.idegaweb.IWBundle;
-import com.idega.builder.business.BuilderLogic;
-import com.idega.block.media.business.*;
-import com.idega.presentation.ui.InterfaceObjectContainer;
-import com.idega.presentation.*;
-import com.idega.presentation.ui.*;
-import com.idega.presentation.text.*;
-import com.idega.io.*;
-import com.idega.builder.business.*;
 import com.idega.idegaweb.presentation.BusyBar;
-import java.util.*;
+import com.idega.io.UploadFile;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Table;
+import com.idega.presentation.text.Link;
+import com.idega.presentation.ui.FileInput;
+import com.idega.presentation.ui.Form;
+import com.idega.presentation.ui.HiddenInput;
+import com.idega.presentation.ui.InterfaceObject;
+import com.idega.presentation.ui.InterfaceObjectContainer;
+import com.idega.presentation.ui.SubmitButton;
+import com.idega.presentation.ui.TextInput;
 
 /**
  * <p>Title: idegaWeb</p>

@@ -10,16 +10,13 @@ package com.idega.block.media.business;
  */
 
 
-import com.idega.presentation.ui.*;
-import com.idega.presentation.Table;
-import com.idega.presentation.IWContext;
-import com.idega.presentation.PresentationObject;
-import com.idega.presentation.Image;
-import com.idega.util.caching.Cache;
 import com.idega.block.media.data.MediaProperties;
-import java.util.Iterator;
-
-import com.idega.core.data.ICFile;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Image;
+import com.idega.presentation.PresentationObject;
+import com.idega.presentation.Table;
+import com.idega.presentation.ui.TextInput;
+import com.idega.util.caching.Cache;
 public class ImageTypeHandler extends FileTypeHandler {
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){

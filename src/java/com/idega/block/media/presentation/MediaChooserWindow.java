@@ -1,14 +1,14 @@
 package com.idega.block.media.presentation;
 
-import com.idega.idegaweb.presentation.IWAdminWindow;
-import com.idega.presentation.*;
-import com.idega.presentation.text.*;
-import com.idega.presentation.ui.*;
-import com.idega.util.IWTimestamp;
-import com.idega.idegaweb.IWBundle;
-import com.idega.block.media.business.MediaConstants;
-import com.idega.presentation.FrameSet;
 import com.idega.block.media.business.MediaBusiness;
+import com.idega.block.media.business.MediaConstants;
+import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.presentation.IWAdminWindow;
+import com.idega.presentation.FrameSet;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Page;
+import com.idega.presentation.Table;
+import com.idega.presentation.ui.AbstractChooserWindow;
 /**
  * Title: com.idega.block.media.presentation.MediaChooserWindow
  * Description: The frame window that displays the filesystem

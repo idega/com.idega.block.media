@@ -1,20 +1,20 @@
 package com.idega.block.media.presentation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+
 import com.idega.block.media.business.MediaBusiness;
-import java.util.*;
-import com.idega.presentation.PresentationObject;
-import com.idega.presentation.ui.*;
 import com.idega.core.ICTreeNode;
-import com.idega.presentation.ui.AbstractTreeViewer;
-import com.idega.presentation.text.Link;
-import com.idega.presentation.text.Text;
-import com.idega.presentation.IWContext;
-import com.idega.idegaweb.IWBundle;
-import com.idega.presentation.Image;
-import com.idega.core.data.ICMimeType;
-import com.idega.data.EntityFinder;
 import com.idega.core.data.ICFile;
-import java.sql.SQLException;
+import com.idega.core.data.ICMimeType;
+import com.idega.idegaweb.IWBundle;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Image;
+import com.idega.presentation.PresentationObject;
+import com.idega.presentation.text.Link;
+import com.idega.presentation.ui.AbstractTreeViewer;
 
 /**
  * Title:        IW Project

@@ -12,7 +12,6 @@ package com.idega.block.media.presentation;
 
 import com.idega.block.media.business.MediaConstants;
 import com.idega.idegaweb.IWBundle;
-import com.idega.idegaweb.IWCacheManager;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWUserContext;
 import com.idega.presentation.Block;

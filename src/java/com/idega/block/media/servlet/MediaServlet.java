@@ -11,20 +11,16 @@ package com.idega.block.media.servlet;
  */
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.DataOutputStream;
-import java.io.ByteArrayOutputStream;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.*;
-import com.idega.servlet.IWCoreServlet;
-import com.idega.util.database.ConnectionBroker;
+
 import com.idega.idegaweb.IWMainApplication;
-import com.idega.presentation.ui.Parameter;
-import com.idega.block.media.servlet.MediaOutputWriter;
-import com.idega.io.MemoryFileBufferWriter;
 import com.idega.io.MediaWritable;
+import com.idega.io.MemoryFileBufferWriter;
+import com.idega.presentation.ui.Parameter;
+import com.idega.servlet.IWCoreServlet;
 
 
 public class MediaServlet extends IWCoreServlet{

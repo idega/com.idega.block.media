@@ -1,14 +1,16 @@
 package com.idega.block.media.presentation;
 
-import com.idega.presentation.text.Text;
-import com.idega.block.media.business.*;
+import com.idega.block.media.business.FileTypeHandler;
+import com.idega.block.media.business.MediaBusiness;
+import com.idega.block.media.business.MediaConstants;
+import com.idega.block.media.business.MissingMimeTypeException;
 import com.idega.block.media.data.MediaProperties;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Table;
-import com.idega.presentation.text.Link;
+import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.FileInput;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.HiddenInput;

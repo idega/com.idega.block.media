@@ -1,18 +1,18 @@
 package com.idega.block.media.servlet;
 
-import java.io.OutputStream;
-import java.io.InputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import com.idega.idegaweb.IWMainApplication;
-import com.idega.block.media.servlet.MediaServlet;
-import com.idega.util.database.ConnectionBroker;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.ResultSet;
+
+import com.idega.idegaweb.IWMainApplication;
+import com.idega.util.database.ConnectionBroker;
 
 
 /**

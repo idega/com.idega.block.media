@@ -1,23 +1,25 @@
 package com.idega.block.media.presentation;
 
-import com.idega.presentation.ui.Window;
-import com.idega.block.media.business.MediaConstants;
-import com.idega.block.media.data.MediaProperties;
-import com.idega.block.media.business.MediaBusiness;
-import com.idega.presentation.Table;
-import com.idega.presentation.ui.*;
-import com.idega.presentation.text.*;
-import java.sql.*;
-import com.idega.presentation.IWContext;
-import com.idega.idegaweb.IWResourceBundle;
-import com.idega.idegaweb.IWBundle;
-import com.idega.core.data.ICFileType;
-import com.idega.core.data.ICFileTypeHandler;
-import com.idega.core.data.ICMimeType;
-import com.idega.idegaweb.presentation.IWAdminWindow;
-import com.idega.idegaweb.IWCacheManager;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import com.idega.block.media.business.MediaConstants;
+import com.idega.core.data.ICFileType;
+import com.idega.core.data.ICMimeType;
+import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWCacheManager;
+import com.idega.idegaweb.IWResourceBundle;
+import com.idega.idegaweb.presentation.IWAdminWindow;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Table;
+import com.idega.presentation.text.Link;
+import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.BackButton;
+import com.idega.presentation.ui.DropdownMenu;
+import com.idega.presentation.ui.Form;
+import com.idega.presentation.ui.HiddenInput;
+import com.idega.presentation.ui.SubmitButton;
+import com.idega.presentation.ui.TextInput;
 
 /**
  * Title: com.idega.block.media.presentation.MimeTypeWindow
