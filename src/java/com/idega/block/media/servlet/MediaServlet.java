@@ -57,7 +57,7 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
   //
 
   try{
-    if( mediaId!=null){
+    if( (mediaId!=null) && (!mediaId.equalsIgnoreCase("-1")) ){
 
         conn = ConnectionBroker.getConnection();
 
@@ -65,7 +65,7 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
           Stmt = conn.createStatement();
 
           RS = Stmt.executeQuery(sql+mediaId);
-
+System.err.println("Mediaservlet debug:"+sql+mediaId);
           InputStream myInputStream = null;
 
           while(RS.next()){
@@ -120,8 +120,9 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
       System.err.println("Exception in "+this.getClass().getName()+" streaming data to browser "+ex.getMessage());
       ex.printStackTrace(System.err);
     }
-
-    ConnectionBroker.freeConnection(conn);
+    if(conn!=null){
+      ConnectionBroker.freeConnection(conn);
+    }
   }
 
 
