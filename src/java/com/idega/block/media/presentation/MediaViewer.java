@@ -95,7 +95,6 @@ public class MediaViewer extends Block {
    * @param  mediaId  The media id
    */
   protected void viewFileFromDB( IWContext iwc, int id ) {
-    MediaBusiness.saveMediaIdToSession(iwc,id);
     Cache cache = FileTypeHandler.getCachedFileInfo( mediaId, iwc );
     ICFile file = ( ICFile ) cache.getEntity();
     FileTypeHandler handler = MediaBusiness.getFileTypeHandler( iwc, file.getMimeType() );
