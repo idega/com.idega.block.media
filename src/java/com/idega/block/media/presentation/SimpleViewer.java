@@ -38,7 +38,7 @@ public class SimpleViewer extends PresentationObjectContainer{
             saveImageId(iwc,sImageId);
           }
           else if(sAction.equals(actDelete)){
-           (ConfirmDeleteImage(sImageId));
+           ConfirmDeleteImage(sImageId);
           }
           else if(sAction.equals(actConfirmDelete)){
             deleteImage( sImageId);
@@ -63,7 +63,9 @@ public class SimpleViewer extends PresentationObjectContainer{
     }
 
     public boolean deleteImage(String sImageId){
+     /*
       Connection Conn = null;
+
       try{
         Conn = com.idega.util.database.ConnectionBroker.getConnection();
         ResultSet RS;
@@ -78,7 +80,7 @@ public class SimpleViewer extends PresentationObjectContainer{
         if(Conn != null)
           com.idega.util.database.ConnectionBroker.freeConnection(Conn);
       }
-
+*/
       try {
         int iImageId = Integer.parseInt(sImageId);
         new ImageEntity(iImageId).delete();
