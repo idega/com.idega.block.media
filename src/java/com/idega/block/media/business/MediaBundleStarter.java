@@ -13,6 +13,7 @@ package com.idega.block.media.business;
 
 import com.idega.idegaweb.IWBundleStartable;
 import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.core.data.ICMimeType;
 import com.idega.core.data.ICFileType;
@@ -109,8 +110,12 @@ public class MediaBundleStarter implements IWBundleStartable{
   }
 
   public void start(IWBundle bundle){
+    start(bundle.getApplication());/**@todo remove from every server**/
+  }
+
+  public void start(IWMainApplication iwma){
     //cache file types ICFileType extends CacheableEntity
-    cm = bundle.getApplication().getIWCacheManager();
+    cm = iwma.getIWCacheManager();
     ICFileTypeHandler handlers = new ICFileTypeHandler();
     handlers.cacheEntity();
     //cache file types ICFileType extends CacheableEntity
