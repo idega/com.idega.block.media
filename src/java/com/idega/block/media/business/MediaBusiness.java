@@ -213,6 +213,26 @@ public class MediaBusiness {
 
 
   /**
+   *  Gets the mediaId attribute
+   *
+   * @param  iwc  The IWContext
+   * @return      The mediaId value
+   */
+  public static int getParentMediaId( IWContext iwc ) {
+    String fileInSessionParameter = getMediaParameterNameInSession( iwc )+"parent";/*@todo put in media constants*/
+    int id = -1;
+
+    if( iwc.getParameter( fileInSessionParameter ) != null ) {
+      id = Integer.parseInt(iwc.getParameter(fileInSessionParameter));//check parameters
+    } else if( iwc.getSessionAttribute( fileInSessionParameter ) != null ) {
+      id = Integer.parseInt((String)iwc.getSessionAttribute(fileInSessionParameter));//check the session parameters
+    }
+
+    return id;
+  }
+
+
+  /**
    *  Description of the Method
    *
    * @param  iwc  The IWContext
@@ -232,6 +252,15 @@ public class MediaBusiness {
     iwc.setSessionAttribute(getMediaParameterNameInSession( iwc ),String.valueOf(mediaId) );
   }
 
+  /**
+   *  Description of the Method
+   *
+   * @param  iwc      Description of the Parameter
+   * @param  mediaId  Description of the Parameter
+   */
+  public static void saveParentMediaIdToSession( IWContext iwc, int mediaId ) {
+    iwc.setSessionAttribute(getMediaParameterNameInSession( iwc )+"parent",String.valueOf(mediaId) );
+  }
 
   /**
    *  Gets a FileTypeHandler for this type of file (mime type)
