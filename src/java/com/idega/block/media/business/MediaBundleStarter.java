@@ -81,7 +81,9 @@ public class MediaBundleStarter implements IWBundleStartable{
                             "JPEG  jpeg jpg jpe pjpeg","image/jpe",
                             "TIFF  tiff tif","image/tiff",
                             "Macintosh PICT format pict","image/x-pict",
-                            "Microsoft Windows bitmap  bmp","image/x-ms-bmp"
+                            "Microsoft Windows bitmap  bmp","image/x-ms-bmp",
+                            "Microsoft Windows bitmap  bmp","image/bmp",
+                            "Microsoft Windows bitmap  bmp","image/x-bmp"
                             };
 
   private String[] vector = {
