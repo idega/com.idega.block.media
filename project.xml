@@ -43,6 +43,13 @@
       <organization>idega software</organization>
       <roles/>
     </developer>
+    <developer>
+      <name>Aron Birkir Gudmundsson</name>
+      <id>aron</id>
+      <email>aron@idega.is</email>
+      <organization>idega software</organization>
+      <roles/>
+    </developer>    
   </developers>
   <dependencies>
     <dependency>
