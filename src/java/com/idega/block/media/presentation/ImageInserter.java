@@ -131,7 +131,7 @@ public ImageInserter(Class WindowToOpen) {
           image.setNoImageLink();
         }
         image.setName("im"+imSessionImageName);
-        System.err.println("image_name is "+image.getName());
+        //System.err.println("image_name is "+image.getName());
         Page P = getParentPage();
         if(P!=null){
           Script S = P.getAssociatedScript();
