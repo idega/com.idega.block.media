@@ -54,6 +54,7 @@ public class MediaBundleStarter implements IWBundleStartable{
 			      "An xml document such as .ibxml",ICMimeType.IC_MIME_TYPE_XML,
 			      "Richtext","text/richtext",
 			      "Richtext newer","text/enriched",
+			      "Style sheet","text/css",
 			      "PostScript  ai eps ps  ","application/postscript",
 			      "Microsoft Rich Text Format rtf","application/rtf",
 			      "Adobe Acrobat PDF  pdf","application/pdf",
