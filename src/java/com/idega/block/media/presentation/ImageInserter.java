@@ -115,7 +115,7 @@ public ImageInserter(Class WindowToOpen) {
       Image image=setImage;
         if(image==null){
           if ( imageId == -1 ) {
-            image = iwrb.getImage("picture.gif",iwrb.getLocalizedString("new_image","New image"),138,90);
+            image = iwrb.getImage("picture.gif",iwrb.getLocalizedString("new_image","Newimage"),138,90);
           }
           else {
             image = new Image(imageId);//,"rugl");
@@ -131,12 +131,13 @@ public ImageInserter(Class WindowToOpen) {
           }
           image.setNoImageLink();
         }
-        image.setName("rugl");
+        image.setName("im"+imSessionImageName);
+        System.err.println("image_name is "+image.getName());
         Page P = getParentPage();
         if(P!=null){
           Script S = P.getAssociatedScript();
           if(S!=null)
-            S.addFunction("imchange",getImageChangeJSFunction());
+            S.addFunction("imchange",getImageChangeJSFunction(image.getName()));
         }
 
       Link imageAdmin = null;
@@ -152,7 +153,9 @@ public ImageInserter(Class WindowToOpen) {
         imageAdmin.addParameter(SimpleChooserWindow.prmReloadParent,"true");
       imageAdmin.addParameter("submit","new");
       imageAdmin.addParameter(sessionImageParameterName,imSessionImageName);
-			String sImageId = imageId > 0 ?String.valueOf(imageId):"";
+      imageAdmin.addParameter("image_name",image.getName());
+      System.err.println(imSessionImageName);
+      String sImageId = imageId > 0 ?String.valueOf(imageId):"";
       if ( imageId != -1 )
         imageAdmin.addParameter(imSessionImageName,imageId);
 
@@ -196,12 +199,17 @@ public ImageInserter(Class WindowToOpen) {
     return "setImageId("+id+")";
   }
 
-  public String getImageChangeJSFunction(){
+  public String getImageChangeJSFunction(String imageName){
     StringBuffer function = new StringBuffer("");//var imageName = \"rugl\"; \n");
-    function.append("function setImageId(imageId) { \n \t");
+    function.append("function setImageId(imageId,imagename) { \n \t");
     function.append("if (document.images) { \n \t\t");
-    function.append("document.rugl.src = \"/servlet/MediaServlet/\"+imageId+\"media?media_id=\"+imageId; \n\t ");
-    function.append("document.forms[0]."+sHiddenInputName+".value = imageId \n\t}\n }");
+    function.append("document.images['im'+imagename].src = \"/servlet/MediaServlet/\"+imageId+\"media?media_id=\"+imageId; \n\t}\n\t");
+    function.append("document.forms[0].elements[getElementIndex(imagename)].value = imageId \n}\n");
+    function.append("function getElementIndex(elementname){ \n \t");
+    function.append("len = document.forms[0].length \n \t");
+    function.append("for(i=0; i<len; i++){ \n \t \t");
+    function.append("if(document.forms[0].elements[i].name == elementname.toString()){ \n\t\t ");
+    function.append("return i; \n \t \t} \n  \t} \n }");
 
     return function.toString();
   }

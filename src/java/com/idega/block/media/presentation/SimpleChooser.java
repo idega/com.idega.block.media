@@ -39,11 +39,11 @@ import com.idega.block.media.servlet.MediaServlet;
       return "saveImageId()";
     }
 
-    public static String getSaveImageFunction(){
+    public static String getSaveImageFunction(String imagename){
       StringBuffer function = new StringBuffer("");
       function.append(" var iImageId = -1 ; \n");
       function.append("function "+getSaveImageFunctionName()+" {\n \t");
-      function.append("top.window.opener.setImageId(iImageId) ; \n \t");
+      function.append("top.window.opener.setImageId(iImageId,'"+imagename+"') ; \n \t");
       function.append("top.window.close(); \n }");
       return function.toString();
     }
@@ -54,7 +54,9 @@ import com.idega.block.media.servlet.MediaServlet;
 
       if(iwc.getApplication().getSettings().getProperty(MediaServlet.USES_OLD_TABLES)!=null)
         usesOld = true;
-      getParentPage().getAssociatedScript().addFunction("callbim",getSaveImageFunction() );
+
+        getParentPage().getAssociatedScript().addFunction("callbim",getSaveImageFunction(sessImageParameter) );
+
 
       add("block.media");
       Table Frame = new Table();
