@@ -8,6 +8,7 @@ import com.idega.presentation.ui.*;
 import com.idega.block.media.data.ImageEntity;
 import com.idega.util.idegaTimestamp;
 import com.idega.idegaweb.IWBundle;
+import com.idega.block.media.servlet.MediaServlet;
 
 
 /**
@@ -24,6 +25,7 @@ import com.idega.idegaweb.IWBundle;
     private String sessImageParameter = "image_id";
     private final static String IW_BUNDLE_IDENTIFIER="com.idega.block.image";
     private boolean includeLinks;
+    private boolean usesOld = false;
 
     public void setToIncludeLinks(boolean includeLinks){
       this.includeLinks = includeLinks;
@@ -50,6 +52,8 @@ import com.idega.idegaweb.IWBundle;
       IWBundle iwb = getBundle(iwc);
       checkParameterName(iwc);
 
+      if(iwc.getApplication().getSettings().getProperty(MediaServlet.USES_OLD_TABLES)!=null)
+        usesOld = true;
       getParentPage().getAssociatedScript().addFunction("callbim",getSaveImageFunction() );
 
       add("block.media");
@@ -58,6 +62,10 @@ import com.idega.idegaweb.IWBundle;
       Frame.setCellspacing(0);
       IFrame ifList = new IFrame(target1,SimpleLister.class);
       IFrame ifViewer = new IFrame(target2, SimpleViewer.class);
+      if(usesOld){
+        ifList = new IFrame(target1,com.idega.jmodule.image.presentation.SimpleLister.class);
+        ifViewer = new IFrame(target2, com.idega.jmodule.image.presentation.SimpleViewer.class);
+      }
       ifList.setWidth(210);
       ifList.setHeight(410);
       ifViewer.setWidth(500);
@@ -126,7 +134,8 @@ import com.idega.idegaweb.IWBundle;
     }
 
     public Link getNewImageLink(PresentationObject mo){
-      Link L = new Link(mo,SimpleUploaderWindow.class);
+      Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleUploaderWindow.class :SimpleUploaderWindow.class;
+      Link L = new Link(mo,C);
       L.addParameter("action","upload");
       L.addParameter("submit","new");
       L.setTarget(target2);
@@ -134,7 +143,8 @@ import com.idega.idegaweb.IWBundle;
     }
 
     public Link getSaveLink(PresentationObject mo){
-      Link L = new Link(mo,SimpleViewer.class);
+      Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleViewer.class :SimpleViewer.class;
+      Link L = new Link(mo,C);
       L.addParameter(prmAction,actSave);
       L.setOnClick(getSaveImageFunctionName());
       L.setTarget(target2);
@@ -142,7 +152,8 @@ import com.idega.idegaweb.IWBundle;
     }
 
     public Link getDeleteLink(PresentationObject mo){
-      Link L = new Link(mo,SimpleViewer.class);
+      Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleViewer.class :SimpleViewer.class;
+      Link L = new Link(mo,C);
       L.addParameter(prmAction,actDelete);
       L.setOnClick("top.setTimeout('top.frames.lister.location.reload()',150)");
       L.setTarget(target2);
@@ -150,7 +161,8 @@ import com.idega.idegaweb.IWBundle;
     }
 
     public Link getReloadLink(PresentationObject mo){
-      Link L = new Link(mo,SimpleLister.class);
+      Class C = usesOld ? com.idega.jmodule.image.presentation.SimpleLister.class :SimpleLister.class;
+      Link L = new Link(mo,C);
       L.setTarget(target1);
       return L;
     }
