@@ -47,7 +47,8 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
   if( mediaId == null){
      mediaId = request.getParameter("image_id");
      if( mediaId != null){
-      sql = "select image_value,content_type from image where image_id=";
+      //sql = "select image_value,content_type from image where image_id=";
+      sql = "select image_value from image where image_id=";
      }
      else{
       mediaId = request.getParameter("file_id");
@@ -70,10 +71,10 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
 
           while(RS.next()){
             myInputStream = RS.getBinaryStream(1);
-            contentType = RS.getString(2);
+           // contentType = RS.getString(2);
           }
 
-          response.setContentType(contentType);
+          //response.setContentType(contentType);
 
           if(myInputStream!=null){
 
@@ -95,7 +96,7 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
 
             output.flush();
             output.close();
-            myInputStream.close();
+           // myInputStream.close();
           }
           else System.err.println("InputStream is null");
 
