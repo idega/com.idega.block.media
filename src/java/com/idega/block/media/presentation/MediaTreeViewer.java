@@ -1,5 +1,6 @@
 package com.idega.block.media.presentation;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -7,8 +8,11 @@ import javax.ejb.FinderException;
 
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
+import com.idega.core.file.business.ICFileSystem;
+import com.idega.core.file.business.ICFileSystemFactory;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
+import com.idega.core.file.data.ICMimeTypeBMPBean;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.Block;
@@ -32,7 +36,7 @@ public class MediaTreeViewer extends Block {
   private IWCacheManager cm;
   private IWResourceBundle iwrb;
 
-  public void  main(IWContext iwc){
+  public void  main(IWContext iwc) throws Exception{
     iwrb = getResourceBundle(iwc);
     cm = iwc.getIWMainApplication().getIWCacheManager();
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
@@ -44,14 +48,31 @@ public class MediaTreeViewer extends Block {
 
     Link proto = new Link(MediaViewerWindow.class);
     proto.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
-    ICFile rootNode = (ICFile)cm.getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+    ICFile publicRootNodeOld = (ICFile)cm.getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
     ICFileTree tree = new ICFileTree();
+    tree.setToShowLeafs(false);
     tree.getLocation().setApplicationClass(MediaTreeViewer.class);
     tree.getLocation().setTarget("legacy_mediaviewer");
 
-    Iterator it = rootNode.getChildren();
-    if(it!=null) tree.setFirstLevelNodes(it);
+//    Iterator it = publicRootNodeOld.getChildren();
+//    if(it!=null) tree.setFirstLevelNodes(it);
+	
+	List firstLevelNodes = new ArrayList();
+	if(publicRootNodeOld != null){
+		ICFileTreeNode node = new ICFileTreeNode(publicRootNodeOld);
+		node.addVisibleMimeType(ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
+		firstLevelNodes.add(node);
+	}
+	
+	// add user and group folders to publicRootNodeOld
+	
+//	ICFileSystem fileSystem = ICFileSystemFactory.getFileSystem(iwc);
+	
+
+
+	Iterator it = firstLevelNodes.iterator();
+	if(it!=null) tree.setFirstLevelNodes(it);
 
     tree.setNodeActionParameter(fileInSessionParameter);
     tree.setFileLinkPrototype(proto);
@@ -68,16 +89,16 @@ public class MediaTreeViewer extends Block {
     *
     */
 
-    Link upload = MediaBusiness.getNewFileLink();
-    upload.setText(iwrb.getLocalizedString("mv.upload","upload"));
-    upload.setAsImageButton(true);
-    add(upload);
+//    Link upload = MediaBusiness.getNewFileLink();
+//    upload.setText(iwrb.getLocalizedString("mv.upload","upload"));
+//    upload.setAsImageButton(true);
+//    add(upload);
 
 
-    Link folder = MediaBusiness.getNewFolderLink();
-    folder.setText(iwrb.getLocalizedString("mv.folder","folder"));
-    folder.setAsImageButton(true);
-    add(folder);
+//    Link folder = MediaBusiness.getNewFolderLink();
+//    folder.setText(iwrb.getLocalizedString("mv.folder","folder"));
+//    folder.setAsImageButton(true);
+//    add(folder);
 
     add(T);
 

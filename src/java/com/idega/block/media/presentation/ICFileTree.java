@@ -45,6 +45,8 @@ public class ICFileTree extends AbstractTreeViewer {
   private String nodeActionPrm = null;
 
   private ArrayList icFileTypeArrayList = null;
+  
+  private boolean _isICFileTreeNode = false;
 
   public ICFileTree(){
     super();
@@ -56,9 +58,42 @@ public class ICFileTree extends AbstractTreeViewer {
     fileTree.setFirstLevelNodes(nodes);
     return fileTree;
   }
+  
+	public void setFirstLevelNodes(ICTreeNode[] nodes) {
+		super.setFirstLevelNodes(nodes);
+		
+		if(nodes.length > 0 && nodes[0] instanceof ICFileTreeNode){
+			_isICFileTreeNode = true;
+		}
+	}
+
+	public void setFirstLevelNodes(Iterator nodes) {
+		//defaultRoot.clear();
+		super.setFirstLevelNodes((Iterator)null);
+		if (nodes != null) {
+			while (nodes.hasNext()) {
+				ICTreeNode node = (ICTreeNode) nodes.next();
+				this.addFirstLevelNode(node);
+			}
+		}
+	}
+
+	public void addFirstLevelNode(ICTreeNode node) {
+		super.addFirstLevelNode(node);
+		if(node instanceof ICFileTreeNode){
+			_isICFileTreeNode = true;
+		}
+	}
+  
+  
 
   public Image getIcon(ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode){
-    String mimeType = ((ICFile)node).getMimeType();
+    String mimeType = null;
+    if(_isICFileTreeNode){
+			mimeType = ((ICFileTreeNode)node).getICFile().getMimeType();
+    } else {
+		mimeType = ((ICFile)node).getMimeType();
+    }
     if(mimeType != null){
       mimeType = mimeType.replace('\\','_');
       mimeType = mimeType.replace('/','_');
@@ -90,14 +125,14 @@ public class ICFileTree extends AbstractTreeViewer {
   }
 
   public PresentationObject getObjectToAddToColumn(int colIndex, ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode) {
-    if( filter(node) ){//return null if this
+//    if( filter(node) ){//return null if this
       switch (colIndex) {
         case 1:
           return getIcon(node, iwc, nodeIsOpen, nodeHasChild, isRootNode );
         case 2:
 
           if(!node.isLeaf()){
-            Link l = this.getFolderLinkClone(node.getNodeName());
+            Link l = this.getFolderLinkClone(node.getNodeName(iwc.getCurrentLocale(),iwc));
 
             this.setLinkToOpenOrCloseNode(l,node,nodeIsOpen);
             if( nodeNameTarget != null ){
@@ -110,7 +145,7 @@ public class ICFileTree extends AbstractTreeViewer {
             return l;
           }
           else {
-            Link l = this.getFileLinkClone(node.getNodeName());
+            Link l = this.getFileLinkClone(node.getNodeName(iwc.getCurrentLocale()));
             this.setLinkToMaintainOpenAndClosedNodes(l);
 
             if( nodeNameTarget != null ){
@@ -123,7 +158,7 @@ public class ICFileTree extends AbstractTreeViewer {
             return l;
           }
       }
-    }
+//    }
     return null;
   }
 
@@ -237,21 +272,21 @@ public class ICFileTree extends AbstractTreeViewer {
   }
 */
 
-/**
- *
- * @param fileType An ArrayList of ICFileType entities
- */
-  public void setICFileTypeFilterArrayList(ArrayList icFileTypeArrayList){
-    this.icFileTypeArrayList = icFileTypeArrayList;
-  }
-
-  protected boolean filter(ICTreeNode node){
-    //store mimetype result
-    //check in store
-    //else get type from cache
-    //return if not of filter type
-return true;
-    //return ((ICFile)node).getMimeType().equals(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
-  }
+///**
+// *
+// * @param fileType An ArrayList of ICFileType entities
+// */
+//  public void setICFileTypeFilterArrayList(ArrayList icFileTypeArrayList){
+//    this.icFileTypeArrayList = icFileTypeArrayList;
+//  }
+//
+//  protected boolean filter(ICTreeNode node){
+//    //store mimetype result
+//    //check in store
+//    //else get type from cache
+//    //return if not of filter type
+//return true;
+//    //return ((ICFile)node).getMimeType().equals(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
+//  }
 
 }
