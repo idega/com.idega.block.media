@@ -45,42 +45,48 @@ public class MediaBusiness {
    * @return                 Return the MediaProperties class setId(the new media id) -1 if failed
    */
   public static MediaProperties saveMediaToDB( MediaProperties mediaProps, int icFileParentId, IWContext iwc ) {
-    int id = -1;
-    try {
 
-      long time1 = System.currentTimeMillis();
-
-      FileInputStream input = new FileInputStream( mediaProps.getRealPath() );
-
-      ICFile file = new ICFile();
-      file.setName( mediaProps.getName() );
-      file.setMimeType( mediaProps.getMimeType() );
-
-      file.setFileValue( input );
-      file.setFileSize( ( int ) mediaProps.getSize() );
-
-
-      file = saveMediaToDB(file,icFileParentId,iwc);
-      long time2 = System.currentTimeMillis();
-      System.out.println("MediaBusiness saveMediaToDB :"+ (time2 - time1 )+ " ms for "+mediaProps.getSize()+" bytes");
-
-      id = file.getID();
-      mediaProps.setId( id );
-
-      try {
-        FileUtil.delete(mediaProps.getRealPath() );
-      }
-      catch (Exception ex) {
-        System.err.println("MediaBusiness: deleting the temporary file at "+mediaProps.getRealPath()+" failed.");
-      }
-    }
-    catch( Exception e ) {
-      e.printStackTrace( System.err );
-      mediaProps.setId( -1 );
-      return mediaProps;
-    }
+    //ICFile icFile = saveMediaToDB(mediaProps.getUploadFile(),icFileParentId,iwc);
+    saveMediaToDB(mediaProps.getUploadFile(),icFileParentId,iwc);
 
     return mediaProps;
+
+//    int id = -1;
+//    try {
+//
+//      long time1 = System.currentTimeMillis();
+//
+//      FileInputStream input = new FileInputStream( mediaProps.getRealPath() );
+//
+//      ICFile file = new ICFile();
+//      file.setName( mediaProps.getName() );
+//      file.setMimeType( mediaProps.getMimeType() );
+//
+//      file.setFileValue( input );
+//      file.setFileSize( ( int ) mediaProps.getSize() );
+//
+//
+//      file = saveMediaToDB(file,icFileParentId,iwc);
+//      long time2 = System.currentTimeMillis();
+//      System.out.println("MediaBusiness saveMediaToDB :"+ (time2 - time1 )+ " ms for "+mediaProps.getSize()+" bytes");
+//
+//      id = file.getID();
+//      mediaProps.setId( id );
+//
+//      try {
+//        FileUtil.delete(mediaProps.getRealPath() );
+//      }
+//      catch (Exception ex) {
+//        System.err.println("MediaBusiness: deleting the temporary file at "+mediaProps.getRealPath()+" failed.");
+//      }
+//    }
+//    catch( Exception e ) {
+//      e.printStackTrace( System.err );
+//      mediaProps.setId( -1 );
+//      return mediaProps;
+//    }
+//
+//    return mediaProps;
   }
 
   public static MediaProperties saveMediaToDBUnderRoot( MediaProperties mediaProps,IWContext iwc ) {
@@ -154,7 +160,7 @@ public class MediaBusiness {
     UploadFile file = iwc.getUploadedFile();
 
     if(file != null){
-      mediaProps = new MediaProperties(file.getName(),file.getMimeType(),file.getRealPath(),file.getWebPath(),(int)file.getSize(),parameters);
+      mediaProps = new MediaProperties(file,parameters);
     }
 
     return mediaProps;
@@ -445,48 +451,100 @@ public class MediaBusiness {
     }
   }
 
-  /**
-   * @deprecated : tempImplementation
-   * @param uplaodFile
-   * @param iwc
-   * @return
-   * @ todo reimplement
+
+  public static ICFile saveMediaToDBUploadFolder(UploadFile uploadFile, IWContext iwc){
+    return saveMediaToDB(uploadFile, -1, iwc);
+  }
+
+
+
+ /**
+   *  Description of the Method
+   *
+   * @param  mediaProps      The MediaProperties class containing the path to the media
+   * @param  icFileParentId  The id of the media's parent in the database.
+   * <br> A value of -1 sets the parent to the default parent directory of the IWDBFS
+   * <br> A value of 0 saves the media with no parent.
+   * @param  iwc             The IWContext
+   * @return                 Return the ICFile class, null if failed, sets uploadfile.getID() = ICFile.getID() or -1 if failed
    */
-  public static ICFile SaveMediaToDB(UploadFile uploadFile, IWContext iwc){
-    int parentId = getMediaId(iwc);
-    ICFile file = null;
+
+  public static ICFile saveMediaToDB(UploadFile uploadFile, int icFileParentId, IWContext iwc){
     int id = -1;
-    try{
-      FileInputStream input = new FileInputStream(uploadFile.getRealPath());
+    ICFile file = null;
+    try {
+
+      long time1 = System.currentTimeMillis();
+
+      FileInputStream input = new FileInputStream( uploadFile.getRealPath() );
+
       file = new ICFile();
-      file.setName(uploadFile.getName());
-      file.setMimeType(uploadFile.getMimeType() );
+      file.setName( uploadFile.getName() );
+      file.setMimeType( uploadFile.getMimeType() );
 
-      System.out.println("MIMETYPE: "+uploadFile.getMimeType());
+      file.setFileValue( input );
+      file.setFileSize( ( int ) uploadFile.getSize() );
 
-      file.setFileValue(input);
-      file.setFileSize((int)uploadFile.getSize());
-      file.insert();
 
-      if( parentId==-1 ){
-        ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
-        rootNode.addChild(file);
-      }
-      else {
-        ICFile rootNode = new ICFile(parentId);
-        rootNode.addChild(file);
-      }
+      file = saveMediaToDB(file,icFileParentId,iwc);
+      long time2 = System.currentTimeMillis();
+      System.out.println("MediaBusiness saveMediaToDB :"+ (time2 - time1 )+ " ms for "+uploadFile.getSize()+" bytes");
 
       id = file.getID();
-      uploadFile.setId(id);
+      uploadFile.setId( id );
+
+      try {
+        FileUtil.delete(uploadFile);
+        //uploadFile = null;
+      }
+      catch (Exception ex) {
+        System.err.println("MediaBusiness: deleting the temporary file at "+uploadFile.getRealPath()+" failed.");
+      }
     }
-    catch(Exception e){
-      e.printStackTrace(System.err);
-      uploadFile.setId(-1);
-      return file;
+    catch( Exception e ) {
+      e.printStackTrace( System.err );
+      uploadFile.setId( -1 );
+      return null;
     }
 
     return file;
+
+
+
+//    int parentId = getMediaId(iwc);
+//    ICFile file = null;
+//    int id = -1;
+//    try{
+//      FileInputStream input = new FileInputStream(uploadFile.getRealPath());
+//      file = new ICFile();
+//      file.setName(uploadFile.getName());
+//      file.setMimeType(uploadFile.getMimeType() );
+//
+//      System.out.println("MIMETYPE: "+uploadFile.getMimeType());
+//
+//      file.setFileValue(input);
+//      file.setFileSize((int)uploadFile.getSize());
+//      file.insert();
+//
+//      if( parentId==-1 ){
+//        ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
+//        rootNode.addChild(file);
+//      }
+//      else {
+//        ICFile rootNode = new ICFile(parentId);
+//        rootNode.addChild(file);
+//      }
+//
+//      id = file.getID();
+//      uploadFile.setId(id);
+//    }
+//    catch(Exception e){
+//      e.printStackTrace(System.err);
+//      uploadFile.setId(-1);
+//      return file;
+//    }
+//
+//    return file;
 
   }
 
