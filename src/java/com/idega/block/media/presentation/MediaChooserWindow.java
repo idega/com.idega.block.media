@@ -9,7 +9,7 @@ import com.idega.presentation.FrameSet;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Page;
 import com.idega.presentation.Table;
-import com.idega.presentation.ui.AbstractChooserWindow;
+import com.idega.presentation.ui.StyledAbstractChooserWindow;
 /**
  * Title: com.idega.block.media.presentation.MediaChooserWindow
  * Description: The frame window that displays the filesystem
@@ -20,7 +20,10 @@ import com.idega.presentation.ui.AbstractChooserWindow;
  */
 
  //public class MediaChooserWindow extends FrameSet {
- public class MediaChooserWindow extends AbstractChooserWindow {
+ public class MediaChooserWindow extends StyledAbstractChooserWindow {
+ 	
+	private static final String IW_BUNDLE_IDENTIFIER = "com.idega.user";
+	
   private IWBundle iwb;
   //  public static String prmReloadParent = "simple_upl_wind_rp";
   private String fileInSessionParameter = "ic_file_id";
@@ -29,28 +32,32 @@ import com.idega.presentation.ui.AbstractChooserWindow;
   public MediaChooserWindow(){
     super();
     //frameset fixes
-    setEmpty();//for IWAdminWindow
+//    setEmpty();//for IWAdminWindow
     setOnlyScript(true);//for AbstractChooserWindow
     //
     setWidth(640);
     setHeight(480);
     setResizable(true);
 
-    frame = new FrameSet();
-    frame.add(Top.class);
-    frame.add(BottomFrameSet.class);
-    frame.setSpanPixels(1,50);
-    frame.setScrollbar(false);
-    frame.setScrolling(1,false);
-    frame.setScrolling(2,false);
-    frame.setSpanAdaptive(2);
-    frame.setResizable(true);
+
   }
 
   public void displaySelection(IWContext iwc){
    //store the parameter in session
     //MediaBusiness.getMediaParameterNameInSession(iwc);
     MediaBusiness.saveMediaIdToSession(iwc,MediaBusiness.getMediaId(iwc));
+    
+		frame = new FrameSet();
+		
+		
+    frame.add(Top.class);
+		frame.add(BottomFrameSet.class);
+		frame.setSpanPixels(1,50);
+		frame.setScrollbar(false);
+		frame.setScrolling(1,false);
+		frame.setScrolling(2,false);
+		frame.setSpanAdaptive(2);
+		frame.setResizable(true);
     
     
     String chooserType = iwc.getParameter(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME);
@@ -62,23 +69,29 @@ import com.idega.presentation.ui.AbstractChooserWindow;
       frame.setParentToReload();
     }
 
-    add(frame);
+    add(frame,iwc);
   }
 
   public String getBundleIdentifier(){
     return MediaConstants.IW_BUNDLE_IDENTIFIER;
   }
+  
 
 
   public static class FileTree extends Page{
    public FileTree(){
     setAllMargins(0);
-    setBackgroundColor(MediaConstants.MEDIA_TREE_VIEWER_BACKGROUND_COLOR);
+    setStyleClass("main");
+//    setBackgroundColor(MediaConstants.MEDIA_TREE_VIEWER_BACKGROUND_COLOR);
     add(new MediaTreeViewer());
    }
   }
 
   public static class FileViewer extends MediaViewerWindow{
+  	public FileViewer() {
+  		setAllMargins(0);
+  		setStyleClass("main");
+  	}
   }
 
   public static class BottomFrameSet extends FrameSet{
@@ -101,9 +114,6 @@ import com.idega.presentation.ui.AbstractChooserWindow;
 
     public Top(){
      setAllMargins(0);
-     /**
-      * TODO: remove hack!!!
-      */
      setBackgroundColor("#9DB308");//IWAdminWindow.HEADER_COLOR);
     }
 
@@ -115,10 +125,7 @@ import com.idega.presentation.ui.AbstractChooserWindow;
     headerTable.setWidth("100%");
     headerTable.setHeight("100%");
     headerTable.setAlignment(1,1,"left");//changed from right
-    headerTable.addText(iwrb.getLocalizedString("user_property_window", "User Property Window"), IWConstants.BUILDER_FONT_STYLE_TITLE);
-    /**
-     * TODO: remove hack!!! 
-     */
+ //   headerTable.addText(iwrb.getLocalizedString("user_property_window", "User Property Window"), IWConstants.BUILDER_FONT_STYLE_TITLE);
     headerTable.add(getBundle(iwc).getImage("top.gif"));
  //   headerTable.add(iwc.getApplication().getCoreBundle().getImage("/editorwindow/idegaweb.gif","idegaWeb"),1,1);
     add(headerTable);
