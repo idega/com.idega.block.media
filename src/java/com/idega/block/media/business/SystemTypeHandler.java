@@ -11,34 +11,64 @@ package com.idega.block.media.business;
 
 import com.idega.presentation.*;
 import com.idega.presentation.text.*;
+import com.idega.presentation.ui.CheckBox;
+import com.idega.presentation.text.*;
+import com.idega.block.reports.business.Content;
+import com.idega.block.reports.presentation.ContentViewer;
 import java.util.Iterator;
+import java.util.Vector;
 
 import com.idega.core.data.ICFile;
 public class SystemTypeHandler extends FileTypeHandler {
 
+public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Size","Mimetype"};
+
+
   public PresentationObject getPresentationObject(int icFileId){
-    Table table = new Table();
-
-    table.setWidth("100%");
-    table.setHeight("100%");
-
+    ContentViewer listView = null;
     try {
+
       ICFile file = new ICFile(icFileId);
-      Link link;
+      Vector V = new Vector();
+
+      //**@todo debug only do this if not a folder**/
+      V.add(getContentObject(file));
 
       Iterator iter = file.getChildren();
-      while (iter.hasNext()) {
-        ICFile item = (ICFile) iter.next();
-        link = new Link();
-        link.setFile(item);
-        table.add(link);
+      if( iter != null ){
+        while (iter.hasNext()) {
+          ICFile item = (ICFile) iter.next();
+          V.add(getContentObject(item));
+        }
       }
+
+      listView = new ContentViewer(LIST_VIEW_HEADERS,V);
+      //CV1.setICObjectInstanceID(2);
+      listView.setDisplayNumber(2);
+      listView.setAllowOrder(true);
+
+
+
     }
     catch (Exception ex) {
       ex.printStackTrace(System.err);
     }
-    return table;
+    return listView;
 
-  };
+  }
+
+  private Content getContentObject(ICFile item){
+    Object[] objs = new Object[5];
+    objs[0] = new CheckBox(Integer.toString(item.getID()));
+    objs[1] = (item.getName() != null ) ? item.getName() : "";
+    objs[2] = (item.getModificationDate() != null ) ? item.getModificationDate().toString() : item.getCreationDate().toString();
+    //objs[3] = (item.getFileSize() != null ) ? item.getFileSize().toString() : "";
+    objs[3] = "size";
+    objs[4] = (item.getMimeType() != null ) ? item.getMimeType() : "";
+
+    Content C = new Content(objs);
+
+    return C;
+  }
 
 }
