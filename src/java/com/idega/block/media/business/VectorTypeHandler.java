@@ -1,32 +1,30 @@
 package com.idega.block.media.business;
 
+import com.idega.block.media.data.MediaProperties;
+import com.idega.core.data.ICFile;
+import com.idega.presentation.Flash;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.PresentationObject;
+import com.idega.util.caching.Cache;
+
 /**
  * Title: com.idega.block.media.business.VectorTypeHandler
- * Description: A type handler that handles vector graphics
+ * Description: A type handler that handles vector graphics and their plugins
  * Copyright:    Copyright (c) 2001
  * Company:      idega software
  * @author Eirikur S. Hrafnsson eiki@idega.is
  * @version 1.0
  */
 
-import com.idega.presentation.*;
-import com.idega.presentation.text.*;
-import java.util.Iterator;
-import com.idega.presentation.IWContext;
-import com.idega.util.caching.Cache;
-import com.idega.presentation.Image;
-import com.idega.block.media.data.MediaProperties;
-
-import com.idega.core.data.ICFile;
 public class VectorTypeHandler extends FileTypeHandler {
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
 
     Cache cache = this.getCachedFileInfo(icFileId,iwc);
-    Flash flash = new Flash();
+    Flash flash = new Flash(cache.getVirtualPathToFile());
     flash.setWidth("100%");
     flash.setHeight("100%");
-    flash.setFile((ICFile)cache.getEntity());
+
     return flash;
   }
 

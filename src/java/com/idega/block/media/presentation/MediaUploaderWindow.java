@@ -1,30 +1,19 @@
 package com.idega.block.media.presentation;
 
-import com.idega.presentation.ui.Window;
-import com.idega.block.media.business.MediaConstants;
+import com.idega.presentation.text.Text;
+import com.idega.block.media.business.*;
 import com.idega.block.media.data.MediaProperties;
-import com.idega.block.media.business.MediaBusiness;
-import com.idega.block.media.business.FileTypeHandler;
-import com.idega.presentation.ui.Form;
-import com.idega.presentation.ui.SubmitButton;
-import com.idega.presentation.ui.FileInput;
-import com.idega.presentation.ui.HiddenInput;
-import com.idega.presentation.IWContext;
-import com.idega.presentation.PresentationObject;
-import com.idega.presentation.Table;
-import com.idega.presentation.Image;
-import com.idega.presentation.Script;
-import com.idega.presentation.text.Link;
-import com.idega.presentation.ui.IFrame;
-import com.idega.util.*;
-import java.sql.*;
-import java.io.*;
-import java.util.*;
-import com.oreilly.servlet.MultipartRequest;
-import com.idega.block.media.servlet.MediaServlet;
-import com.idega.block.media.business.MediaBusiness;
-import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWResourceBundle;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Image;
+import com.idega.presentation.Table;
+import com.idega.presentation.text.Link;
+import com.idega.presentation.ui.FileInput;
+import com.idega.presentation.ui.Form;
+import com.idega.presentation.ui.HiddenInput;
+import com.idega.presentation.ui.SubmitButton;
+import com.idega.presentation.ui.Window;
 
 /**
  * Title: com.idega.block.media.presentation.MediaUploaderWindow
@@ -40,11 +29,12 @@ public class MediaUploaderWindow extends Window{
 private IWBundle iwb;
 private IWResourceBundle iwrb;
 
-/** this parameter is changed right away**/
+/* this parameter is changed right away */
     private String fileInSessionParameter = "";
 
     public MediaUploaderWindow(){
     }
+
 
     public void main(IWContext iwc){
       setBackgroundColor(MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR);
@@ -57,67 +47,62 @@ private IWResourceBundle iwrb;
     }
 
     private void handleEvents(IWContext iwc){
+      /* can only check this because of the multipart form*/
       String contentType = iwc.getRequestContentType();
 
-      if( (contentType !=null) && (contentType.indexOf("multipart")!=-1) ){//viewing after uploading to disk
+      /* Uploading and checking for a valid mimetype */
+      if( (contentType!=null) && contentType.indexOf("multipart")!=-1 ){
         MediaProperties mediaProps = MediaBusiness.uploadToDiskAndGetMediaProperties(iwc);
+        iwc.setSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME,mediaProps);
 
+        /*if the upload succeded*/
         if(mediaProps!=null){
-          Table T = new Table(2,2);
-
-          /**@todo: insert a generated localized generated button**/
-          Link submitSave = new Link("Save");
-          submitSave.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
-          submitSave.setAsImageButton(true);
-          submitSave.addParameter(fileInSessionParameter,(String)mediaProps.getParameterMap().get(fileInSessionParameter));
-
-          /**@todo: insert a generated localized generated button**/
-          Link submitNew = new Link("New");
-          submitNew.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_NEW);
-          submitNew.addParameter(fileInSessionParameter,(String)mediaProps.getParameterMap().get(fileInSessionParameter));
-          submitNew.setAsImageButton(true);
-
-          T.add(submitNew,1,1);
-
-
           try {
-            T.add(submitSave,1,1);
-            T.add(new MediaViewer(mediaProps),1,2);
+            /*this will throw an exection if the mimetype does not exist*/
+            FileTypeHandler handler = MediaBusiness.getFileTypeHandler( iwc, mediaProps.getMimeType() );
+            viewUploadedMedia(mediaProps);
           }
-          catch (Exception ex) {
-          /** @todo missing mimetype handling
-           *
-           */
-
-            StringBuffer text = new StringBuffer();
-            text.append(iwrb.getLocalizedString("uploader.window.nomimetype.firsthalf","The mimetype"));
-            text.append(" ");
-            text.append(mediaProps.getMimeType());
-            text.append(iwrb.getLocalizedString("uploader.window.nomimetype.secondhalf"," is not in the database."));
-
-            Link mimeWindow = new Link(iwrb.getLocalizedString("uploader.window.mimewindowbutton","Add mimetype"));
-            mimeWindow.setAsImageButton(true);
-            mimeWindow.setWindowToOpen(MimeTypeWindow.class);
-            mimeWindow.addParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME,mediaProps.getMimeType());
-            T.add(text.toString(),1,2);
-            T.add(mimeWindow,2,2);
+          catch (MissingMimeTypeException ex) {
+              StringBuffer text = new StringBuffer();
+              text.append(iwrb.getLocalizedString("uploader.window.nomimetype.firsthalf","The mimetype"));
+              text.append(" ");
+              text.append(mediaProps.getMimeType());
+              text.append(iwrb.getLocalizedString("uploader.window.nomimetype.secondhalf"," is not in the database."));
+              add(text.toString());
+              addBreak();
+              add(new MimeTypeWindow(mediaProps.getMimeType()));
           }
-
-
-          add(T);
         }
-        else{//upload failed try again
+        //upload failed try again
+        else{
           add("Error in upload try again");
           add(getMultiPartUploaderForm(iwc));
         }
 
       }
-      else{//else saving or uploading a new file
+      /*Saving to database or uploading a new file*/
+      else{
         String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
         if( (action!=null) && action.equals(MediaConstants.MEDIA_ACTION_SAVE)  ){
-        /**@todo merge with mediaviewer???**/
           setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
-          add(MediaBusiness.saveMedia(iwc));//also deletes the file from disk and return a MediaViewer
+
+          MediaProperties mediaProps = ( MediaProperties ) iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME );
+          iwc.removeSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME );
+
+          String parentId = MediaBusiness.getMediaId( iwc );
+          int pId = -1;
+          if( parentId!= null ) pId = Integer.parseInt(parentId);
+
+          /* if saving a new mimetype */
+          if( iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME)!=null ){
+            String mimeType = iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME);
+            String mimeDescription = iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_DESCRIPTION_PARAMETER_NAME);
+            int fileTypeId = Integer.parseInt(iwc.getParameter(MediaConstants.MEDIA_FILE_TYPE_PARAMETER_NAME));
+            MediaBusiness.saveMimeType(mimeType,mimeDescription,fileTypeId);
+          }
+
+          mediaProps = MediaBusiness.saveMediaToDB( mediaProps, pId, iwc);
+          add(new MediaViewer(mediaProps));//also deletes the file from disk and return a MediaViewer
         }
         else{//add a new file
           add(getMultiPartUploaderForm(iwc));
@@ -127,35 +112,66 @@ private IWResourceBundle iwrb;
 
     }
 
+
+  private void viewUploadedMedia(MediaProperties mediaProps){
+    Table T = new Table(2,2);
+    /**@todo: insert a generated localized generated button**/
+    Link submitSave = new Link("Save");
+    submitSave.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
+    submitSave.setAsImageButton(true);
+    submitSave.addParameter(fileInSessionParameter,(String)mediaProps.getParameterMap().get(fileInSessionParameter));
+
+    /**@todo: insert a generated localized generated button**/
+    Link submitNew = new Link("New");
+    submitNew.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_NEW);
+    submitNew.addParameter(fileInSessionParameter,(String)mediaProps.getParameterMap().get(fileInSessionParameter));
+    submitNew.setAsImageButton(true);
+
+    T.add(submitNew,1,1);
+
+    T.add(submitSave,1,1);
+    T.add(new MediaViewer(mediaProps),1,2);
+    add(T);
+  }
+
+
   private Form getMultiPartUploaderForm(IWContext iwc){
-    /**@todo make the busy image toggle
-     * Script script = getAssociatedScript();
-    script.addFunction("iwToggleBusy(*/
+    Table table = new Table(1,3);
+    table.setWidth(300);
+    table.setHeight(120);
+    table.setVerticalAlignment(1,1,Table.VERTICAL_ALIGN_TOP);
+    table.setVerticalAlignment(1,2,Table.VERTICAL_ALIGN_TOP);
+    table.setVerticalAlignment(1,3,Table.VERTICAL_ALIGN_TOP);
+
+    Text select = new Text(iwrb.getLocalizedString("me.uploadtext","Select a file to upload."));
+    select.setFontFace(Text.FONT_FACE_ARIAL);
+    select.setFontSize(Text.FONT_SIZE_10_HTML_2);
+    select.setBold();
+    table.add(select,1,1);
 
     Form f = new Form();
     f.setMultiPart();
    // String s = iwc.getRequestURI()+"?"+com.idega.+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass());
     String s = com.idega.idegaweb.IWMainApplication.getObjectInstanciatorURL(this.getClass());
     f.setAction(s);
-    Image busy = iwc.getApplication().getCoreBundle().getImage("transparentcell.gif");
 
-    f.add(busy);
-    f.add(new FileInput());
-    f.setOnSubmit("javascript:document.images['"+busy.getID()+"'].src='"+iwc.getApplication().getCoreBundle().getImage("busy.gif").getURL()+"';return true");
+    IWBundle core = iwc.getApplication().getCoreBundle();
+    Image transparent = core.getImage("transparentcell.gif");
+    Image busy = core.getImage("busy.gif");
 
-    Link submit = new Link("Submit");
-    submit.setToFormSubmit(f);
-   // submit.setAsImageButton(true);
+    getParentPage().setOnLoad(";preLoadImages('"+transparent.getURL()+"');preLoadImages('"+busy.getURL()+"')");
 
-    //submit.setOnClick("javascript:document.images['"+busy.getID()+"'].src='"+iwc.getApplication().getCoreBundle().getImage("busy.gif").getURL()+"';"+submit.getOnClick());
+    table.add(transparent,1,2);
+    table.add(new FileInput(),1,3);
+    table.add(new SubmitButton(),1,3);
+    table.add(new HiddenInput(fileInSessionParameter,MediaBusiness.getMediaId(iwc)),1,3);
 
-    f.add(new SubmitButton());
+    f.setOnSubmit("swapImage('"+transparent.getID()+"','','"+busy.getURL()+"',1);return true");
 
-    f.add(new HiddenInput(fileInSessionParameter,MediaBusiness.getMediaId(iwc)));
+    f.add(table);
 
     return f;
   }
-
 
   public String getBundleIdentifier(){
     return MediaConstants.IW_BUNDLE_IDENTIFIER ;

@@ -1,5 +1,18 @@
 package com.idega.block.media.business;
 
+
+import com.idega.block.media.data.MediaProperties;
+import com.idega.block.reports.business.Content;
+import com.idega.core.data.ICFile;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.PresentationObject;
+import com.idega.presentation.Table;
+import com.idega.presentation.text.Link;
+import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.CheckBox;
+import java.util.Iterator;
+
+
 /**
  * Title: com.idega.block.media.business.SystemTypeHandler
  * Description: A type handler that handles idegaWeb system type files such as folders ( The Finder ;)
@@ -9,21 +22,6 @@ package com.idega.block.media.business;
  * @version 1.0
  */
 
-import com.idega.presentation.*;
-import com.idega.presentation.text.*;
-import com.idega.presentation.ui.CheckBox;
-import com.idega.presentation.text.*;
-import com.idega.block.reports.business.Content;
-import com.idega.block.reports.presentation.ContentViewer;
-import com.idega.presentation.IWContext;
-import java.util.Iterator;
-import java.util.Vector;
-import com.idega.util.caching.Cache;
-import com.idega.presentation.Image;
-import com.idega.block.media.data.MediaProperties;
-
-
-import com.idega.core.data.ICFile;
 public class SystemTypeHandler extends FileTypeHandler {
 
 public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Size","Mimetype"};//**@todo localize**/
@@ -33,7 +31,8 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
     //ContentViewer listView = null;
     //try {
       Table table = new Table();
-      table.setColor("#ECECEC");
+     // table.setColor("#ECECEC");
+      table.setColor(MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR);
       table.setWidth(Table.HUNDRED_PERCENT);
       table.setHeight(Table.HUNDRED_PERCENT);
       table.setCellpadding(2);
@@ -92,8 +91,8 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
       table.add(Text.NON_BREAKING_SPACE,1,++y);
       table.setHeight(y,Table.HUNDRED_PERCENT);
 
-      table.setColumnColor(2,"#FCFCFC");
-      table.setColumnColor(4,"#FCFCFC");
+     // table.setColumnColor(2,"#FCFCFC");
+      //table.setColumnColor(4,"#FCFCFC");
       table.setAlignment(Table.HORIZONTAL_ALIGN_LEFT);
 
 

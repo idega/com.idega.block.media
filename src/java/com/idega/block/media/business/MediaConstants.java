@@ -4,8 +4,8 @@ import com.idega.block.media.presentation.MediaUploaderWindow;
 import com.idega.block.media.presentation.MediaViewer;
 import com.idega.block.media.presentation.MediaTreeViewer;
 import com.idega.block.media.presentation.MediaFolderEditorWindow;
-
 import com.idega.presentation.text.Link;
+
 /**
  * Title: com.idega.block.media.business.MediaConstants
  * Description: A handy class with shared constants (static final) used by all the Media classes

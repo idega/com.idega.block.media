@@ -1,5 +1,12 @@
 package com.idega.block.media.business;
 
+import com.idega.block.media.data.MediaProperties;
+import com.idega.core.data.ICFile;
+import com.idega.idegaweb.IWMainApplication;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.PresentationObject;
+import com.idega.util.caching.Cache;
+
 /**
  * Title: com.idega.block.media.business.FileTypeHandler
  * Description: This is the FileTypeHandler interface it defines one static method get
@@ -8,13 +15,6 @@ package com.idega.block.media.business;
  * @author Eirikur S. Hrafnsson eiki@idega.is
  * @version 1.0
  */
-
-import com.idega.presentation.PresentationObject;
-import com.idega.idegaweb.IWMainApplication;
-import com.idega.util.caching.Cache;
-import com.idega.presentation.IWContext;
-import com.idega.core.data.ICFile;
-import com.idega.block.media.data.MediaProperties;
 
 public abstract class FileTypeHandler extends java.lang.Object{
 

@@ -1,48 +1,36 @@
 package com.idega.block.media.business;
 
+import com.idega.block.media.data.MediaProperties;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.PresentationObject;
+import com.idega.presentation.Quicktime;
+import com.idega.util.caching.Cache;
+
+
 /**
  * Title: com.idega.block.media.business.AudioTypeHandler
- * Description: A type handler that handles idegaWeb system type files such as folders ( The Finder ;)
+ * Description: A type handler that handles audio files and their plugins
  * Copyright:    Copyright (c) 2001
  * Company:      idega software
  * @author Eirikur S. Hrafnsson eiki@idega.is
  * @version 1.0
  */
 
-import com.idega.presentation.*;
-import com.idega.presentation.text.*;
-import java.util.Iterator;
-import com.idega.presentation.IWContext;
-import com.idega.util.caching.Cache;
-import com.idega.presentation.Image;
-import com.idega.block.media.data.MediaProperties;
-
-import com.idega.core.data.ICFile;
 public class AudioTypeHandler extends FileTypeHandler {
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
-    Table table = new Table();
-
-    table.setWidth("100%");
-    table.setHeight("100%");
-
-    Cache cache = this.getCachedFileInfo(icFileId,iwc);
-    Image image = new Image(cache.getVirtualPathToFile(),cache.getEntity().getName());
-    table.add(image);
-
-    return table;
+    Cache cache = getCachedFileInfo(icFileId,iwc);
+    Quicktime qt = new Quicktime(cache.getVirtualPathToFile(),cache.getEntity().getName());
+    qt.setWidth(200);
+    qt.setHeight(15);
+    return qt;
   }
 
   public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc){
-    Table table = new Table();
-
-    table.setWidth("100%");
-    table.setHeight("100%");
-
-    Image image = new Image(props.getWebPath(),props.getName());
-    table.add(image);
-
-    return table;
+    Quicktime qt = new Quicktime(props.getWebPath(),props.getName());
+    qt.setWidth(200);
+    qt.setHeight(15);
+    return qt;
   }
 
 }
