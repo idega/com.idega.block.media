@@ -89,9 +89,10 @@ public class SimpleLister extends PresentationObjectContainer {
       sql.append(" where f.mime_type = m.mime_type ");
       sql.append(" and m.ic_file_type_id = t.ic_file_type_id ");
       sql.append(" and t.unique_name = 'ic_image' ");
-      EntityFinder.debug = true;
+      sql.append(" order by ").append(image.getColumnNameCreationDate()).append(" desc ");
+      //EntityFinder.debug = true;
       L = EntityFinder.findAll(image,sql.toString());
-      EntityFinder.debug = false;
+      //EntityFinder.debug = false;
     }
     catch (SQLException ex) {
       L = null;
