@@ -4,12 +4,18 @@ package com.idega.block.media.business;
 import com.idega.block.media.data.MediaProperties;
 import com.idega.block.reports.business.Content;
 import com.idega.core.file.data.ICFile;
+import com.idega.core.file.data.ICMimeType;
+import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.IWContext;
+import com.idega.presentation.Image;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.CheckBox;
+
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 
@@ -25,6 +31,24 @@ import java.util.Iterator;
 public class SystemTypeHandler extends FileTypeHandler {
 
 public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Size","Mimetype"};//**@todo localize**/
+private static Hashtable _icFileIcons = null;
+private static final String _NODE_CLOSED = "_closed";
+private static final String _DEFAULT_ICON_PREFIX = "icfileicons/ui/";
+
+private static final String _DEFAULT_ICON_SUFFIX = ".gif";
+private String iconFolder = _DEFAULT_ICON_PREFIX;
+private String icon_suffix = _DEFAULT_ICON_SUFFIX;
+
+public static final String _UI_WIN = "win/";
+public static final String _UI_MAC = "mac/";
+public static final String _UI_IW = "iw/";
+private String _ui = _UI_IW;
+
+private static final String _APP_DEFAULT_FILE_ICONS = "ic_filetree_icons";
+private String _APP_FILE_ICONS = _APP_DEFAULT_FILE_ICONS;
+
+protected String iconWidth = "16";
+protected String iconHeight = "16";
 
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
@@ -62,12 +86,13 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
       mime.setBold(true);
       mime.setFontSize(Text.FONT_SIZE_10_HTML_2);
 
-      table.add(name,1,1);
-      table.add(date,2,1);
-      table.add(size,3,1);
-      table.add(mime,4,1);
+      table.add(name,2,1);
+      table.add(date,3,1);
+      table.add(size,4,1);
+      table.add(mime,5,1);
 
-      table.setHeight(1,"15");
+      table.setHeight(1,iconHeight);
+      table.setWidth(1,iconWidth);
 
 
       if( iter != null ){
@@ -75,6 +100,7 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
           ++y;
           ICFile item = (ICFile) iter.next();
           //table.add(new CheckBox(Integer.toString(item.getID())),x++,y);
+		  table.add(getIcon(item,iwc),x++,y);
           Link view = MediaBusiness.getMediaViewerLink();
           view.setText(((item.getName() != null ) ? item.getName() : ""));
           view.addParameter(MediaBusiness.getMediaParameterNameInSession(iwc),item.getPrimaryKey().toString());
@@ -130,6 +156,104 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
 */
 return table;
   }
+  
+  
+public void initIcons(IWContext iwc){
+
+	Object obj = iwc.getApplicationAttribute(_APP_FILE_ICONS + getUI());
+	if(obj == null){
+		IWBundle bundle = this.getBundle(iwc);
+		Hashtable tmp = new Hashtable();
+
+		HashMap mimeMap = (HashMap)MediaBusiness.getICMimeTypeMap(iwc);
+
+		if(mimeMap != null){
+			Iterator iter = mimeMap.keySet().iterator();
+			while (iter.hasNext()) {
+				ICMimeType item = (ICMimeType)(mimeMap.get((String)iter.next()));
+				String mimeType = item.getMimeType();
+				tmp.put(mimeType,bundle.getImage(_DEFAULT_ICON_PREFIX+getUI()+mimeType+_DEFAULT_ICON_SUFFIX));
+			}
+		}
+
+		iwc.setApplicationAttribute(_APP_FILE_ICONS + getUI(),tmp);
+		this._icFileIcons = tmp;
+	} else {
+		this._icFileIcons = (Hashtable)obj;
+	}
+
+	updateIconDimensions();
+
+}
+
+protected void updateIconDimensions(){
+
+	if(_icFileIcons != null && _icFileIcons.values() != null){
+		Iterator iter = this._icFileIcons.values().iterator();
+		while (iter.hasNext()) {
+			Image item = (Image)iter.next();
+			if(item != null){
+				item.setHeight(iconHeight);
+			}
+		}
+	}
+}
+	/**
+ * @param iwc
+ * @return
+ */
+private IWBundle getBundle(IWContext iwc) {
+	return iwc.getIWMainApplication().getCoreBundle();
+}
+
+
+public Image getIcon(ICFile file, IWContext iwc){
+		if(_icFileIcons == null){
+			initIcons(iwc);
+		}
+		String mimeType = file.getMimeType();
+
+		if(mimeType != null){
+			mimeType = mimeType.replace('\\','_');
+			mimeType = mimeType.replace('/','_');
+			mimeType = mimeType.replace(':','_');
+			mimeType = mimeType.replace('*','_');
+			mimeType = mimeType.replace('?','_');
+			mimeType = mimeType.replace('<','_');
+			mimeType = mimeType.replace('>','_');
+			mimeType = mimeType.replace('|','_');
+			mimeType = mimeType.replace('\"','_');
+			if(!file.isLeaf()){
+				Object obj = _icFileIcons.get(mimeType+_NODE_CLOSED);
+				if(obj == null){
+					this.updateFileIcon(mimeType,iwc,false);
+					obj = _icFileIcons.get(mimeType+_NODE_CLOSED);
+				}
+				return (Image)obj;
+			}else {
+				Object obj = _icFileIcons.get(mimeType);
+				if(obj == null){
+					this.updateFileIcon(mimeType,iwc,true);
+					obj = _icFileIcons.get(mimeType);
+				}
+				return (Image)obj;
+			}
+		}else {
+			return null;
+		}
+	}
+	
+	public void updateFileIcon(String mimeType, IWContext iwc, boolean isLeaf){
+		IWBundle bundle = this.getBundle(iwc);
+		if(isLeaf){
+			_icFileIcons.put(mimeType,bundle.getImage(_DEFAULT_ICON_PREFIX+getUI()+mimeType+_DEFAULT_ICON_SUFFIX));
+		} else {
+			_icFileIcons.put(mimeType+_NODE_CLOSED,bundle.getImage(_DEFAULT_ICON_PREFIX+getUI()+mimeType+_NODE_CLOSED+_DEFAULT_ICON_SUFFIX));
+		}
+	}
+	public String getUI() {
+		return _ui;
+	}
 
   public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc){
     return new Table();
