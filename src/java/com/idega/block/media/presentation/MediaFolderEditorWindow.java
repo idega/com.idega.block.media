@@ -128,13 +128,15 @@ public class MediaFolderEditorWindow extends Window {
 			String oldFileName = file.getName();
 			boolean store = false;
 			// Check for new name or description
-			if( (newFileName!=null) && !(newFileName.equalsIgnoreCase("")) && !oldFileName.equals(newFileName) ){
+			if( (newFileName!=null)  &&!(newFileName.equalsIgnoreCase(""))  ){
 				//	keeping same file ending 
-				int lastPeriod = oldFileName.lastIndexOf(".");
-				if(lastPeriod>0){
-					String postfix = oldFileName.substring(lastPeriod);
-					if(newFileName.lastIndexOf(".")==-1){
-						newFileName +=postfix;
+				if(oldFileName!=null&& !oldFileName.equals(newFileName)){
+					int lastPeriod = oldFileName.lastIndexOf(".");
+					if(lastPeriod>0){
+						String postfix = oldFileName.substring(lastPeriod);
+						if(newFileName.lastIndexOf(".")==-1){
+							newFileName +=postfix;
+						}
 					}
 				}
 				file.setName(newFileName);
@@ -193,7 +195,9 @@ public class MediaFolderEditorWindow extends Window {
 		if(mediaId>0){
 			ICFile file = ( (ICFileHome) IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(mediaId));
 			//ICFile file = (ICFile)MediaBusiness.getCachedFileInfo(mediaId,iwc.getApplication()).getEntity();
-			inputName.setContent(file.getName());
+			if(file.getName()!=null){
+				inputName.setContent(file.getName());
+			}
 			if(file.getDescription()!=null){
 				inputDescription.setContent(file.getDescription());
 			}
