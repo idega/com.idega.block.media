@@ -50,7 +50,7 @@ public class SimpleLister extends PresentationObjectContainer {
           /**@todo: localize
            *
            */
-          T.add(formatText(new idegaTimestamp(image.getCreationDate() ).getISLDate()),2,row);
+          T.add(formatText(new idegaTimestamp(image.getCreationDate() ).getISLDate(".",true)),2,row);
           row++;
         }
         T.setCellpadding(2);
@@ -72,7 +72,7 @@ public class SimpleLister extends PresentationObjectContainer {
   }
 
   public Link getImageLink(ImageEntity image,String target,String prm){
-    Link L = new Link(image.getName(),SimpleViewer.class);
+    Link L = new Link(formatText(image.getName()),SimpleViewer.class);
     L.setFontSize(1);
     L.setOnClick("top.iImageId = "+image.getID() );
     L.addParameter(sessImageParameter,image.getID());
