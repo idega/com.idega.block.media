@@ -77,7 +77,9 @@ public class SimpleUploaderWindow extends Window implements SimpleImage{
     public Form getMultiForm(IWContext iwc){
       Form f = new Form();
       f.setMultiPart();
-      f.setAction(iwc.getRequestURI()+"?"+com.idega.presentation.Page.IW_FRAME_CLASS_PARAMETER+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass()));
+      String s = iwc.getRequestURI()+"?"+"idegaweb_instance_class"+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass());
+      f.setAction(s);
+      add(s);
       f.add(new FileInput());
       f.add(new SubmitButton());
       return f;
