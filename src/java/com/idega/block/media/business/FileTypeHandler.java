@@ -11,10 +11,13 @@ package com.idega.block.media.business;
 
 import com.idega.presentation.PresentationObject;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.util.caching.Cache;
+import com.idega.presentation.IWContext;
+import com.idega.core.data.ICFile;
 
 public abstract class FileTypeHandler extends java.lang.Object{
 
-public abstract PresentationObject getPresentationObject(int icFileId);
+public abstract PresentationObject getPresentationObject(int icFileId, IWContext iwc);
 
 public static FileTypeHandler getInstance(IWMainApplication iwma, String handlerClass){
   FileTypeHandler handler = (FileTypeHandler)iwma.getAttribute(handlerClass);
@@ -28,6 +31,10 @@ public static FileTypeHandler getInstance(IWMainApplication iwma, String handler
     }
   }
   return handler;
+}
+
+public static Cache getCachedFileInfo(int icFileId, IWContext iwc){
+  return (Cache) iwc.getApplication().getIWCacheManager().getCachedBlobObject(ICFile.class.getName(),icFileId,iwc.getApplication());
 }
 
 }

@@ -12,11 +12,12 @@ package com.idega.block.media.business;
 import com.idega.presentation.*;
 import com.idega.presentation.text.*;
 import java.util.Iterator;
+import com.idega.presentation.IWContext;
 
 import com.idega.core.data.ICFile;
 public class AudioTypeHandler extends FileTypeHandler {
 
-  public PresentationObject getPresentationObject(int icFileId){
+  public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
     Table table = new Table();
 
     table.setWidth("100%");

@@ -15,8 +15,10 @@ import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.text.*;
 import com.idega.block.reports.business.Content;
 import com.idega.block.reports.presentation.ContentViewer;
+import com.idega.presentation.IWContext;
 import java.util.Iterator;
 import java.util.Vector;
+
 
 import com.idega.core.data.ICFile;
 public class SystemTypeHandler extends FileTypeHandler {
@@ -24,11 +26,11 @@ public class SystemTypeHandler extends FileTypeHandler {
 public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Size","Mimetype"};
 
 
-  public PresentationObject getPresentationObject(int icFileId){
+  public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
     ContentViewer listView = null;
     try {
 
-      ICFile file = new ICFile(icFileId);
+      ICFile file = this.getCachedFileInfo(icFileId,iwc).getEntity();
       Vector V = new Vector();
 
       //**@todo debug only do this if not a folder**/

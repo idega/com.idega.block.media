@@ -164,7 +164,7 @@ public class MediaBusiness  {
     return mediaProps;
   }
 
-  public static FileTypeHandler getFileTypeHandler(IWContext iwc ,String mimeType){
+  public static FileTypeHandler getFileTypeHandler(IWContext iwc ,String mimeType) throws NullPointerException{
 
     IWCacheManager cm = iwc.getApplication().getIWCacheManager();
 
@@ -173,7 +173,7 @@ public class MediaBusiness  {
     ICFileTypeHandler typeHandler = (ICFileTypeHandler) cm.getFromCachedTable(ICFileTypeHandler.class,Integer.toString(type.getFileTypeHandlerID()));
 
     FileTypeHandler handler = FileTypeHandler.getInstance(iwc.getApplication(),typeHandler.getHandlerClass());
-System.out.println("SELECTED HANDLER IS :"+typeHandler.getHandlerName());
+    System.out.println("SELECTED HANDLER IS :"+typeHandler.getHandlerName());
    return handler;
   }
 

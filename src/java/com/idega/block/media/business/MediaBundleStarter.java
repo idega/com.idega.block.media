@@ -129,8 +129,15 @@ public class MediaBundleStarter implements IWBundleStartable{
       registerMimeType(video,videos);
     }
     catch (Exception ex) {
-     System.out.println("\nMediaBundleStarter : You must restart the application to finish installing iWDBFS\n");
+      ex.printStackTrace(System.err);
     }
+
+    cm.removeTableFromCache(ICFileTypeHandler.class);
+    handlers.cacheEntityByID();
+
+    cm.removeTableFromCache(ICFileType.class);
+    types.cacheEntityByID();
+
   }
 
 
