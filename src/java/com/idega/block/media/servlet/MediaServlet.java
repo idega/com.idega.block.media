@@ -20,6 +20,7 @@ import com.idega.core.file.business.FileSystemConstants;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.io.MediaWritable;
 import com.idega.io.MemoryFileBufferWriter;
+import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.Parameter;
 import com.idega.servlet.IWCoreServlet;
 
@@ -44,7 +45,6 @@ public class MediaServlet extends IWCoreServlet{
   }
 
   public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException{
-
     if( iwma == null )
       iwma = IWMainApplication.getIWMainApplication(getServletContext());
 
@@ -56,8 +56,11 @@ public class MediaServlet extends IWCoreServlet{
     }
     else if(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS)!=null){
       try{
+      		IWContext iwc = new IWContext(request, response);
+      		iwc.setServletContext(request.getSession().getServletContext());
+      		
         MediaWritable mw = (MediaWritable) Class.forName(IWMainApplication.decryptClassName(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS))).newInstance();
-        mw.init(request,iwma);
+        mw.init(request,iwc);
         response.setContentType(mw.getMimeType());
         ServletOutputStream out = response.getOutputStream();
         mw.writeTo(out);
