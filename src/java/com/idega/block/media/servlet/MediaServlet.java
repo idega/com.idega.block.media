@@ -15,6 +15,8 @@ package com.idega.block.media.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.DataOutputStream;
+import java.io.ByteArrayOutputStream;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.*;
@@ -106,16 +108,36 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
           if( (RS!=null) &&  (RS.next()) ){
             myInputStream = RS.getBinaryStream(1);
           // debug
-          //  contentType = RS.getString(2);
+
+           contentType = RS.getString(2);
           }
 
-          // debug
-         // response.setContentType(contentType);
 
+          // debug
           if(myInputStream!=null){
 
             if (!RS.wasNull()){
-              DataOutputStream output = new DataOutputStream( response.getOutputStream() );
+
+							if(contentType!=null)
+							  response.setContentType(contentType);
+
+							/* // Using BytArrayOutputStream
+							ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+								// Read the entire contents of the file.
+							while (myInputStream.available() > 0)
+							{
+									baos.write(myInputStream.read());
+							}
+
+							// write ByteArrayOutputStream to the ServletOutputStream
+							response.setContentLength(baos.size());
+							ServletOutputStream out = response.getOutputStream();
+							baos.writeTo(out);
+							out.flush();
+							*/
+							/// using DataOutputStream
+							DataOutputStream output = new DataOutputStream( response.getOutputStream() );
 
               byte buffer[]= new byte[1024];
               int	noRead	= 0;
@@ -132,7 +154,8 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
 
               output.flush();
               output.close();
-             // myInputStream.close();
+							myInputStream.close();
+
               RS.close();
 
             }
@@ -140,8 +163,6 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
 
           }
           else System.err.println("InputStream is null");
-
-
       }
 
   }
