@@ -34,7 +34,7 @@ public class ImageAttributeSetter extends Block{
   public static String prmAttributeKey = "prmAttributeKey";
   private Map oldMap,newMap;
 
-  public static final String ALIGNMENT = "alignment",BORDER = "border",VSPACE = "vspace",
+  public static final String ALIGNMENT = "align",BORDER = "border",VSPACE = "vspace",
                               HSPACE = "hspace",WIDTH = "width",HEIGHT="height";
 
   private IWBundle iwb;
@@ -81,8 +81,9 @@ public class ImageAttributeSetter extends Block{
       try {
         Image image = new Image(iImageEntityId);
         image.setAttributes(oldMap);
-        T.add(getText());
+        T.add(getText("bla "));
         T.add(image);
+        T.add(getText("blu "));
 
         add(T);
       }
@@ -95,10 +96,10 @@ public class ImageAttributeSetter extends Block{
       add("no attributekey or image id ");
   }
 
-  public String getText(){
+  public String getText(String bla){
     StringBuffer text = new StringBuffer();
-    for (int i = 0; i < 100; i++) {
-      text.append("bla ");
+    for (int i = 0; i < 60; i++) {
+      text.append(bla);
     }
     return text.toString();
   }
