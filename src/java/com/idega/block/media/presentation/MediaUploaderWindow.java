@@ -152,8 +152,9 @@ private IWResourceBundle iwrb;
     Form f = new Form();
     f.setMultiPart();
    // String s = iwc.getRequestURI()+"?"+com.idega.+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass());
-    String s = com.idega.idegaweb.IWMainApplication.getObjectInstanciatorURL(this.getClass());
-    f.setAction(s);
+    //String s = com.idega.idegaweb.IWMainApplication.getObjectInstanciatorURL(this.getClass());
+    //f.setAction(s);
+    f.setClassToInstanciateAndSendTo(this.getClass(),iwc);
 
     IWBundle core = iwc.getApplication().getCoreBundle();
     Image transparent = core.getImage("transparentcell.gif");
