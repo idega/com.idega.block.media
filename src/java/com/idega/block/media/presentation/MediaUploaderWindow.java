@@ -60,7 +60,18 @@ private IWResourceBundle iwrb;
           iwc.setSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME,mediaProps);
           try {
             /*this will throw an exection if the mimetype does not exist*/
+            
+            // Getting mimetype from file extension if a binary file uploaded (aron@idega.is)
+			String mimeType = mediaProps.getMimeType();
+			if(mimeType.equalsIgnoreCase("application/octet-stream")){
+			   String name = mediaProps.getName();
+			   java.net.FileNameMap fileNameMap = java.net.URLConnection.getFileNameMap();
+			   String mime = fileNameMap.getContentTypeFor(name);
+			   if(mime!=null)
+				   mediaProps.setMimeType(mime);
+			}
             // added by aron, or else the missingmimeTypeException is never thrown otherwise than runtime exception
+           
             MediaBusiness.getFileType(iwc,mediaProps.getMimeType());
             
             viewUploadedMedia(mediaProps);
@@ -114,10 +125,11 @@ private IWResourceBundle iwrb;
 
               //also deletes the file from disk and return a MediaViewer
               mediaProps = MediaBusiness.saveMediaToDB( mediaProps, pId, iwc);
-              add(new MediaToolbar(mediaProps));
-              add(new MediaViewer(mediaProps));
+             // add(new MediaToolbar(mediaProps));
+            //  add(new MediaViewer(mediaProps));
             }
-
+			add(new MediaToolbar(mediaProps));
+			add(new MediaViewer(mediaProps));
         }
       }
     }
