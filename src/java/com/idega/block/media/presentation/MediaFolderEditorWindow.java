@@ -3,7 +3,6 @@ package com.idega.block.media.presentation;
 import java.text.DateFormat;
 import java.util.Iterator;
 import java.util.Map;
-
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.core.data.ICTreeNode;
@@ -56,127 +55,140 @@ public class MediaFolderEditorWindow extends Window {
 
     int mediaId = MediaBusiness.getMediaId(iwc);
 
-    if( action.equals(MediaConstants.MEDIA_ACTION_NEW) ){
-      Form form = new Form();
-      Table table = new Table(1,3);
-      table.setWidth(300);
-      table.setHeight(120);
-      table.setVerticalAlignment(1,1,Table.VERTICAL_ALIGN_TOP);
-      table.setVerticalAlignment(1,2,Table.VERTICAL_ALIGN_TOP);
-      table.setVerticalAlignment(1,3,Table.VERTICAL_ALIGN_TOP);
+    if(action != null) {
+      if( action.equals(MediaConstants.MEDIA_ACTION_NEW) ) {
+      		add(new MediaToolbar(mediaId));
+        Form form = new Form();
+        Table table = new Table(1,3);
+        table.setWidth(300);
+        table.setHeight(120);
+        table.setVerticalAlignment(1,1,Table.VERTICAL_ALIGN_TOP);
+        table.setVerticalAlignment(1,2,Table.VERTICAL_ALIGN_TOP);
+        table.setVerticalAlignment(1,3,Table.VERTICAL_ALIGN_TOP);
 
-      TextInput folderName = new TextInput(MediaConstants.MEDIA_FOLDER_NAME_PARAMETER_NAME);
-      //Link save = new Link("Save");
-      //save.setAsImageButton(true);
-      //save.setToFormSubmit(form);
-      Text add = new Text(iwrb.getLocalizedString("mediafoldereditwindow.name.the.folder","Name the folder"));
-      add.setStyle(Text.FONT_FACE_ARIAL);
-      add.setFontSize(Text.FONT_SIZE_10_HTML_2);
-      add.setBold();
+        TextInput folderName = new TextInput(MediaConstants.MEDIA_FOLDER_NAME_PARAMETER_NAME);
+        //Link save = new Link("Save");
+        //save.setAsImageButton(true);
+        //save.setToFormSubmit(form);
+        Text add = new Text(iwrb.getLocalizedString("mediafoldereditwindow.name.the.folder","Name the folder"));
+        add.setStyle(Text.FONT_FACE_ARIAL);
+        add.setFontSize(Text.FONT_SIZE_10_HTML_2);
+        add.setBold();
 
-      table.add(add,1,1);
-      table.add(new HiddenInput(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_FOLDER_SAVE),1,2);
-      table.add(folderName,1,3);
-      table.add(new SubmitButton(iwrb.getLocalizedString("mv.save","save")),1,3);
+        table.add(add,1,1);
+        table.add(new HiddenInput(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_FOLDER_SAVE),1,2);
+        table.add(folderName,1,3);
+        table.add(new SubmitButton(iwrb.getLocalizedString("mv.save","save")),1,3);
 
 
-      form.add(table);
+        form.add(table);
 
-      if( mediaId != -1){
-        form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),String.valueOf(mediaId)));
+        if( mediaId != -1){
+          form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),String.valueOf(mediaId)));
+        }
+        else{
+          ICFile rootNode = (ICFile)iwc.getIWMainApplication().getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+          form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),rootNode.getPrimaryKey().toString()));
+        }
+
+        add(form);
       }
-      else{
-        ICFile rootNode = (ICFile)iwc.getIWMainApplication().getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
-        form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),rootNode.getPrimaryKey().toString()));
+      else if( action.equals(MediaConstants.MEDIA_ACTION_EDIT) ){
+       /**TODO add edit code**/
+       	// done  by Aron (aron@idega.is)
+  	 	addFileProperties(iwc,mediaId);
       }
-
-      add(form);
-    }
-    else if( action.equals(MediaConstants.MEDIA_ACTION_EDIT) ){
-     /**TODO add edit code**/
-     	// done  by Aron (aron@idega.is)
-	 	addFileProperties(iwc,mediaId);
-    }
-    else if( action.equals(MediaConstants.MEDIA_ACTION_FOLDER_SAVE) ){
-      String folderName = iwc.getParameter(MediaConstants.MEDIA_FOLDER_NAME_PARAMETER_NAME);
-      if( (folderName!=null) && !(folderName.equalsIgnoreCase("")) ){
+	    	else if(action.equals(MediaConstants.MEDIA_ACTION_MOVE)) {
+	    		addFileMove(iwc, mediaId);
+	    	}
+      else if( action.equals(MediaConstants.MEDIA_ACTION_FOLDER_SAVE) ){
+        String folderName = iwc.getParameter(MediaConstants.MEDIA_FOLDER_NAME_PARAMETER_NAME);
+        if( (folderName!=null) && !(folderName.equalsIgnoreCase("")) ){
 
 
-        ICFile folder = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).create();
-        folder.setName(folderName);
-        folder.setMimeType(com.idega.core.file.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
+          ICFile folder = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).create();
+          folder.setName(folderName);
+          folder.setMimeType(com.idega.core.file.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 
-        folder = MediaBusiness.saveMediaToDB(folder,mediaId,iwc);
-        setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
-        add(new MediaToolbar(((Integer)folder.getPrimaryKey()).intValue()));
-        add(new MediaViewer(((Integer)folder.getPrimaryKey()).intValue()));
+          folder = MediaBusiness.saveMediaToDB(folder,mediaId,iwc);
+          setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
+          add(new MediaToolbar(((Integer)folder.getPrimaryKey()).intValue()));
+          add(new MediaViewer(((Integer)folder.getPrimaryKey()).intValue()));
 
-//        Text created = new Text(iwrb.getLocalizedString("mediafoldereditwindow.folder.saved","Folder created"));
-//        created.setStyle(Text.FONT_FACE_ARIAL);
-//        created.setFontSize(Text.FONT_SIZE_10_HTML_2);
+//          Text created = new Text(iwrb.getLocalizedString("mediafoldereditwindow.folder.saved","Folder created"));
+//          created.setStyle(Text.FONT_FACE_ARIAL);
+//          created.setFontSize(Text.FONT_SIZE_10_HTML_2);
 
 
+        }
       }
+		  	else if( action.equals(MediaConstants.MEDIA_ACTION_RENAME) ){
+		  		String newFileName = iwc.getParameter(MediaConstants.MEDIA_FOLDER_NAME_PARAMETER_NAME);
+		  		String newDescription = iwc.getParameter("me_fol_desc");
+		  		
+		  		if(mediaId>0){
+		  			ICFile file = ( (ICFileHome) IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(mediaId));
+		  			// Keeping same file ending :
+		  			String oldFileName = file.getName();
+		  			boolean store = false;
+		  			// Check for new name or description
+		  			if( (newFileName!=null)  &&!(newFileName.equalsIgnoreCase(""))  ){
+		  				//	keeping same file ending 
+		  				if(oldFileName!=null&& !oldFileName.equals(newFileName)){
+		  					int lastPeriod = oldFileName.lastIndexOf(".");
+		  					if(lastPeriod>0){
+		  						String postfix = oldFileName.substring(lastPeriod);
+		  						if(newFileName.lastIndexOf(".")==-1){
+		  							newFileName +=postfix;
+		  						}
+		  					}
+		  				}
+		  				file.setName(newFileName);
+		  				store = true;
+		  			}			
+		  					
+		  			// Check for new description
+		  			if(newDescription!=null && !newDescription.equals(file.getDescription()) ){
+		  				file.setDescription(newDescription);
+		  				store = true;
+		  			}
+		  					
+		  			// Check for new metadata
+		  			if(iwc.isParameterSet("me_fol_mkey") && iwc.isParameterSet("me_fol_mval")){
+		  				String key = iwc.getParameter("me_fol_mkey");
+		  				String val = iwc.getParameter("me_fol_mval");
+		  				file.setMetaData(key,val);
+		  				store = true;
+		  				//System.out.println("we shall add metadata !");
+		  			}
+		  			if(iwc.isParameterSet("me_fol_mdel")){
+		  				String[] deleteMeta = iwc.getParameterValues("me_fol_mdel");
+		  				if(deleteMeta!=null){
+		  					for (int i = 0; i < deleteMeta.length; i++) {
+		  						file.removeMetaData(deleteMeta[i]);
+		  					}
+		  					file.updateMetaData();				
+		  				}
+		  			}
+		  			if(store){
+		  				file.store();
+		  			}
+		  				
+		  			setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
+		  			addFileProperties(iwc,mediaId);
+		  				//add(new MediaToolbar(file.getID()));
+		  				//add(new MediaViewer(file.getID()));
+		  			
+		  		}
+		  	}
+		  	else if(action.equals(MediaConstants.MEDIA_ACTION_SAVE_MOVE)) {
+		  		String newFolder = iwc.getParameter(MediaConstants.MEDIA_CHOOSER_FOLDER_CHOOSER_NAME);
+		  		if(newFolder != null && !newFolder.equals("")) {
+		    		MediaBusiness.moveMedia(mediaId,Integer.parseInt(newFolder));
+		  		}
+				setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
+		  	}
     }
-	else if( action.equals(MediaConstants.MEDIA_ACTION_RENAME) ){
-		String newFileName = iwc.getParameter(MediaConstants.MEDIA_FOLDER_NAME_PARAMETER_NAME);
-		String newDescription = iwc.getParameter("me_fol_desc");
-		
-		if(mediaId>0){
-			ICFile file = ( (ICFileHome) IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(mediaId));
-			// Keeping same file ending :
-			String oldFileName = file.getName();
-			boolean store = false;
-			// Check for new name or description
-			if( (newFileName!=null)  &&!(newFileName.equalsIgnoreCase(""))  ){
-				//	keeping same file ending 
-				if(oldFileName!=null&& !oldFileName.equals(newFileName)){
-					int lastPeriod = oldFileName.lastIndexOf(".");
-					if(lastPeriod>0){
-						String postfix = oldFileName.substring(lastPeriod);
-						if(newFileName.lastIndexOf(".")==-1){
-							newFileName +=postfix;
-						}
-					}
-				}
-				file.setName(newFileName);
-				store = true;
-			}			
-					
-			// Check for new description
-			if(newDescription!=null && !newDescription.equals(file.getDescription()) ){
-				file.setDescription(newDescription);
-				store = true;
-			}
-					
-			// Check for new metadata
-			if(iwc.isParameterSet("me_fol_mkey") && iwc.isParameterSet("me_fol_mval")){
-				String key = iwc.getParameter("me_fol_mkey");
-				String val = iwc.getParameter("me_fol_mval");
-				file.setMetaData(key,val);
-				store = true;
-				//System.out.println("we shall add metadata !");
-			}
-			if(iwc.isParameterSet("me_fol_mdel")){
-				String[] deleteMeta = iwc.getParameterValues("me_fol_mdel");
-				if(deleteMeta!=null){
-					for (int i = 0; i < deleteMeta.length; i++) {
-						file.removeMetaData(deleteMeta[i]);
-					}
-					file.updateMetaData();				
-				}
-			}
-			if(store){
-				file.store();
-			}
-				
-			setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
-			addFileProperties(iwc,mediaId);
-				//add(new MediaToolbar(file.getID()));
-				//add(new MediaViewer(file.getID()));
-			
-		}
-	}
   }
   
   private void addFileProperties(IWContext iwc,int mediaId)throws Exception{
@@ -299,6 +311,37 @@ public class MediaFolderEditorWindow extends Window {
 		form.add(table);
 		add(form);
 
+  }
+  private void addFileMove(IWContext iwc,int mediaId)throws Exception {
+  		add(new MediaToolbar(mediaId));
+  		Form form = new Form();
+  		form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),String.valueOf(mediaId)));
+  		Table table = new Table();
+  		table.setCellpadding(0);
+  		table.setCellspacing(0);
+  		table.setWidth(Table.HUNDRED_PERCENT);
+  		table.add(Text.BREAK,1,1);
+  		table.add(new HiddenInput(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE_MOVE),1,2);
+  		
+  		Text move = new Text(iwrb.getLocalizedString("mediafoldereditwindow.choose_folder_to_move_to","Choose a folder to move current file/folder to"));
+  		move.setStyle(Text.FONT_FACE_ARIAL);
+  		move.setFontSize(Text.FONT_SIZE_10_HTML_2);
+  		move.setBold();
+  		table.setAlignment(1,1,Table.HORIZONTAL_ALIGN_CENTER);
+  		table.add(move,1,1);
+  		
+  		FolderChooser folderChooser = new FolderChooser(MediaConstants.MEDIA_CHOOSER_FOLDER_CHOOSER_NAME);
+  		table.setAlignment(1,2,Table.HORIZONTAL_ALIGN_CENTER);
+  		table.add(Text.BREAK,1,2);
+  		table.add(folderChooser,1,2);
+  		
+  		SubmitButton submit = new SubmitButton(iwrb.getLocalizedString("mv.save","save"));
+  		table.setAlignment(1,3,Table.HORIZONTAL_ALIGN_CENTER);
+  		table.add(Text.BREAK,1,3); 
+  		table.add(submit,1,3);
+  		
+  		form.add(table);
+  		add(form);
   }
   
 	private Text getHeaderText(String string){

@@ -251,7 +251,6 @@ public class MediaToolbar extends Block {
         add( new Text(iwrb.getLocalizedString("mv.file.deleted","The file was deleted")) );
 
       }
-
       else{
 
         /*viewing from db*/
@@ -528,6 +527,12 @@ public class MediaToolbar extends Block {
 	rename.setAsImageButton(true);
 	rename.addParameter(fileInSessionParameter,mediaId);
 	T.add(rename,1,1);
+	
+	Link move = MediaBusiness.getMoveLink();
+	move.setText(iwrb.getLocalizedString("mv.move","move"));
+	move.setAsImageButton(true);
+	move.addParameter(fileInSessionParameter,mediaId);
+	T.add(move, 1, 1); 
 	
     add( T );
 

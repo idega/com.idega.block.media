@@ -1,6 +1,9 @@
 package com.idega.block.media.business;
 
-import com.idega.block.media.presentation.*;
+import com.idega.block.media.presentation.MediaFolderEditorWindow;
+import com.idega.block.media.presentation.MediaTreeViewer;
+import com.idega.block.media.presentation.MediaUploaderWindow;
+import com.idega.block.media.presentation.MediaViewerWindow;
 import com.idega.presentation.text.Link;
 
 /**
@@ -24,6 +27,9 @@ public class MediaConstants {
   public static final String MEDIA_CHOOSER_PARAMETER_NAME = "me_ch";
   public static final String MEDIA_CHOOSER_IMAGE = "me_im_ch";
   public static final String MEDIA_CHOOSER_FILE = "me_f_ch";
+  public static final String MEDIA_CHOOSER_FOLDER = "me_ch_fol";
+  
+  public static final String MEDIA_CHOOSER_FOLDER_CHOOSER_NAME = "me_fol_ch_name";
 
 
   public static final String MEDIA_ACTION_VIEW = "me_act_v";
@@ -36,6 +42,8 @@ public class MediaConstants {
   public static final String MEDIA_ACTION_EDIT = "me_act_e";
   public static final String MEDIA_ACTION_USE = "me_act_u";
   public static final String MEDIA_ACTION_RENAME = "me_act_rn";
+  public static final String MEDIA_ACTION_MOVE = "me_act_mv";
+  public static final String MEDIA_ACTION_SAVE_MOVE = "me_act_save_mv";
 
 
   public static final String MEDIA_ACTION_PARAMETER_NAME = "me_cho_act";

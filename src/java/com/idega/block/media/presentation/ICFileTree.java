@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
-
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.core.data.ICTreeNode;
 import com.idega.core.file.data.ICFile;
@@ -13,6 +12,7 @@ import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.PresentationObject;
+import com.idega.presentation.Script;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.ui.AbstractTreeViewer;
 
@@ -21,7 +21,7 @@ import com.idega.presentation.ui.AbstractTreeViewer;
  * Description:
  * Copyright:    Copyright (c) 2001
  * Company:      idega
- * @author <a href="gummi@idega.is">Guðmundur Ágúst Sæmundsson</a>
+ * @author <a href="gummi@idega.is">Guï¿½mundur ï¿½gï¿½st Sï¿½mundsson</a>
  * @version 1.0
  */
 
@@ -32,6 +32,11 @@ public class ICFileTree extends AbstractTreeViewer {
   private static final String _NODE_OPEN = "_open";
   private static final String _NODE_CLOSED = "_closed";
   private static final String _DEFAULT_ICON_PREFIX = "icfileicons/ui/";
+  
+	public static final String ONCLICK_FUNCTION_NAME = "treenodeselect";
+	public static final String ONCLICK_DEFAULT_NODE_ID_PARAMETER_NAME = "iw_node_id";
+	public static final String ONCLICK_DEFAULT_NODE_NAME_PARAMETER_NAME = "iw_node_name";
+
 
   private static final String _DEFAULT_ICON_SUFFIX = ".gif";
   private String iconFolder = _DEFAULT_ICON_PREFIX;
@@ -47,6 +52,7 @@ public class ICFileTree extends AbstractTreeViewer {
   private ArrayList icFileTypeArrayList = null;
   
   private boolean _isICFileTreeNode = false;
+	private boolean _usesOnClick = false;
 
   public ICFileTree(){
     super();
@@ -126,10 +132,12 @@ public class ICFileTree extends AbstractTreeViewer {
 
   public PresentationObject getObjectToAddToColumn(int colIndex, ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode) {
 //    if( filter(node) ){//return null if this
+  	
       switch (colIndex) {
         case 1:
           return getIcon(node, iwc, nodeIsOpen, nodeHasChild, isRootNode );
         case 2:
+        	
 
           if(!node.isLeaf()){
             Link l = this.getFolderLinkClone(node.getNodeName(iwc.getCurrentLocale(),iwc));
@@ -141,6 +149,11 @@ public class ICFileTree extends AbstractTreeViewer {
             if( nodeActionPrm!=null ){
               l.addParameter(nodeActionPrm,node.getNodeID());
             }
+            if (_usesOnClick) {
+    					String nodeName = node.getNodeName();
+    					l.setURL("#");
+    					l.setOnClick(ONCLICK_FUNCTION_NAME + "('" + nodeName + "','" +  node.getNodeID() + "')");
+    				}
 
             return l;
           }
@@ -154,6 +167,11 @@ public class ICFileTree extends AbstractTreeViewer {
             if( nodeActionPrm!=null ){
               l.addParameter(nodeActionPrm,node.getNodeID());
             }
+            if (_usesOnClick) {
+    					String nodeName = node.getNodeName();
+    					l.setURL("#");
+    					l.setOnClick(ONCLICK_FUNCTION_NAME + "('" + nodeName + "','" + node.getNodeID() + "')");
+    				}
 
             return l;
           }
@@ -250,6 +268,25 @@ public class ICFileTree extends AbstractTreeViewer {
       _icFileIcons.put(mimeType+_NODE_CLOSED,bundle.getImage(_DEFAULT_ICON_PREFIX+getUI()+mimeType+_NODE_CLOSED+_DEFAULT_ICON_SUFFIX));
     }
   }
+  
+	public void setToUseOnClick() {
+		setToUseOnClick(ONCLICK_DEFAULT_NODE_NAME_PARAMETER_NAME, ONCLICK_DEFAULT_NODE_ID_PARAMETER_NAME);
+	}
+  public void setToUseOnClick(String NodeNameParameterName, String NodeIDParameterName) {
+		_usesOnClick = true;
+		Script associatedScript = getParentPage().getAssociatedScript();
+		if(associatedScript != null) {
+			getAssociatedScript().addFunction(ONCLICK_FUNCTION_NAME, "function " + ONCLICK_FUNCTION_NAME + "(" + NodeNameParameterName + "," + NodeIDParameterName + "){ }");
+		}
+	}
+
+	public void setOnClick(String action) {
+		Script associatedScript = getParentPage().getAssociatedScript();
+		if(associatedScript != null) {
+			this.getAssociatedScript().addToFunction(ONCLICK_FUNCTION_NAME, action);
+		}
+	}
+
 /*
   public void main(IWContext iwc) throws Exception {
     super.main(iwc);

@@ -483,6 +483,16 @@ public class MediaBusiness {
 		return L;
 	}
 	/**
+	 * 
+	 * @return The moveLink value
+	 */
+	public static Link getMoveLink() {
+		Link L = (Link)MediaConstants.MEDIA_FOLDER_EDITOR_LINK.clone();
+		L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_MOVE);
+		L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+		return L;
+	}
+	/**
 	
 	 *  Checks if the ICFile is a folder (has the mimetype
 	
