@@ -44,7 +44,7 @@ import com.idega.block.media.servlet.MediaServlet;
       function.append(" var iImageId = -1 ; \n");
       function.append("function "+getSaveImageFunctionName()+" {\n \t");
       function.append("top.window.opener.setImageId(iImageId) ; \n \t");
-      function.append("window.close(); \n }");
+      function.append("top.window.close(); \n }");
       return function.toString();
     }
 

@@ -42,6 +42,7 @@ private boolean limitWidth = true;
 public final String sessionImageParameterName = "im_image_session_name";
 private String prmUseBox = "insertImage";
 private boolean maintainSessionParameter = false;
+private boolean setWindowToReloadParent = false;
 
 private IWBundle iwb;
 private IWResourceBundle iwrb;
@@ -135,6 +136,8 @@ public ImageInserter(Class WindowToOpen) {
         Window insertNewsImageWindow = new Window(nameOfWindow,ImageBusiness.IM_BROWSER_WIDTH,ImageBusiness.IM_BROWSER_HEIGHT,adminURL);
         imageAdmin = new Link(image,insertNewsImageWindow);
       }
+      if(setWindowToReloadParent)
+        imageAdmin.addParameter(SimpleChooserWindow.prmReloadParent,"true");
       imageAdmin.addParameter("submit","new");
       imageAdmin.addParameter(sessionImageParameterName,imSessionImageName);
       if ( imageId != -1 )
@@ -232,6 +235,10 @@ public ImageInserter(Class WindowToOpen) {
 
   public void maintainSessionParameter(){
     maintainSessionParameter = true;
+  }
+
+  public void setWindowToReload(boolean reload){
+    setWindowToReloadParent = reload;
   }
 
   public void setWindowClassToOpen(Class WindowClass){

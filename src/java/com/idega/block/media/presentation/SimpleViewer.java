@@ -28,7 +28,7 @@ public class SimpleViewer extends PresentationObjectContainer{
 
     public void  main(IWContext iwc){
 
-
+      //add("block.media");
       String sImageId = getImageId(iwc);
       String sAction = iwc.getParameter(prmAction);
 
@@ -46,7 +46,7 @@ public class SimpleViewer extends PresentationObjectContainer{
             removeFromSession(iwc);
           }
         }
-        else{
+       {
           int id = Integer.parseInt(sImageId);
           try {
             ImageEntity ieImage = new ImageEntity(id);
@@ -147,9 +147,13 @@ public class SimpleViewer extends PresentationObjectContainer{
       String s = null;
       if(iwc.getParameter(sessImageParameter)!=null){
         s = iwc.getParameter(sessImageParameter);
+        iwc.setSessionAttribute(sessImageParameter+"_2",s);
       }
       else if(iwc.getSessionAttribute(sessImageParameter)!=null)
         s = (String) iwc.getSessionAttribute(sessImageParameter);
+      else if(iwc.getSessionAttribute(sessImageParameter+"_2")!=null)
+        s = (String) iwc.getSessionAttribute(sessImageParameter+"_2");
+      //add(" " +s);
       return s;
     }
 
@@ -159,8 +163,10 @@ public class SimpleViewer extends PresentationObjectContainer{
     }
 
     public void saveImageId(IWContext iwc,String sImageId){
+      //System.err.println("SimpleViewer : "+sessImageParameter+" "+ sImageId);
       iwc.setSessionAttribute(sessImageParameter,sImageId);
-      iwc.setSessionAttribute(sessImageParameter+"2",sImageId);
+      iwc.removeSessionAttribute(sessImageParameter+"_2");
+      //iwc.setSessionAttribute(sessImageParameter+"2",sImageId);
     }
 
     public void saveImage(IWContext iwc,String sImageId){

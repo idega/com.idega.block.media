@@ -21,6 +21,7 @@ import com.idega.idegaweb.IWBundle;
  public class SimpleChooserWindow extends IWAdminWindow {
     private IWBundle iwb;
     private String IW_BUNDLE_IDENTIFIER="com.idega.block.image";
+    public static String prmReloadParent = "simple_upl_wind_rp";
 
     public SimpleChooserWindow(){
       super();
@@ -41,7 +42,7 @@ import com.idega.idegaweb.IWBundle;
       addHeaderObject(SC.getLinkTable(iwb));
       setTitle("Image Chooser Block Media");
       addTitle("Image Chooser" );
-
-      //setParentToReload();
+      if(iwc.getParameter(prmReloadParent )!= null)
+        setParentToReload();
     }
 }
