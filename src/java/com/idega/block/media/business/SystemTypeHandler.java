@@ -3,6 +3,7 @@ package com.idega.block.media.business;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import com.idega.block.media.data.MediaProperties;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICMimeType;
@@ -26,7 +27,7 @@ public class SystemTypeHandler extends FileTypeHandler {
 
 	public static String[] LIST_VIEW_HEADERS = { "Select", "Name", "Date modified", "Size", "Mimetype" };//**@todo
 																										 // localize**/
-	private static Hashtable _icFileIcons = null;
+	//private static Hashtable _icFileIcons = null;
 	private static final String _NODE_CLOSED = "_closed";
 	private static final String _DEFAULT_ICON_PREFIX = "icfileicons/ui/";
 	private static final String _DEFAULT_ICON_SUFFIX = ".gif";
@@ -34,8 +35,8 @@ public class SystemTypeHandler extends FileTypeHandler {
 	public static final String _UI_MAC = "mac/";
 	public static final String _UI_IW = "iw/";
 	private String _ui = _UI_IW;
-	private static final String _APP_DEFAULT_FILE_ICONS = "ic_filetree_icons";
-	private String _APP_FILE_ICONS = _APP_DEFAULT_FILE_ICONS;
+	//private static final String _APP_DEFAULT_FILE_ICONS = "ic_filetree_icons";
+	//private String _APP_FILE_ICONS = _APP_DEFAULT_FILE_ICONS;
 	protected String iconWidth = "16";
 	protected String iconHeight = "16";
 
@@ -121,9 +122,9 @@ public class SystemTypeHandler extends FileTypeHandler {
 		return table;
 	}
 
-	public void initIcons(IWContext iwc) {
-		Object obj = iwc.getApplicationAttribute(_APP_FILE_ICONS + getUI());
-		if (obj == null) {
+	public Map initIcons(IWContext iwc) {
+		//Object obj = iwc.getApplicationAttribute(_APP_FILE_ICONS + getUI());
+		//if (obj == null) {
 			IWBundle bundle = this.getBundle(iwc);
 			Hashtable tmp = new Hashtable();
 			HashMap mimeMap = (HashMap) MediaBusiness.getICMimeTypeMap(iwc);
@@ -135,15 +136,16 @@ public class SystemTypeHandler extends FileTypeHandler {
 					tmp.put(mimeType, bundle.getImage(_DEFAULT_ICON_PREFIX + getUI() + mimeType + _DEFAULT_ICON_SUFFIX));
 				}
 			}
-			iwc.setApplicationAttribute(_APP_FILE_ICONS + getUI(), tmp);
-			SystemTypeHandler._icFileIcons = tmp;
-		}
-		else {
-			SystemTypeHandler._icFileIcons = (Hashtable) obj;
-		}
-		updateIconDimensions();
+			//iwc.setApplicationAttribute(_APP_FILE_ICONS + getUI(), tmp);
+			//SystemTypeHandler._icFileIcons = tmp;
+			return tmp;
+		//}
+		//else {
+		//	SystemTypeHandler._icFileIcons = (Hashtable) obj;
+		//}
+		//updateIconDimensions();
 	}
-
+/*
 	protected void updateIconDimensions() {
 		if (_icFileIcons != null && _icFileIcons.values() != null) {
 			Iterator iter = this._icFileIcons.values().iterator();
@@ -154,7 +156,7 @@ public class SystemTypeHandler extends FileTypeHandler {
 				}
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * @param iwc
@@ -165,9 +167,10 @@ public class SystemTypeHandler extends FileTypeHandler {
 	}
 
 	public Image getIcon(ICFile file, IWContext iwc) {
-		if (_icFileIcons == null) {
+		Map _icFileIcons=initIcons(iwc);
+		/*if (_icFileIcons == null) {
 			initIcons(iwc);
-		}
+		}*/
 		String mimeType = file.getMimeType();
 		if (mimeType != null) {
 			mimeType = mimeType.replace('\\', '_');
@@ -182,7 +185,7 @@ public class SystemTypeHandler extends FileTypeHandler {
 			if (!file.isLeaf()) {
 				Object obj = _icFileIcons.get(mimeType + _NODE_CLOSED);
 				if (obj == null) {
-					this.updateFileIcon(mimeType, iwc, false);
+					this.updateFileIcon(_icFileIcons,mimeType, iwc, false);
 					obj = _icFileIcons.get(mimeType + _NODE_CLOSED);
 				}
 				return (Image) obj;
@@ -190,7 +193,7 @@ public class SystemTypeHandler extends FileTypeHandler {
 			else {
 				Object obj = _icFileIcons.get(mimeType);
 				if (obj == null) {
-					this.updateFileIcon(mimeType, iwc, true);
+					this.updateFileIcon(_icFileIcons,mimeType, iwc, true);
 					obj = _icFileIcons.get(mimeType);
 				}
 				return (Image) obj;
@@ -201,7 +204,8 @@ public class SystemTypeHandler extends FileTypeHandler {
 		}
 	}
 
-	public void updateFileIcon(String mimeType, IWContext iwc, boolean isLeaf) {
+	
+	public void updateFileIcon(Map _icFileIcons,String mimeType, IWContext iwc, boolean isLeaf) {
 		IWBundle bundle = this.getBundle(iwc);
 		if (isLeaf) {
 			_icFileIcons.put(mimeType,
