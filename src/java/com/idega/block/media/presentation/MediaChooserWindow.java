@@ -26,6 +26,8 @@ import com.idega.user.business.UserBusiness;
 public class MediaChooserWindow extends AbstractChooserWindow {
 
 	private static final String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
+	
+	private static final String HELP_TEXT_KEY = "media_chooser_help";
 
 	private IWBundle iwb;
 	//  public static String prmReloadParent = "simple_upl_wind_rp";
@@ -83,8 +85,16 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 		public FileTree() {
 			setAllMargins(0);
 			setStyleClass("main");
+			Table table = new Table();
+			table.setHeight(Table.HUNDRED_PERCENT);
+			table.setWidth(Table.HUNDRED_PERCENT);
+			table.setVerticalAlignment(1,1,Table.VERTICAL_ALIGN_TOP);
+			table.setVerticalAlignment(1,2,Table.VERTICAL_ALIGN_TOP);
+			table.setCellpadding(1,2,7);
+			table.add(new MediaTreeViewer(),1,1);
+			table.add(getHelp(HELP_TEXT_KEY),1,2);
 			//    setBackgroundColor(MediaConstants.MEDIA_TREE_VIEWER_BACKGROUND_COLOR);
-			add(new MediaTreeViewer());
+			add(table);
 		}
 	}
 
