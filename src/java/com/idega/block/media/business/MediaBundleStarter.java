@@ -11,6 +11,9 @@ package com.idega.block.media.business;
  * @version 1.0
  */
 
+import java.util.*;
+import com.idega.builder.app.IBApplication;
+import com.idega.block.media.presentation.MediaToolbarButton;
 import com.idega.idegaweb.IWBundleStartable;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
@@ -21,10 +24,7 @@ import com.idega.core.data.ICFile;
 import com.idega.core.data.ICFileTypeHandler;
 import com.idega.data.EntityFinder;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Iterator;
 
-import java.util.HashMap;
 
 public class MediaBundleStarter implements IWBundleStartable{
 
@@ -109,10 +109,26 @@ public class MediaBundleStarter implements IWBundleStartable{
   }
 
   public void start(IWBundle bundle){
-    bundle.removeProperty("iw_bundle_starter_class");/**@todo remove in the future**/
+     //add toolbar buttons
+    MediaToolbarButton separator = new MediaToolbarButton(bundle,true);
+    MediaToolbarButton button = new MediaToolbarButton(bundle,false);
+
+    List l = (List)bundle.getApplication().getAttribute(IBApplication.TOOLBAR_ITEMS);
+    if (l == null) {
+      l = new Vector();
+      bundle.getApplication().setAttribute(IBApplication.TOOLBAR_ITEMS, l);
+    }
+
+
+    l.add(button);
+    l.add(separator);
+
   }
 
   public void start(IWMainApplication iwma){
+
+    //handle mimetypes
+
     //cache file types ICFileType extends CacheableEntity
     cm = iwma.getIWCacheManager();
     ICFileTypeHandler handlers = new ICFileTypeHandler();
