@@ -16,6 +16,8 @@ public class MediaConstants {
 
   public static final String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
 
+  public static final String MEDIA_ID = "me_id";
+
   public static final String TARGET_MEDIA_TREE = "tree";
   public static final String TARGET_MEDIA_VIEWER = "viewer";
 
