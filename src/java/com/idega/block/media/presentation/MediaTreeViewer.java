@@ -69,8 +69,6 @@ public class MediaTreeViewer extends PresentationObjectContainer {
     //L.setOnClick("top.iImageId = "+file.getID() );
     L.addParameter(fileInSessionParameter,file.getID());
 
-    System.out.println("fileInSessionParameter: " + fileInSessionParameter +" id: "+file.getID());
-
     L.setTarget(target);
     return L;
   }

@@ -36,6 +36,7 @@ public class MediaBusiness  {
       ICFile file = new ICFile();
       file.setName(mediaProps.getName());
       file.setMimeType(mediaProps.getContentType());
+      System.out.println("MIMETYPE"+mediaProps.getContentType());
       file.setFileValue(input);
       file.setFileSize((int)mediaProps.getSize());
       file.insert();

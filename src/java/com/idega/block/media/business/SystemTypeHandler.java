@@ -62,8 +62,7 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
     objs[0] = new CheckBox(Integer.toString(item.getID()));
     objs[1] = (item.getName() != null ) ? item.getName() : "";
     objs[2] = (item.getModificationDate() != null ) ? item.getModificationDate().toString() : item.getCreationDate().toString();
-    //objs[3] = (item.getFileSize() != null ) ? item.getFileSize().toString() : "";
-    objs[3] = "size";
+    objs[3] = (item.getFileSize() != null ) ? item.getFileSize().toString() : "";
     objs[4] = (item.getMimeType() != null ) ? item.getMimeType() : "";
 
     Content C = new Content(objs);

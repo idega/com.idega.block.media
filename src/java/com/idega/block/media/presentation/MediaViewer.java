@@ -77,6 +77,11 @@ public class MediaViewer extends  Window {
             l.setOnClick(ONCLICK_FUNCTION_NAME+"('"+file.getName()+"','"+file.getID()+"')");
             add(l);
 
+            Class C = MediaUploaderWindow.class;
+            Link L = new Link("New",C);
+            L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+            L.setAsImageButton(true);
+            add(L);
 
             add(T);
 
