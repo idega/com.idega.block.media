@@ -6,9 +6,13 @@ import com.idega.util.caching.Cache;
 import com.idega.idegaweb.IWMainApplication;
 import java.util.*;
 import java.sql.SQLException;
+
+import javax.ejb.FinderException;
+
 import com.idega.block.media.data.MediaProperties;
 import com.idega.block.media.presentation.MediaViewer;
 import com.idega.core.data.ICFile;
+import com.idega.core.data.ICFileHome;
 import com.idega.core.data.ICFileType;
 import com.idega.core.data.ICFileTypeHandler;
 import com.idega.core.data.ICMimeType;
@@ -16,6 +20,7 @@ import com.idega.idegaweb.IWCacheManager;
 import com.idega.presentation.IWContext;
 import com.idega.idegaweb.IWApplicationContext;
 import com.idega.presentation.text.Link;
+import com.idega.data.IDOLookup;
 import com.idega.util.FileUtil;
 //this package must be installed
 import com.oreilly.servlet.multipart.FilePart;
@@ -150,6 +155,25 @@ public class MediaBusiness {
 		}
 		return file;
 	}
+	
+	public static ICFile saveMediaToDB(ICFile file, int parentId) {
+		try {
+			file.insert();
+			if (parentId > 0) { //add to root
+				ICFile rootNode =
+					(
+						(com.idega.core.data.ICFileHome) com.idega.data.IDOLookup.getHomeLegacy(
+							ICFile.class)).findByPrimaryKeyLegacy(
+						parentId);
+				rootNode.addChild(file);
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return file;
+	}
+	
 	/**
 	
 	 * @param  iwc            The IWContext used to get the multipart form
@@ -663,5 +687,40 @@ public class MediaBusiness {
 	public static String getMediaURL(int id, Class entityClass, IWMainApplication iwma) {
 		Cache cache = getCachedFileInfo(id, entityClass, iwma);
 		return cache.getVirtualPathToFile();
+	}
+	
+	public static ICFile createSubFolder(int parentId,String name) throws java.rmi.RemoteException,SQLException,FinderException{
+		ICFile parent = ((ICFileHome) IDOLookup.getHome(ICFile.class)).findByPrimaryKey(parentId);
+		return createSubFolder(parent,name);
+	}
+	
+	public static ICFile createSubFolder(ICFile parent,String name) throws java.rmi.RemoteException,SQLException{
+		
+		ICFile folder = ((ICFileHome) IDOLookup.getHome(ICFile.class)).createLegacy();
+        folder.setName(name);
+        folder.setMimeType(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
+        folder.store();
+        parent.addChild(folder);
+        return folder;        
+       
+	}
+	
+	public static MemoryFileBuffer getMediaBuffer(int fileId) throws Exception{
+		ICFile file = ((ICFileHome) IDOLookup.getHome(ICFile.class)).findByPrimaryKey(fileId);
+		return getMediaBuffer(file);
+	}
+	
+	public static  MemoryFileBuffer getMediaBuffer(ICFile file) throws Exception{
+		BufferedInputStream bis = new BufferedInputStream(file.getFileValue());
+		MemoryFileBuffer buffer = new MemoryFileBuffer();
+		MemoryOutputStream bos = new MemoryOutputStream(buffer);
+		byte[] buff = new byte[2048];
+        int bytesRead;
+
+        // Simple read/write loop.
+        while(-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+            bos.write(buff, 0, bytesRead);
+        }
+        return buffer;
 	}
 }
