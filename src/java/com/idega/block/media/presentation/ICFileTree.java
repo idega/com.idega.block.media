@@ -3,6 +3,7 @@ package com.idega.block.media.presentation;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.ui.*;
 import com.idega.core.ICTreeNode;
+import com.idega.presentation.ui.AbstractTreeViewer;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.IWContext;
