@@ -164,7 +164,7 @@ public class ImageInserter extends Block  {
 			imageAdmin.addParameter(imSessionImageName, imageId);
 
 		String stringImageID = null;
-		if (nullImageIDDefault) {
+		if (nullImageIDDefault && imageId==-1) {
 			stringImageID = "";
 		}
 		else {
