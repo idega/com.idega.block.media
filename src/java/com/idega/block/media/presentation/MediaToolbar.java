@@ -227,7 +227,6 @@ public class MediaToolbar extends Block {
 
     if(choosingImage){
       use.setOnClick( "top.window.opener.setImageId('" + file.getID() + "','" + fileInSessionParameter + "');");
-      MediaBusiness.saveMediaIdToSession(iwc,mediaId);/*could also just be removed in the FileChooser*/
     }
     else{
       use.setURL( "#" );
