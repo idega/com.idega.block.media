@@ -215,15 +215,17 @@ public class MediaBundleStarter implements IWBundleStartable{
       //check if these common mimetypes exist and insert if not.
       mimetype = (ICMimeType) cm.getFromCachedTable(ICMimeType.class,array[i+1]);
       if( mimetype == null ){
-	mimetype = ((com.idega.core.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
-	mimetype.setMimeTypeAndDescription(array[i+1],array[i]);
-	mimetype.setFileTypeId(typeId);
-	try {
-	  mimetype.insert();
-	}
-	catch (SQLException ex) {
-	  ex.printStackTrace(System.err);
-	}
+        String mimeType = array[i+1];
+        mimetype = ((com.idega.core.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
+        mimetype.setMimeTypeAndDescription(mimeType,array[i]);
+        mimetype.setFileTypeId(typeId);
+        try {
+          mimetype.insert();
+        }
+        catch (SQLException ex) {
+          //ex.printStackTrace(System.err);
+          System.err.println("[MediBundleStarter] : Error inserting MIME-TYPE for: "+mimeType);
+        }
       }
       i++;
 
