@@ -180,7 +180,7 @@ private IWResourceBundle iwrb;
 
     table.add(transparent,1,2);
     table.add(new FileInput(),1,3);
-    table.add(new SubmitButton(),1,3);
+    table.add(new SubmitButton(iwrb.getLocalizedString("me.submit","Submit")),1,3);
     String parentId = iwc.getParameter(fileInSessionParameter);
     if( parentId!=null ) table.add(new HiddenInput(fileInSessionParameter,parentId),1,3);
     f.setOnSubmit("swapImage('"+transparent.getID()+"','','"+busy.getURL()+"',1);return true");
