@@ -8,8 +8,6 @@ import javax.ejb.FinderException;
 
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
-import com.idega.core.file.business.ICFileSystem;
-import com.idega.core.file.business.ICFileSystemFactory;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
 import com.idega.core.file.data.ICMimeTypeBMPBean;
@@ -51,7 +49,6 @@ public class MediaTreeViewer extends Block {
     ICFile publicRootNodeOld = (ICFile)cm.getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
     ICFileTree tree = new ICFileTree();
-    tree.setToShowLeafs(false);
     tree.getLocation().setApplicationClass(MediaTreeViewer.class);
     tree.getLocation().setTarget("legacy_mediaviewer");
 
