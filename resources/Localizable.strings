@@ -1,5 +1,6 @@
-#Fri Oct 24 12:54:49 CEST 2003
 case_status_key.FLYT=
+close=
+login_text=
 me.uploadtext=Select a file to upload.
 mediafoldereditwindow.folder.saved=Folder created
 mediafoldereditwindow.name.the.folder=Name the folder
