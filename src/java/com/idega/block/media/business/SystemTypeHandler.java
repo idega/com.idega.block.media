@@ -177,9 +177,9 @@ public void initIcons(IWContext iwc){
 		}
 
 		iwc.setApplicationAttribute(_APP_FILE_ICONS + getUI(),tmp);
-		this._icFileIcons = tmp;
+		SystemTypeHandler._icFileIcons = tmp;
 	} else {
-		this._icFileIcons = (Hashtable)obj;
+		SystemTypeHandler._icFileIcons = (Hashtable)obj;
 	}
 
 	updateIconDimensions();
