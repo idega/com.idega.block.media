@@ -154,6 +154,7 @@ public ImageInserter(Class WindowToOpen) {
         imageAdmin.addParameter(imSessionImageName,imageId);
 
       HiddenInput hidden = new HiddenInput(sHiddenInputName,Integer.toString(imageId));
+        hidden.keepStatusOnAction();
       CheckBox insertImage = new CheckBox(prmUseBox,"Y");
         insertImage.setChecked(selected);
 
