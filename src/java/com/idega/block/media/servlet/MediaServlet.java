@@ -69,35 +69,42 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
 System.err.println("Mediaservlet debug:"+sql+mediaId);
           InputStream myInputStream = null;
 
-          while(RS.next()){
+         // while(RS.next()){
+          if( (RS.next()) && (!RS.wasNull()) ){
             myInputStream = RS.getBinaryStream(1);
+          // debug
            // contentType = RS.getString(2);
           }
 
+          // debug
           //response.setContentType(contentType);
 
           if(myInputStream!=null){
 
     //      System.err.println("FileSize: "+myInputStream.available());
 
-            DataOutputStream output = new DataOutputStream( response.getOutputStream() );
+            if (!RS.wasNull()){
+              DataOutputStream output = new DataOutputStream( response.getOutputStream() );
 
-            byte buffer[]= new byte[1024];
-            int	noRead	= 0;
+              byte buffer[]= new byte[1024];
+              int	noRead	= 0;
 
-         // check something!!!
+           // check something!!!
 
-            noRead = myInputStream.read( buffer, 0, 1024 );
-
-            //Write out the file to the browser
-            while ( noRead != -1 ){
-              output.write( buffer, 0, noRead );
               noRead = myInputStream.read( buffer, 0, 1024 );
-            }
 
-            output.flush();
-            output.close();
-           // myInputStream.close();
+              //Write out the file to the browser
+              while ( noRead != -1 ){
+                output.write( buffer, 0, noRead );
+                noRead = myInputStream.read( buffer, 0, 1024 );
+              }
+
+              output.flush();
+              output.close();
+             // myInputStream.close();
+            }
+            else System.err.println("MediaServlet: Was null");
+
           }
           else System.err.println("InputStream is null");
 
