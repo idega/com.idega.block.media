@@ -133,7 +133,7 @@ return table;
   }
 
   public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc){
-    return new Table();;
+    return new Table();
   }
 
   private Content getContentObject(ICFile item){
