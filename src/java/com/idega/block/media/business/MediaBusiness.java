@@ -1,5 +1,6 @@
 package com.idega.block.media.business;
 
+import java.io.*;
 import com.idega.util.caching.Cache;
 import com.idega.idegaweb.IWMainApplication;
 import java.util.*;
@@ -20,8 +21,6 @@ import com.oreilly.servlet.multipart.FilePart;
 import com.oreilly.servlet.multipart.MultipartParser;
 import com.oreilly.servlet.multipart.ParamPart;
 import com.oreilly.servlet.multipart.Part;
-import java.io.File;
-import java.io.FileInputStream;
 
 /**
  *  Title: com.idega.block.media.business.MediaBusiness Description: The main
@@ -48,14 +47,22 @@ public class MediaBusiness {
   public static MediaProperties saveMediaToDB( MediaProperties mediaProps, int icFileParentId, IWContext iwc ) {
     int id = -1;
     try {
+
       FileInputStream input = new FileInputStream( mediaProps.getRealPath() );
+      BufferedInputStream bis = new BufferedInputStream(input);
+
       ICFile file = new ICFile();
       file.setName( mediaProps.getName() );
       file.setMimeType( mediaProps.getMimeType() );
 
-      file.setFileValue( input );
+      file.setFileValue( bis );
       file.setFileSize( ( int ) mediaProps.getSize() );
+      long time1 = System.currentTimeMillis();
       file.insert();
+
+      long time2 = System.currentTimeMillis();
+      System.out.println("BLOBINSERT TIME :"+ (time2 - time1 )+ " ms");
+
 
       if( icFileParentId == -1 ) {//add to root
         ICFile rootNode = ( ICFile ) iwc.getApplication().getIWCacheManager().getCachedEntity( ICFile.IC_ROOT_FOLDER_CACHE_KEY );
