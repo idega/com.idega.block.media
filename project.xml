@@ -1,0 +1,101 @@
+<project>
+   <extend>../com.idega.core.bundle/block-dependencies.xml</extend>
+    <pomVersion>3</pomVersion>
+    <name>idegaWeb Media Block</name>
+    <artifactId>com.idega.block.media</artifactId>
+    <currentVersion>2.0</currentVersion>
+    <organization>
+        <name>idega software</name>
+        <url>http://www.idega.com</url>
+        <logo>http://support.idega.is/images/idegalogo2.gif</logo>
+    </organization>
+    <inceptionYear>2000</inceptionYear>
+    <shortDescription>idegaWeb Builder is</shortDescription>
+    <issueTrackingUrl>http://issues.idega.is</issueTrackingUrl>
+    <repository>
+        <connection>scm:cvs:ext:tryggvil@einstein.idega.is:/idega/cvs:bundles/com.idega.builder.bundle</connection>
+        <developerConnection>scm:cvs:ext:tryggvil@einstein.idega.is:/idega/cvs:bundles/com.idega.builder.bundle</developerConnection>
+    </repository>
+    <versions/>
+    <branches/>
+    <mailingLists>
+        <mailingList>
+            <name>${pom.name} Dev List</name>
+        </mailingList>
+        <mailingList>
+            <name>${pom.name} User List</name>
+        </mailingList>
+    </mailingLists>
+    <developers>
+        <developer>
+            <name>Tryggvi Larusson</name>
+            <id>tryggvil</id>
+            <email>tryggvi@idega.is</email>
+            <organization>idega software</organization>
+            <roles/>
+        </developer>
+        <developer>
+            <name>Pall Helgason</name>
+            <id>palli</id>
+            <email>palli@idega.is</email>
+            <organization>idega software</organization>
+            <roles/>
+        </developer>
+        <developer>
+            <name>Eirikur Sveinn Hrafnsson</name>
+            <id>eiki</id>
+            <email>eiki@idega.is</email>
+            <organization>idega software</organization>
+            <roles/>
+        </developer>
+        <developer>
+            <name>Thorhallur Helgason</name>
+            <id>laddi</id>
+            <email>laddi@idega.is</email>
+            <organization>idega software</organization>
+            <roles/>
+        </developer>
+    </developers>
+    <dependencies>
+        <dependency>
+            <groupId>bundles</groupId>
+            <artifactId>com.idega.core</artifactId>
+            <version>2.0</version>
+            <type>jar</type>
+            <url>http://www.idega.com/</url>
+            <properties>
+                <eclipse.dependency>true</eclipse.dependency>
+            </properties>
+        </dependency>
+         <dependency>
+            <groupId>bundles</groupId>
+            <artifactId>com.idega.builder</artifactId>
+            <version>1.1</version>
+            <type>jar</type>
+            <url>http://www.idega.com/</url>
+            <properties>
+                <eclipse.dependency>true</eclipse.dependency>
+            </properties>
+        </dependency>
+    </dependencies>
+      <build>
+        <sourceDirectory>src/java</sourceDirectory>
+        <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+        <unitTest>
+            <includes>
+                <include>**/*Test.java</include>
+            </includes>
+        </unitTest>
+    </build>
+    <reports>
+        <report>maven-tasklist-plugin</report>
+        <report>maven-changelog-plugin</report>
+        <report>maven-developer-activity-plugin</report>
+        <report>maven-simian-plugin</report>
+        <report>maven-jcoverage-plugin</report>
+        <report>maven-faq-plugin</report>
+        <report>maven-file-activity-plugin</report>
+        <report>maven-changes-plugin</report>
+    </reports>
+    <properties/>
+</project>
