@@ -522,9 +522,13 @@ public class MediaToolbar extends Block {
       T.add( folder, 1, 1 );
 
     }
-
-
-
+    
+    Link rename = MediaBusiness.getRenameFileLink();
+	rename.setText(iwrb.getLocalizedString("mv.properties","properties"));
+	rename.setAsImageButton(true);
+	rename.addParameter(fileInSessionParameter,mediaId);
+	T.add(rename,1,1);
+	
     add( T );
 
 

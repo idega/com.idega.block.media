@@ -437,6 +437,13 @@ public class MediaBusiness {
 		L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
 		return L;
 	}
+	
+	public static Link getRenameFileLink() {
+		Link L = (Link) MediaConstants.MEDIA_FOLDER_EDITOR_LINK.clone();
+		L.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_EDIT);
+		L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+		return L;
+	}
 	/**
 	
 	 * @return    The useImageLink value

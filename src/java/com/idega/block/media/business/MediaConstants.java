@@ -35,6 +35,7 @@ public class MediaConstants {
   public static final String MEDIA_ACTION_NEW = "me_act_n";
   public static final String MEDIA_ACTION_EDIT = "me_act_e";
   public static final String MEDIA_ACTION_USE = "me_act_u";
+  public static final String MEDIA_ACTION_RENAME = "me_act_rn";
 
 
   public static final String MEDIA_ACTION_PARAMETER_NAME = "me_cho_act";
