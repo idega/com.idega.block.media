@@ -19,153 +19,132 @@ import com.idega.user.business.UserBusiness;
  * @version 1.0
  */
 
- //public class MediaChooserWindow extends FrameSet {
- public class MediaChooserWindow extends AbstractChooserWindow {
- 	
-	private static final String IW_BUNDLE_IDENTIFIER = "com.idega.user";
-	
-	 
-	
-  private IWBundle iwb;
-  //  public static String prmReloadParent = "simple_upl_wind_rp";
-  private String fileInSessionParameter = "ic_file_id";
-  private FrameSet frame = null;
+//public class MediaChooserWindow extends FrameSet {
+public class MediaChooserWindow extends AbstractChooserWindow {
 
-  public MediaChooserWindow(){
-    super();
-    //frameset fixes
-    setEmpty();//for IWAdminWindow
-    setOnlyScript(true);//for AbstractChooserWindow
-    //
-    setWidth(640);
-    setHeight(480);
-    setResizable(true);
-    
+	private static final String IW_BUNDLE_IDENTIFIER = "com.idega.user";
+
+	private IWBundle iwb;
+	//  public static String prmReloadParent = "simple_upl_wind_rp";
+	private String fileInSessionParameter = "ic_file_id";
+	private FrameSet frame = null;
+
+	public MediaChooserWindow() {
+		super();
+		//frameset fixes
+		setEmpty(); //for IWAdminWindow
+		setOnlyScript(true); //for AbstractChooserWindow
+		//
+		setWidth(640);
+		setHeight(480);
+		setResizable(true);
+
 		frame = new FrameSet();
-				
+
 		frame.add(Top.class);
 		frame.add(BottomFrameSet.class);
-		frame.setSpanPixels(1,50);
+		frame.setSpanPixels(1, 50);
 		frame.setScrollbar(false);
-		frame.setScrolling(1,false);
-		frame.setScrolling(2,false);
+		frame.setScrolling(1, false);
+		frame.setScrolling(2, false);
 		frame.setSpanAdaptive(2);
 		frame.setResizable(true);
 
+	}
 
+	public void displaySelection(IWContext iwc) {
+		//store the parameter in session
+		//MediaBusiness.getMediaParameterNameInSession(iwc);
+		MediaBusiness.saveMediaIdToSession(iwc, MediaBusiness.getMediaId(iwc));
 
-  }
+		String chooserType = iwc.getParameter(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME);
+		if (chooserType != null) {
+			iwc.setSessionAttribute(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME, chooserType);
+		}
 
-  public void displaySelection(IWContext iwc){
-   //store the parameter in session
-    //MediaBusiness.getMediaParameterNameInSession(iwc);
-    MediaBusiness.saveMediaIdToSession(iwc,MediaBusiness.getMediaId(iwc));
-    
-    
-    
-    String chooserType = iwc.getParameter(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME);
-    if( chooserType!=null ){
-      iwc.setSessionAttribute(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME,chooserType);
-    }
+		if (MediaBusiness.reloadOnClose(iwc)) {
+			frame.setParentToReload();
+		}
 
-    if( MediaBusiness.reloadOnClose(iwc) ){
-      frame.setParentToReload();
-    }
+		add(frame);
+	}
 
-    add(frame);
-  }
+	public String getBundleIdentifier() {
+		return MediaConstants.IW_BUNDLE_IDENTIFIER;
+	}
 
-  public String getBundleIdentifier(){
-    return MediaConstants.IW_BUNDLE_IDENTIFIER;
-  }
-  
+	public static class FileTree extends Page {
+		public FileTree() {
+			setAllMargins(0);
+			setStyleClass("main");
+			//    setBackgroundColor(MediaConstants.MEDIA_TREE_VIEWER_BACKGROUND_COLOR);
+			add(new MediaTreeViewer());
+		}
+	}
 
+	public static class FileViewer extends MediaViewerWindow {
+		public FileViewer() {
+			setAllMargins(0);
+			setStyleClass("main");
+		}
+	}
 
-  public static class FileTree extends Page{
-   public FileTree(){
-    setAllMargins(0);
-    setStyleClass("main");
-//    setBackgroundColor(MediaConstants.MEDIA_TREE_VIEWER_BACKGROUND_COLOR);
-    add(new MediaTreeViewer());
-   }
-  }
+	public static class BottomFrameSet extends FrameSet {
+		public BottomFrameSet() {
+			add(FileTree.class);
+			add(FileViewer.class);
+			setFrameName(1, MediaConstants.TARGET_MEDIA_TREE);
+			setFrameName(2, MediaConstants.TARGET_MEDIA_VIEWER);
 
-  public static class FileViewer extends MediaViewerWindow{
-  	public FileViewer() {
-  		setAllMargins(0);
-  		setStyleClass("main");
-  	}
-  }
+			this.setSpanPixels(1, 210);
+			this.setHorizontal();
+			// this.setSpanPixels(3,35);
+			this.setScrollbar(false);
+			this.setScrolling(1, true);
+			this.setScrolling(2, true);
+		}
+	}
 
-  public static class BottomFrameSet extends FrameSet{
-   public BottomFrameSet(){
-    add(FileTree.class);
-    add(FileViewer.class);
-    setFrameName(1,MediaConstants.TARGET_MEDIA_TREE);
-    setFrameName(2,MediaConstants.TARGET_MEDIA_VIEWER);
-
-    this.setSpanPixels(1,210);
-    this.setHorizontal();
-    // this.setSpanPixels(3,35);
-    this.setScrollbar(false);
-    this.setScrolling(1,true);
-    this.setScrolling(2,true);
-   }
-  }
-
-  public static class Top extends Page{
+	public static class Top extends Page {
 		private UserBusiness userBusiness = null;
-		private String styleSrc = ""; 
+		private String styleSrc = "";
 
-    public Top(){
-     setAllMargins(0);
-    }
+		public Top() {
+			setAllMargins(0);
+		}
 
-   public void main(IWContext iwc) throws Exception{
-   	//IWResourceBundle iwrb = getResourceBundle(iwc);
-   	Page parentPage = null;
-    Table headerTable = new Table();
-    headerTable.setCellpadding(0);
-    headerTable.setCellspacing(0);
-    headerTable.setStyleClass("banner");
-    headerTable.setWidth("100%");
-    headerTable.setHeight("100%");
-    headerTable.setAlignment(1,1,"left");//changed from right
- //   headerTable.addText(iwrb.getLocalizedString("user_property_window", "User Property Window"), IWConstants.BUILDER_FONT_STYLE_TITLE);
- //   headerTable.add(getBundle(iwc).getImage(this.getBundle(iwc).getProperty("logo_image_name","top.gif")));
-    
-		parentPage = this.getParentPage();
-		userBusiness = getUserBusiness(iwc); 
-		styleSrc = userBusiness.getUserApplicationStyleSheet(parentPage, iwc);
-		parentPage.addStyleSheetURL(styleSrc);
-    
-    
- //   headerTable.add(iwc.getApplication().getCoreBundle().getImage("/editorwindow/idegaweb.gif","idegaWeb"),1,1);
-    add(headerTable);
-   }
-	 protected UserBusiness getUserBusiness(IWApplicationContext iwc) {
-			 if (userBusiness == null) {
-				 try {
-					 userBusiness = (UserBusiness) com.idega.business.IBOLookup.getServiceInstance(iwc, UserBusiness.class);
-				 }
-				 catch (java.rmi.RemoteException rme) {
-					 throw new RuntimeException(rme.getMessage());
-				 }
-			 }
-			 return userBusiness;
-		 }
-   
-   
-   
-   
-   
-   
+		public void main(IWContext iwc) throws Exception {
+			//IWResourceBundle iwrb = getResourceBundle(iwc);
+			Page parentPage = null;
+			Table headerTable = new Table();
+			headerTable.setCellpadding(0);
+			headerTable.setCellspacing(0);
+			headerTable.setStyleClass("banner");
+			headerTable.setWidth("100%");
+			headerTable.setHeight("100%");
+			headerTable.setAlignment(1, 1, "left"); //changed from right
+			//   headerTable.addText(iwrb.getLocalizedString("user_property_window", "User Property Window"), IWConstants.BUILDER_FONT_STYLE_TITLE);
+			//   headerTable.add(getBundle(iwc).getImage(this.getBundle(iwc).getProperty("logo_image_name","top.gif")));
 
-  }
+			parentPage = this.getParentPage();
+			userBusiness = getUserBusiness(iwc);
+			styleSrc = userBusiness.getUserApplicationStyleSheet(parentPage, iwc);
+			parentPage.addStyleSheetURL(styleSrc);
 
+			//   headerTable.add(iwc.getApplication().getCoreBundle().getImage("/editorwindow/idegaweb.gif","idegaWeb"),1,1);
+			add(headerTable);
+		}
+		protected UserBusiness getUserBusiness(IWApplicationContext iwc) {
+			if (userBusiness == null) {
+				try {
+					userBusiness = (UserBusiness)com.idega.business.IBOLookup.getServiceInstance(iwc, UserBusiness.class);
+				} catch (java.rmi.RemoteException rme) {
+					throw new RuntimeException(rme.getMessage());
+				}
+			}
+			return userBusiness;
+		}
+
+	}
 
 }
-
-
-
-
