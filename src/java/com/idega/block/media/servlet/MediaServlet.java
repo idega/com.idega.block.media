@@ -66,7 +66,7 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
           Stmt = conn.createStatement();
 
           RS = Stmt.executeQuery(sql+mediaId);
-//System.err.println("Mediaservlet debug:"+sql+mediaId);
+System.err.println("Mediaservlet debug:"+sql+mediaId);
           InputStream myInputStream = null;
 
           while(RS.next()){
@@ -85,6 +85,7 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
             byte buffer[]= new byte[1024];
             int	noRead	= 0;
 
+         // check something!!!
 
             noRead = myInputStream.read( buffer, 0, 1024 );
 
