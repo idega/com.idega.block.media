@@ -9,6 +9,7 @@ package com.idega.block.media.presentation;
  */
 
 import com.idega.block.media.business.MediaConstants;
+import com.idega.core.builder.business.BuilderImageInserter;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWUserContext;
@@ -24,7 +25,7 @@ import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.HiddenInput;
 import com.idega.presentation.ui.Window;
 
-public class ImageInserter extends Block {
+public class ImageInserter extends Block implements BuilderImageInserter {
 
 	private final static String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
 	private int imageId = -1;
