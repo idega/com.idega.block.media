@@ -1,6 +1,7 @@
 package com.idega.block.media.presentation;
 
 import com.idega.presentation.IWContext;
+import com.idega.core.data.ICFile;
 import com.idega.presentation.ui.AbstractChooser;
 import com.idega.idegaweb.IWBundle;
 import com.idega.builder.business.BuilderLogic;
@@ -36,4 +37,7 @@ public class FileChooser extends AbstractChooser {
     setChooseButtonImage(iwb.getImage("open.gif","Choose"));
   }
 
+  public void setSelectedFile(ICFile file){
+    super.setChooserValue(file.getName(),file.getID());
+  }
 }
