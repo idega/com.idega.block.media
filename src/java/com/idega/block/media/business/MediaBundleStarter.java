@@ -104,6 +104,8 @@ public class MediaBundleStarter implements IWBundleStartable{
 
 
   public MediaBundleStarter() {
+  //java.lang.Runnable run = new java.lang.Runnable();
+
   }
 
   public void start(IWBundle bundle){

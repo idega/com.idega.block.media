@@ -44,10 +44,7 @@ public class MediaViewer extends  Window {
       String mediaId = MediaBusiness.getMediaId(iwc);
       String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
       fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
-
-
-
-      System.out.println("Media ID :"+mediaId);
+      iwc.removeSessionAttribute(fileInSessionParameter);
 
       if( (mediaId!=null) && !(mediaId.equalsIgnoreCase("-1")) ){
         //saveMediaId(iwc,mediaId);
@@ -59,8 +56,10 @@ public class MediaViewer extends  Window {
            ConfirmDeleteMedia(mediaId);
           }
           else if(action.equals(MediaConstants.MEDIA_ACTION_DELETE_CONFIRM)){
-            deleteMedia( mediaId);
+            deleteMedia(mediaId);
             MediaBusiness.removeMediaIdFromSession(iwc);
+            setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
+            add(new Text("Deleted"));
           }
         }
         else{
@@ -70,6 +69,8 @@ public class MediaViewer extends  Window {
           ICFile file = (ICFile) cache.getEntity();
           Table T = new Table();
           T.add(file.getName(),1,1);
+          T.setWidth("100%");
+          T.setHeight("100%");
 
           FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,file.getMimeType());
           T.add(handler.getPresentationObject(id,iwc),1,2);
@@ -77,19 +78,36 @@ public class MediaViewer extends  Window {
           getAssociatedScript().addFunction(ONCLICK_FUNCTION_NAME,"function "+ONCLICK_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+"){ }");
           getAssociatedScript().addToFunction(ONCLICK_FUNCTION_NAME,"top."+AbstractChooserWindow.SELECT_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+")");
 
-          Link l = new Link();
-          l.setTextOnLink("Use");
-          l.setAsImageButton(true);
-          l.setURL("#");
-          l.setOnClick(ONCLICK_FUNCTION_NAME+"('"+file.getName()+"','"+file.getID()+"')");
-          add(l);
+          Link use = new Link();
+          use.setTextOnLink("Use");
+          use.setAsImageButton(true);
+          use.setURL("#");
+          use.setOnClick(ONCLICK_FUNCTION_NAME+"('"+file.getName()+"','"+file.getID()+"')");
+          add(use);
 
-          Class C = MediaUploaderWindow.class;
-          Link L = new Link("New",C);
-          L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
-          L.setAsImageButton(true);
-          L.addParameter(fileInSessionParameter,id);
-          add(L);
+
+          Link newLink = new Link("New",MediaUploaderWindow.class);
+          newLink.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+          newLink.setAsImageButton(true);
+          newLink.addParameter(fileInSessionParameter,id);
+          newLink.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_NEW);
+          add(newLink);
+
+
+          Link delete = new Link("Delete",MediaViewer.class);
+          delete.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+          delete.setAsImageButton(true);
+          delete.addParameter(fileInSessionParameter,id);
+          delete.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_DELETE);
+          add(delete);
+
+          if( MediaBusiness.isFolder(file) ){
+            Link folder = MediaBusiness.getNewFolderLink();
+            folder.setText("folder");
+            folder.setAsImageButton(true);
+            folder.addParameter(fileInSessionParameter,id);
+            add(folder);
+          }
 
           add(T);
         }

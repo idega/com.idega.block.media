@@ -41,7 +41,7 @@ public class MediaBusiness  {
       FileInputStream input = new FileInputStream(mediaProps.getRealPath());
       ICFile file = new ICFile();
       file.setName(mediaProps.getName());
-      file.setMimeType(mediaProps.getContentType());
+      file.setMimeType(mediaProps.getContentType() );
 
       System.out.println("MIMETYPE: "+mediaProps.getContentType());
 
@@ -86,12 +86,14 @@ public class MediaBusiness  {
     Part part;
     File dir = null;
     String value = null;
+    HashMap parameters = new HashMap();
+
     while ((part = mp.readNextPart()) != null) {
       String name = part.getName();
       if(part.isParam()){
         ParamPart paramPart = (ParamPart) part;
-        value = paramPart.getStringValue();
-
+        parameters.put(paramPart.getName(),paramPart.getStringValue());
+        //System.out.println(" PARAMETERS "+paramPart.getName()+" : "+paramPart.getStringValue());
       }
       else if (part.isFile()) {
         // it's a file part
@@ -116,7 +118,7 @@ public class MediaBusiness  {
         System.out.println("MediaBusiness : File getContentType"+filePart.getContentType());
         System.out.println("MediaBusiness : File fileName"+fileName);
         */
-          mediaProps = new MediaProperties(fileName,filePart.getContentType(),filePath,webPath.toString(),size);
+          mediaProps = new MediaProperties(fileName,filePart.getContentType(),filePath,webPath.toString(),size,parameters);
         }
       }
     }
@@ -144,18 +146,18 @@ public class MediaBusiness  {
   public static String getMediaId(IWContext iwc){
     String fileInSessionParameter = getMediaParameterNameInSession(iwc);
 
-    String id = null;
+    String id = "-1";
     if(iwc.getParameter(fileInSessionParameter)!=null){
       id = iwc.getParameter(fileInSessionParameter);
       //used for viewing the last thing used
-      iwc.setSessionAttribute(fileInSessionParameter+"_2",id);
+      //iwc.setSessionAttribute(fileInSessionParameter+"_2",id);
     }
     else if(iwc.getSessionAttribute(fileInSessionParameter)!=null){
       id = (String) iwc.getSessionAttribute(fileInSessionParameter);
     }//used for viewing the last thing used
-    else if(iwc.getSessionAttribute(fileInSessionParameter+"_2")!=null){
-      id = (String) iwc.getSessionAttribute(fileInSessionParameter+"_2");
-    }
+   // else if(iwc.getSessionAttribute(fileInSessionParameter+"_2")!=null){
+   //   id = (String) iwc.getSessionAttribute(fileInSessionParameter+"_2");
+   // }
 
     return id;
   }
@@ -169,6 +171,14 @@ public class MediaBusiness  {
     iwc.removeSessionAttribute(getMediaParameterNameInSession(iwc)+"_2");
   }
 
+  public static PresentationObject saveMedia(IWContext iwc){
+    MediaProperties mediaProps = null;
+    mediaProps = (MediaProperties) iwc.getSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME);
+    iwc.removeSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME);
+    int i = MediaBusiness.SaveMediaToDB(mediaProps,iwc);
+    FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,mediaProps.getContentType());
+    return handler.getPresentationObject(i,iwc);
+  }
 
   public static MediaProperties uploadToDiskAndGetMediaProperties(IWContext iwc){
     MediaProperties mediaProps = null;
@@ -285,5 +295,12 @@ public class MediaBusiness  {
 
     return MediaConstants.IMAGE_CHANGE_JS_FUNCTION;
   }
+
+  public static boolean isFolder(ICFile file){
+    if(file.getMimeType().equals(ICMimeType.IC_MIME_TYPE_FOLDER)) return true;
+    else return false;
+  }
+
+
 }//end of class
 

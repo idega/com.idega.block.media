@@ -8,6 +8,7 @@ import com.idega.block.media.business.FileTypeHandler;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.FileInput;
+import com.idega.presentation.ui.HiddenInput;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.Table;
@@ -55,20 +56,23 @@ private IWResourceBundle iwrb;
 
     private void handleEvents(IWContext iwc){
       String contentType = iwc.getRequestContentType();
+
       if( (contentType !=null) && (contentType.indexOf("multipart")!=-1) ){//viewing after uploading to disk
         MediaProperties mediaProps = MediaBusiness.uploadToDiskAndGetMediaProperties(iwc);
 
         if(mediaProps!=null){
           Table T = new Table(2,2);
 
-          Link submitSave = new Link("Save");
           /**@todo: insert a generated localized generated button**/
+          Link submitSave = new Link("Save");
           submitSave.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
           submitSave.setAsImageButton(true);
+          submitSave.addParameter(fileInSessionParameter,(String)mediaProps.getParameterMap().get(fileInSessionParameter));
 
-          Link submitNew = new Link("New");
           /**@todo: insert a generated localized generated button**/
+          Link submitNew = new Link("New");
           submitNew.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_NEW);
+          submitNew.addParameter(fileInSessionParameter,(String)mediaProps.getParameterMap().get(fileInSessionParameter));
           submitNew.setAsImageButton(true);
 
           T.add(submitNew,2,1);
@@ -106,7 +110,9 @@ private IWResourceBundle iwrb;
       else{//else saving or uploading a new file
         String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
         if( (action!=null) && action.equals(MediaConstants.MEDIA_ACTION_SAVE)  ){
-          save(iwc);//also deletes the file from disk
+        /**@todo merge with mediaviewer???**/
+          setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
+          add(MediaBusiness.saveMedia(iwc));//also deletes the file from disk and return a FileHandler made presentationobject
         }
         else{//add a new file
           add(getMultiPartUploaderForm(iwc));
@@ -116,32 +122,21 @@ private IWResourceBundle iwrb;
 
     }
 
-
   private Form getMultiPartUploaderForm(IWContext iwc){
     Form f = new Form();
     f.setMultiPart();
-    String s = iwc.getRequestURI()+"?idegaweb_instance_class="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass());
+   // String s = iwc.getRequestURI()+"?"+com.idega.+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass());
+    String s = com.idega.idegaweb.IWMainApplication.getObjectInstanciatorURL(this.getClass());
     f.setAction(s);
 
     f.add(new FileInput());
     f.add(new SubmitButton());
+
+    f.add(new HiddenInput(fileInSessionParameter,MediaBusiness.getMediaId(iwc)));
+
     return f;
   }
 
-
-    private void save(IWContext iwc){
-      MediaProperties mediaProps = null;
-      if(iwc.getSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME)!=null){
-        mediaProps = (MediaProperties) iwc.getSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME);
-        iwc.removeSessionAttribute(MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME);
-      }
-      if(mediaProps !=null){
-        int i = MediaBusiness.SaveMediaToDB(mediaProps,iwc);
-        iwc.setSessionAttribute(fileInSessionParameter,String.valueOf(i));
-         FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,mediaProps.getContentType());
-         add(handler.getPresentationObject(i,iwc));
-      }
-    }
 
   public String getBundleIdentifier(){
     return MediaConstants.IW_BUNDLE_IDENTIFIER ;

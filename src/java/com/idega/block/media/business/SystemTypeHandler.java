@@ -25,7 +25,7 @@ import com.idega.presentation.Image;
 import com.idega.core.data.ICFile;
 public class SystemTypeHandler extends FileTypeHandler {
 
-public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Size","Mimetype"};
+public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Size","Mimetype"};//**@todo localize**/
 
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
@@ -35,21 +35,23 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
       ICFile file = (ICFile)this.getCachedFileInfo(icFileId,iwc).getEntity();
       Vector V = new Vector();
 
-      //**@todo debug only do this if not a folder**/
-      V.add(getContentObject(file));
+      if(!MediaBusiness.isFolder(file)) V.add(getContentObject(file));
 
       Iterator iter = file.getChildren();
+      int i = 0;
       if( iter != null ){
         while (iter.hasNext()) {
+          i++;
           ICFile item = (ICFile) iter.next();
           V.add(getContentObject(item));
         }
       }
 
       listView = new ContentViewer(LIST_VIEW_HEADERS,V);
-      //CV1.setICObjectInstanceID(2);
-      listView.setDisplayNumber(2);
+      if( i>0 ) listView.setDisplayNumber(i);
       listView.setAllowOrder(true);
+
+
 
 
 

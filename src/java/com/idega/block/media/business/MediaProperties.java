@@ -1,5 +1,7 @@
 package com.idega.block.media.business;
 
+import java.util.Map;
+
 /**
  * Title: com.idega.block.media.business.MediaProperties
  * Description: A wrapper class for known file information after uploading to disk
@@ -12,6 +14,7 @@ package com.idega.block.media.business;
 public class MediaProperties {
 
   private String sName,sContentType,sRealPath,sWebPath;
+  private Map parameterMap;
   private long lSize;
   private int iId;
 
@@ -31,6 +34,10 @@ public class MediaProperties {
     this.sWebPath = webpath;
     this.lSize  = size;
     this.iId = -1;
+  }
+  public MediaProperties(String name,String type,String realpath,String webpath ,long size, Map parameterMap){
+    this(name,type,realpath,webpath,size);
+    setParameterMap(parameterMap);
   }
 
   public String getName(){
@@ -68,6 +75,13 @@ public class MediaProperties {
   }
   public void setId(int id){
     this.iId = id;
+  }
+
+  public Map getParameterMap(){
+    return this.parameterMap;
+  }
+  public void setParameterMap(Map parameterMap){
+    this.parameterMap = parameterMap;
   }
 
 }
