@@ -4,7 +4,7 @@ import com.idega.idegaweb.presentation.IWAdminWindow;
 import com.idega.presentation.*;
 import com.idega.presentation.text.*;
 import com.idega.presentation.ui.*;
-import com.idega.util.idegaTimestamp;
+import com.idega.util.IWTimeStamp;
 import com.idega.idegaweb.IWBundle;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.presentation.FrameSet;
