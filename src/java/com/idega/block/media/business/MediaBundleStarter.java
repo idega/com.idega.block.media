@@ -24,9 +24,14 @@ public class MediaBundleStarter implements IWBundleStartable{
 
   private IWCacheManager cm;
 
+  private String[] system = {
+                            "A Folder",ICMimeType.IC_MIME_TYPE_FOLDER
+                            };
+
   private String[] application = {
                                   "Undefined binary data (often executable progs)","application/octet-stream"
                                   };
+
   private String[] audio = {
                             "basic audio - 8-bit u-law PCM au snd","audio/basic",
                             "Macintosh audio format (AIpple) aif aiff aifc","audio/x-aiff",
@@ -39,7 +44,9 @@ public class MediaBundleStarter implements IWBundleStartable{
   private String[] document = {
                               "HTML text data (RFC 1866) html htm","text/html",
                               "Plain text: documents; program listings txt c c++ pl cc h","text/plain",
-                              "Richtext (obsolete - replaced by text/enriched)","text/richtext",
+                              "An xml document such as .ibxml",ICMimeType.IC_MIME_TYPE_XML,
+                              "Richtext","text/richtext",
+                              "Richtext newer","text/enriched",
                               "PostScript  ai eps ps  ","application/postscript",
                               "Microsoft Rich Text Format rtf","application/rtf",
                               "Adobe Acrobat PDF  pdf","application/pdf",
@@ -54,7 +61,7 @@ public class MediaBundleStarter implements IWBundleStartable{
                               "Javascript program  js ls mocha","text/javascript",
                               "Javascript program  js ls mocha","application/x-javascript",
                               "Gnu tar format gtar","application/x-gtar",
-                              "4.3BSD tar format tar  application/x-tar",
+                              "4.3BSD tar format tar","application/x-tar",
                               };
   private String[] image = {
                             "GIF","image/gif",
@@ -100,30 +107,24 @@ public class MediaBundleStarter implements IWBundleStartable{
     ICFileType images = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_IMAGE);
     ICFileType vectors = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_VECTOR_GRAPHICS);
     ICFileType videos = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_VIDEO);
-
+    ICFileType system = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_SYSTEM);
 
     //cache
     ICMimeType mimes = new ICMimeType();
     mimes.cacheEntity();
 
-    registerMimeType(application,applications);
-    registerMimeType(audio,audios);
-    registerMimeType(document,documents);
-    registerMimeType(image,images);
-    registerMimeType(vector,vectors);
-    registerMimeType(video,videos);
-
-
-
-    //other initially created types that don't aren't easily recognizes as certain file types
-      /*
-      type = new ICMimeType();
-      type.setMimeType("application/pdf");
-      type.setDescription("Adobe PDF Document");
-      type.setFileTypeId(IWMainApplication.);
-      type.insert();
-
-      */
+    try {
+      //insert the mimetypes
+      registerMimeType(application,applications);
+      registerMimeType(audio,audios);
+      registerMimeType(document,documents);
+      registerMimeType(image,images);
+      registerMimeType(vector,vectors);
+      registerMimeType(video,videos);
+    }
+    catch (Exception ex) {
+     System.out.println("\nMediaBundleStarter : You must restart the application to finish installing iWDBFS\n");
+    }
   }
 
 
