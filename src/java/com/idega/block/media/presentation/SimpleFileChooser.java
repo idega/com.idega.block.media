@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.core.data.ICFile;
+import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.presentation.BusyBar;
 import com.idega.io.UploadFile;
 import com.idega.presentation.IWContext;
@@ -19,34 +21,38 @@ import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.TextInput;
 
 /**
- * <p>Title: idegaWeb</p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2001</p>
- * <p>Company: idega</p>
+ * <p>Description: A simple to use persentation object to upload a file into the database</p>
+ * <p>Copyright: Idega SoftwareCopyright (c) 2001</p>
+ * <p>Company: Idega Software</p>
  * @author <a href="gummi@idega.is">Guðmundur Ágúst Sæmundsson</a>
- * @version 1.0
+ * @version 1.1
  */
 
 public class SimpleFileChooser extends InterfaceObjectContainer {
-  //private String _style;
-  private String _name;
-  private Form _form;
-  private int _selectedFileId = -1;
-  private boolean _deleteOnChange = true;
-  private BusyBar _busy = null;
+  //private Stringstyle;
+  private String name;
+  private Form form;
+  private int selectedFileId = -1;
+  private boolean deleteOnChange = true;
+  
+  private BusyBar busy = null;
   private List disabledObjects;
 
-  private final static int _ACTION_DELETE = 0;
-  private final static int _ACTION_NEWFILE = 1;
-  private final static int _ACTION_OLDFILE = 2;
-  private final static int _ACTION_MAINTAINFILE = 3;
-  private int _action = -1;
+  private final static int ACTION_DELETE = 0;
+  private final static int ACTION_NEWFILE = 1;
+  private final static int ACTION_OLDFILE = 2;
+  private final static int ACTION_MAINTAINFILE = 3;
+  private int action = -1;
+  
+  private boolean showPreviewLink = true;
 
-  public SimpleFileChooser(Form form, String chooserName) {
-    _form = form;
-    _name = chooserName;
-    _form.setMultiPart();
-    _busy = new BusyBar("busy_uploading");
+  private IWBundle coreBundle;
+	private IWResourceBundle iwrb;
+	public SimpleFileChooser(Form form, String chooserName) {
+    form = form;
+    name = chooserName;
+    form.setMultiPart();
+    busy = new BusyBar("busy_uploading");
   }
 
   public SimpleFileChooser(Form form, String chooserName,String style) {
@@ -63,33 +69,32 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
 
 
   public void main(IWContext iwc) throws Exception{
-    //IWBundle iwb = iwc.getApplication().getBundle(BuilderLogic.IW_BUNDLE_IDENTIFIER);
+		coreBundle = iwc.getApplication().getCoreBundle();
+		iwrb = coreBundle.getResourceBundle(iwc);
 
-    if(_deleteOnChange && "true".equals(iwc.getParameter("change_file"))&&iwc.getParameter(_name) != null){
-      System.out.println("deleteFile: "+ iwc.getParameter(_name));
+    if(deleteOnChange && "true".equals(iwc.getParameter("change_file"))&&iwc.getParameter(name) != null){
+      System.out.println("deleteFile: "+ iwc.getParameter(name));
       boolean del = false;
       try {
-        del = MediaBusiness.deleteMedia(Integer.parseInt(iwc.getParameter(_name)));
-        _selectedFileId = -1;
+        del = MediaBusiness.deleteMedia(Integer.parseInt(iwc.getParameter(name)));
+       	selectedFileId = -1;
       }
       catch (Exception ex) {
         del = false;
-      } finally{
+      } 
+      finally{
         if(!del){
-          System.err.println("media: "+iwc.getParameter(_name)+" faild to delete");
+          System.err.println("media: "+iwc.getParameter(name)+" failed to delete");
         }
       }
     }
 
-    UploadFile file = iwc.getUploadedFile();
+    UploadFile file = getUploadedFile(iwc);
 
-    if(file == null && _selectedFileId == -1 || "false".equals(iwc.getParameter("change_file")) ){
+    if(file == null &&selectedFileId == -1 || "false".equals(iwc.getParameter("change_file")) ){
       this.empty();
 
       //Image busy = iwc.getApplication().getCoreBundle().getImage("transparentcell.gif");
-
-
-
       Table table = new Table(1,2);
       table.setCellpadding(0);
       table.setCellspacing(0);
@@ -104,32 +109,27 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
 
       if(!iwc.isIE()){
         table.add(confirm,1,1);
-        _busy.addDisabledObject(confirm);
-        _busy.addBusyObject(confirm);
+       busy.addDisabledObject(confirm);
+       busy.addBusyObject(confirm);
       } else {
-        _busy.setBusyOnChange();
-        _busy.addBusyObject(input);
+       busy.setBusyOnChange();
+       busy.addBusyObject(input);
       }
-      _busy.setBusyBarUrl(iwc.getApplication().getCoreBundle().getImage("loading.gif").getURL());
+     busy.setBusyBarUrl(coreBundle.getImage("loading.gif").getURL());
 
       if(disabledObjects != null){
         Iterator iter = disabledObjects.iterator();
         while (iter.hasNext()) {
           InterfaceObject item = (InterfaceObject)iter.next();
-          _busy.addDisabledObject(item);
+         busy.addDisabledObject(item);
         }
       }
 
-      table.add(_busy,1,2);
-      //input.setOnChange("document.forms['"+_form.getID()+"'].submit();document.images['"+busy.getID()+"'].src='"+iwc.getApplication().getCoreBundle().getImage("loading.gif").getURL()+"';");
-      //input.setOnChange("this.form.submit();document.images['"+busy.getID()+"'].src='"+iwc.getApplication().getCoreBundle().getImage("loading.gif").getURL()+"';");
-
-      //input.setOnChange("this.form.submit()");
-
-      //f.setOnSubmit("javascript:document.images['"+busy.getID()+"'].src='"+iwc.getApplication().getCoreBundle().getImage("loading.gif").getURL()+"';return true");
+      table.add(busy,1,2);
 
       this.add(table);
-    } else if(file != null){
+    } 
+    else if(file != null){//uploaded
 
 
       Table table = new Table(1,2);
@@ -150,19 +150,22 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
       table.add(change,1,1);
       //table.add(busy,1,2);
       ICFile icFile = MediaBusiness.saveMediaToDBUploadFolder(file,iwc);
-      table.add(new HiddenInput(_name,Integer.toString(icFile.getID())),1,2);
-      Link preview = new Link("Preview");
-      preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
-      preview.setTarget(Link.TARGET_NEW_WINDOW);
-      table.add(preview,1,2);
+      table.add(new HiddenInput(name,Integer.toString(icFile.getID())),1,2);
+      
+			if( showPreviewLink){
+		    Link preview = new Link("Preview");
+		    preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
+		    preview.setTarget(Link.TARGET_NEW_WINDOW);
+		    table.add(preview,1,2);
+			}
       this.add(table);
       //this.add(new Image(file.getWebPath(),file.getName()));
-    } else if(_selectedFileId != -1) {
+    } else if(selectedFileId != -1) {
       Table table = new Table(1,2);
       table.setCellpadding(0);
       table.setCellspacing(0);
 
-      ICFile icFile = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).findByPrimaryKeyLegacy(_selectedFileId);
+      ICFile icFile = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).findByPrimaryKeyLegacy(selectedFileId);
       TextInput tInput = new TextInput("ic_uploaded_file",icFile.getName());
       tInput.setDisabled(true);
       SubmitButton change = new SubmitButton("Change...","change_file","true");
@@ -176,23 +179,41 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
       table.add(tInput,1,1);
       table.add(change,1,1);
       //table.add(busy,1,2);
-      table.add(new HiddenInput(_name,Integer.toString(_selectedFileId)),1,2);
-      Link preview = new Link("Preview");
-      preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
-      preview.setTarget(Link.TARGET_NEW_WINDOW);
-      table.add(preview,1,2);
+      table.add(new HiddenInput(name,Integer.toString(selectedFileId)),1,2);
+      
+      if( showPreviewLink){
+	      Link preview = new Link("Preview");
+	      preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
+	      preview.setTarget(Link.TARGET_NEW_WINDOW);
+	      table.add(preview,1,2);
+      }
+      
       this.add(table);
     }
   }
 
-  public void setInputStyle(String style){
-    //_style = style;
+
+	public UploadFile getUploadedFile(IWContext iwc) {
+		return iwc.getUploadedFile();
+	}
+
+	public void setInputStyle(String style){
     this.setStyleAttribute(style);
   }
 
   public void setSelectedFile(int fileId){
-    _selectedFileId = fileId;
-    _deleteOnChange = false;
+   selectedFileId = fileId;
+   deleteOnChange = false;
   }
+
+
+	public boolean isShowingPreviewLink() {
+		return showPreviewLink;
+	}
+
+
+	public void setToShowPreviewLink(boolean showPreviewLink) {
+		this.showPreviewLink = showPreviewLink;
+	}
 
 }
