@@ -37,6 +37,19 @@ import com.idega.presentation.ui.AbstractChooserWindow;
     setWidth(640);
     setHeight(480);
     setResizable(true);
+    
+		frame = new FrameSet();
+		
+		
+		frame.add(Top.class);
+		frame.add(BottomFrameSet.class);
+		frame.setSpanPixels(1,50);
+		frame.setScrollbar(false);
+		frame.setScrolling(1,false);
+		frame.setScrolling(2,false);
+		frame.setSpanAdaptive(2);
+		frame.setResizable(true);
+
 
 
   }
@@ -46,17 +59,6 @@ import com.idega.presentation.ui.AbstractChooserWindow;
     //MediaBusiness.getMediaParameterNameInSession(iwc);
     MediaBusiness.saveMediaIdToSession(iwc,MediaBusiness.getMediaId(iwc));
     
-		frame = new FrameSet();
-		
-		
-    frame.add(Top.class);
-		frame.add(BottomFrameSet.class);
-		frame.setSpanPixels(1,50);
-		frame.setScrollbar(false);
-		frame.setScrolling(1,false);
-		frame.setScrolling(2,false);
-		frame.setSpanAdaptive(2);
-		frame.setResizable(true);
     
     
     String chooserType = iwc.getParameter(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME);
