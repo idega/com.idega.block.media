@@ -15,6 +15,7 @@ import com.idega.jmodule.object.interfaceobject.*;
 import com.oreilly.servlet.multipart.*;
 import com.idega.io.ImageSave;
 import com.idega.block.media.business.ImageProperties;
+import com.idega.core.data.ICFileCategory;
 
 /**
  * Title: ImageBusiness
@@ -33,19 +34,9 @@ public class ImageBusiness  {
   public static int IM_BROWSER_HEIGHT = 600;
   public static int IM_MAX_WIDTH = 140;
 
-public static Properties getBundleProperties(ModuleInfo modinfo) throws FileNotFoundException,IOException{
-  //IWMainApplication application = getApplication();
-  String fileSeperator = System.getProperty("file.separator");
-  //FileInputStream fin = new FileInputStream(new File( application.getRealPath("/")+fileSeperator+"image"+fileSeperator+"properties"+fileSeperator+"bundle.properties" ));
-  FileInputStream fin = new FileInputStream(new File( modinfo.getServletContext().getRealPath("/")+fileSeperator+"image"+fileSeperator+"properties"+fileSeperator+"image.properties" ));
-  Properties prop = new Properties();
-  prop.load(fin);
-  fin.close();
-  return prop;
-}
 
 /*
-public static void saveImageToCatagories(int imageId, String[] categoryId)throws SQLException {
+public static void saveImageToCategories(int imageId, String[] categoryId)throws SQLException {
   ImageEntity image = new ImageEntity(imageId);
   image.setParentId(-1);//only top level images saved to categories
   image.update();
@@ -53,7 +44,7 @@ public static void saveImageToCatagories(int imageId, String[] categoryId)throws
   for (int i = 0; i < categoryId.length; i++) {
     try{
       int category = Integer.parseInt(categoryId[i]);
-      ImageCatagory cat = new ImageCatagory(category);
+      ImageCategory cat = new ImageCategory(category);
       cat.addTo(image);
     }
     catch(NumberFormatException e){
@@ -63,6 +54,7 @@ public static void saveImageToCatagories(int imageId, String[] categoryId)throws
 }
 
 */
+
 public static void handleEvent(ModuleInfo modinfo,ImageHandler handler) throws Exception{
 
   String action = modinfo.getParameter("action");
@@ -89,9 +81,14 @@ public static void handleEvent(ModuleInfo modinfo,ImageHandler handler) throws E
         }
         else if( action.equalsIgnoreCase("delete") ){
           try{
+            /**@todo : fix the delete function
+             *
+             */
+
+            /*
             ImageEntity image = new ImageEntity( imageId );
 
-            /*ImageEntity parent = (ImageEntity) this.getParentNode();
+            ImageEntity parent = (ImageEntity) this.getParentNode();
             Iterator iter = (ImageEntity[]) image.getChildren();
 
             //brake childs from parent
@@ -106,17 +103,20 @@ public static void handleEvent(ModuleInfo modinfo,ImageHandler handler) throws E
                   }
                 }
             }
-*/
-
-            ImageCatagory[] catagories = (ImageCatagory[]) image.findReverseRelated(GenericEntity.getStaticInstance("com.idega.block.media.data.ImageCatagory"));
 
 
-            image.removeFrom(GenericEntity.getStaticInstance("com.idega.block.media.data.ImageCatagory"));
+            ICFileCategory[] catagories = (ImageCategory[]) image.findReverseRelated(GenericEntity.getStaticInstance("com.idega.block.media.data.ImageCategory"));
+
+
+            image.removeFrom(GenericEntity.getStaticInstance("com.idega.block.media.data.ImageCategory"));
 
             image.delete();
 
             modinfo.removeSessionAttribute("image_in_session");
             modinfo.removeSessionAttribute("handler");
+*/
+
+
           }
           catch(Exception e){
             e.printStackTrace(System.err);
@@ -166,44 +166,22 @@ public static void handleEvent(ModuleInfo modinfo,ImageHandler handler) throws E
 
 public static void makeDefaultSizes(ModuleInfo modinfo){
   try{
-    Properties prop = getBundleProperties(modinfo);
-    System.out.println(prop.getProperty("image1.width"));
-    System.out.println(prop.getProperty("image2.width"));
-    System.out.println(prop.getProperty("image3.width"));
+    /**
+    *@todo : get the image bundle and make these default image sizes
+    **/
   }
   catch(Exception ex){}
 }
 
 
-
-/*
-        IWMainApplicationSettings list = getApplication().getSettings();
-	//com.idega.idegaweb.IWPropertyList list = new com.idega.idegaweb.IWPropertyList("test.xml");
-	list.setProperty("my","test");
-	list.store();
-
-
-*/
-
-
-    public static List getImageCatagories(int parentID){
+    public static List getImageCategories(){
       try {
-        if (parentID > 0){
-        //temp ImageCatagory.getStaticImageCatagoryInstance()
-          ImageCatagory cat = new ImageCatagory();
-          return EntityFinder.findAll(new ImageCatagory(),"Select * from " + cat.getEntityName() + " Where " + cat.getParentIdColumnName() + " = '" + parentID + "'");
-        }else{
-          return EntityFinder.findAll(new ImageCatagory());
-        }
+        return EntityFinder.findAll(new ICFileCategory());
       }
       catch (Exception ex) {
         return null;
       }
 
-    }
-
-    public static List getAllImageCatagories(){
-      return getImageCatagories(-1);
     }
 
 
@@ -214,21 +192,21 @@ public static void makeDefaultSizes(ModuleInfo modinfo){
 
 
     public static void storeEditForm(ModuleInfo modinfo){
-        String catagoriTextInputName = "catagory";  // same as in ImageViewer getEditForm
+        String catagoriTextInputName = "category";  // same as in ImageViewer getEditForm
         String deleteTextInputName = "delete";      // same as in ImageViewer getEditForm
         String idees = "ids";      // same as in ImageViewer getEditForm
 
-        String[] catagoryName = modinfo.getParameterValues(catagoriTextInputName);
+        String[] categoryName = modinfo.getParameterValues(catagoriTextInputName);
         String[] deleteValue = modinfo.getParameterValues(deleteTextInputName);
         String[] ids = modinfo.getParameterValues(idees);
 
-        ImageCatagory catagory = new ImageCatagory();
+        ICFileCategory category = new ICFileCategory();
 
         //change
-  //      if(catagoryName != null && catagoryName.length > 0){
-  //        for (int i = 0; i < catagoryName.length; i++) {
-  //          String tempName = catagoryName[i];
-  //          catagory = new ImageCatagory(deleteValue[i]);
+  //      if(categoryName != null && categoryName.length > 0){
+  //        for (int i = 0; i < categoryName.length; i++) {
+  //          String tempName = categoryName[i];
+  //          category = new ImageCategory(deleteValue[i]);
   //        }
   //
   //      }
@@ -236,21 +214,20 @@ public static void makeDefaultSizes(ModuleInfo modinfo){
          //debug this is experimental code NOT failsafe!
         try {
           int k = ids.length;
-          ImageCatagory temp;
-          for (int i = 0; i < catagoryName.length; i++) {
-            if (catagoryName[i] != null && !"".equals(catagoryName[i]) ) {
-              String tempName = catagoryName[i];
+          ICFileCategory temp;
+          for (int i = 0; i < categoryName.length; i++) {
+            if (categoryName[i] != null && !"".equals(categoryName[i]) ) {
+              String tempName = categoryName[i];
 
               if( i >= k ){//insert
-                temp = new ImageCatagory();
-                temp.setParentId(-1);
-                temp.setImageCatagoryName(tempName);
+                temp = new ICFileCategory();
+                temp.setName(tempName);
                 temp.insert();
               }
               else{//updates
-                temp = new ImageCatagory(Integer.parseInt(ids[i]));
+                temp = new ICFileCategory(Integer.parseInt(ids[i]));
                 if( !temp.getName().equalsIgnoreCase(tempName) ){
-                   temp.setImageCatagoryName(tempName);
+                   temp.setName(tempName);
                    temp.update();
                 }
               }
@@ -268,7 +245,7 @@ public static void makeDefaultSizes(ModuleInfo modinfo){
         try {
           if(deleteValue != null){
             for(int i = 0; i < deleteValue.length; i++){
-              ImageCatagory cat = new ImageCatagory( Integer.parseInt(deleteValue[i]) );
+              ICFileCategory cat = new ICFileCategory( Integer.parseInt(deleteValue[i]) );
               cat.removeFrom(GenericEntity.getStaticInstance("com.idega.block.media.data.ImageEntity"));
               cat.delete();
             }
@@ -383,12 +360,12 @@ public static void setImageDimensions(ImageProperties ip) {
 
       try{
         ImageEntity image = new ImageEntity(imageId);
-        ImageCatagory cat = new ImageCatagory(Integer.parseInt(categoryId));
+        ICFileCategory cat = new ICFileCategory(Integer.parseInt(categoryId));
         cat.addTo(image);
       }
       catch(SQLException e){
         e.printStackTrace(System.err);
-        System.err.println("ImageBusiness : failed to add to image_image_catagory");
+        System.err.println("ImageBusiness : failed to add to image_image_category");
       }
 
       modinfo.setSessionAttribute("im_image_id",Integer.toString(imageId));

@@ -8,7 +8,7 @@ import com.idega.block.media.business.ImageProperties;
 import com.idega.jmodule.object.textObject.*;
 import com.idega.jmodule.object.*;
 import com.idega.jmodule.object.interfaceobject.*;
-
+import com.idega.core.data.ICFileCategory;
 /**
  * Title:
  * Description:
@@ -120,7 +120,7 @@ public class EditWindow extends Window {
 
 
     ImageEntity image = new ImageEntity(Integer.parseInt(imageId));
-    String imageText = image.getText();
+    String imageText = image.getDescription();
     String imageLink = image.getLink();
 
     if( imageText==null ) imageText = "";
@@ -219,10 +219,10 @@ public class EditWindow extends Window {
 
 
 
-      ImageCatagory[] imgCat = (ImageCatagory[]) (new ImageCatagory()).findAll();
+      ICFileCategory[] imgCat = (ICFileCategory[]) (new ICFileCategory()).findAll();
       DropdownMenu category = new DropdownMenu("category_id");
       for (int i = 0 ; i < imgCat.length ; i++ ) {
-        category.addMenuElement(imgCat[i].getID(),imgCat[i].getImageCatagoryName());
+        category.addMenuElement(imgCat[i].getID(),imgCat[i].getName());
       }
 
       upload.add(texti,1,1);

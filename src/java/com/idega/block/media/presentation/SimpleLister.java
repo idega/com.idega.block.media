@@ -47,7 +47,10 @@ public class SimpleLister extends ModuleObjectContainer {
         for (int i = 0; i < len; i++) {
           ImageEntity image = (ImageEntity) L.get(i);
           T.add(getImageLink(image,target,prmImageView),1,row);
-          T.add(formatText(new idegaTimestamp(image.getDateAdded()).getISLDate()),2,row);
+          /**@todo: localize
+           *
+           */
+          T.add(formatText(new idegaTimestamp(image.getCreationDate() ).getISLDate()),2,row);
           row++;
         }
         T.setCellpadding(2);

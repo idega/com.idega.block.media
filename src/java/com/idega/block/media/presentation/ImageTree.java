@@ -9,6 +9,7 @@ import	com.idega.jmodule.object.interfaceobject.*;
 import	com.idega.block.media.data.*;
 import	com.idega.data.*;
 import com.idega.util.text.*;
+import com.idega.core.data.ICFileCategory;
 
 
 
@@ -20,7 +21,7 @@ private boolean refresh = false;
 
 public Table getTreeTable(ModuleInfo modinfo) throws SQLException {
 
-    ImageCatagory[] catagory = (ImageCatagory[]) (new ImageCatagory()).findAll("Select * from image_catagory where parent_id = -1");
+    ICFileCategory[] catagory = (ICFileCategory[]) (new ICFileCategory()).findAll();
     ImageEntity[] images;
     Vector items = null;
 
@@ -36,7 +37,7 @@ public Table getTreeTable(ModuleInfo modinfo) throws SQLException {
       if ( catagory != null) {
         if (catagory.length > 0) {
           for (int i = 0 ; i < catagory.length ; i++ ) {
-            findNodes(items,catagory[i].getID(),1,GenericEntity.getStaticInstance("com.idega.block.media.data.ImageCatagory"),1);
+            findNodes(items,catagory[i].getID(),1,GenericEntity.getStaticInstance("com.idega.core.data.ICFileCategory"),1);
 
             if ( showAll ) {
               images = (ImageEntity[])catagory[i].findRelated( GenericEntity.getStaticInstance("com.idega.block.media.data.ImageEntity") );
@@ -115,7 +116,7 @@ public Table writeTable(Vector items,ModuleInfo modinfo) throws SQLException {
 
   Text text;
 
-  ImageCatagory catagory;
+  ICFileCategory catagory;
   ImageEntity image;
   Integer[] intArr = new Integer[3];
   int pos = 1;
@@ -131,12 +132,12 @@ public Table writeTable(Vector items,ModuleInfo modinfo) throws SQLException {
       spe= intArr[2].intValue();
       if (spe == 1) {
         ++row;
-        catagory = new ImageCatagory(id);
+        catagory = new ICFileCategory(id);
         preCatId = id;
 
         table.mergeCells(1,row,depth,row);
 
-        text = new Text(catagory.getImageCatagoryName());
+        text = new Text(catagory.getName());
           text.setFontColor("#FFFFFF");
 
         openLink = new Link(more);
@@ -281,7 +282,7 @@ private void refresh(ModuleInfo modinfo) throws SQLException{
     }
 
 
-        ImageCatagory[] catagories = (ImageCatagory[])(new ImageCatagory()).findAll();
+        ICFileCategory[] catagories = (ICFileCategory[])(new ICFileCategory()).findAll();
 
         if (catagories != null) {
             if (catagories.length > 0 ) {

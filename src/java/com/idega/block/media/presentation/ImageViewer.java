@@ -23,6 +23,7 @@ import com.idega.block.media.business.*;
 import com.idega.util.text.*;
 import com.idega.data.GenericEntity;
 import com.oreilly.servlet.MultipartRequest;
+import com.idega.core.data.ICFileCategory;
 
 
 public class ImageViewer extends JModuleObject{
@@ -104,35 +105,13 @@ public void setConnectionAttributes(String attributeName, String attributeId) {
 }
 
 
-/*
-**
-** not needed for single user mode
-**
-*/
-public String getColumnString(ImageCatagoryAttributes[] attribs){
-  String values = "";
-  for (int i = 0 ; i < attribs.length ; i++) {
-    values += " image_catagory_id = '"+attribs[i].getImageCatagoryId()+"'" ;
-    if( i!= (attribs.length-1) ) values += " OR ";
-  }
-return values;
-}
-
-/*
-**
-** old stuff..replace
-**
-*/
-private void setSpokenLanguage(ModuleInfo modinfo){
- String language2 = modinfo.getParameter("language");
-    if (language2==null) language2 = ( String ) modinfo.getSessionAttribute("language");
-    if ( language2 != null) language = language2;
-}
 
 public void main(ModuleInfo modinfo)throws Exception{
   isAdmin= isAdministrator(modinfo);
 
-  setSpokenLanguage(modinfo);
+  /**@todo : add localisation support
+   *
+   */
   ImageEntity[] image =  new ImageEntity[1];
   String imageId = modinfo.getParameter("image_id");
   String imageCategoryId = modinfo.getParameter("image_catagory_id");
@@ -326,7 +305,7 @@ public void main(ModuleInfo modinfo)throws Exception{
             modinfo.setSessionAttribute("image_previous_catagory_id",imageCategoryId);
 
             categoryId = Integer.parseInt(imageCategoryId);
-            ImageCatagory category = new ImageCatagory(categoryId);
+            ICFileCategory category = new ICFileCategory(categoryId);
             if ( inApplication == null ){
               imageEntity = (ImageEntity[]) category.findRelated(new ImageEntity());
             }
@@ -416,7 +395,7 @@ public void main(ModuleInfo modinfo)throws Exception{
 
 private Table displayImage( ImageEntity image ) throws SQLException
 {
-  String texti = image.getText();
+  String texti = image.getDescription();
   String link = image.getLink();
 
   int imageId = image.getID();
@@ -636,12 +615,15 @@ public void refresh(){
 
 private void refresh(ModuleInfo modinfo) throws SQLException{
   modinfo.removeSessionAttribute("image_previous_catagory_id");
-  ImageCatagory[] catagories = (ImageCatagory[])(new ImageCatagory()).findAll();
+  /**@todo : use business object to get categories and folders
+   *
+   */
+  ICFileCategory[] catagories = (ICFileCategory[])(new ICFileCategory()).findAll();
 
   if (catagories != null) {
     if (catagories.length > 0 ) {
       for (int i = 0 ; i < catagories.length ; i++ ) {
-        modinfo.getServletContext().removeAttribute("image_entities_"+catagories[i].getID());
+        modinfo.getApplication().removeAttribute("image_entities_"+catagories[i].getID());
       }
     }
   }
@@ -828,7 +810,7 @@ private Form getCategoryEditForm(){
   frameTable.setCellpadding(0);
   frameTable.setCellspacing(0);
 
-  List catagories = ImageBusiness.getAllImageCatagories();
+  List catagories = ImageBusiness.getImageCategories();
   int catagorieslength = (catagories != null) ? catagories.size() : 0;
 
   Table contentTable = new Table(3,catagorieslength+2);
@@ -840,13 +822,13 @@ private Form getCategoryEditForm(){
   String deleteTextInputName = "delete";
 
   for (int i = 0; i < catagorieslength; i++) {
-    TextInput catagoryInput = new TextInput(catagoriTextInputName,((ImageCatagory)catagories.get(i)).getImageCatagoryName());
+    TextInput catagoryInput = new TextInput(catagoriTextInputName,((ICFileCategory)catagories.get(i)).getName());
     catagoryInput.setLength(textInputLenth);
     contentTable.add(catagoryInput,1,i+2);
-    contentTable.add(new HiddenInput("ids",Integer.toString(((ImageCatagory)catagories.get(i)).getID())),1,i+2);
+    contentTable.add(new HiddenInput("ids",Integer.toString(((ICFileCategory)catagories.get(i)).getID())),1,i+2);
 
     contentTable.setHeight(i+1,"30");
-    contentTable.add(new CheckBox(deleteTextInputName, Integer.toString(((ImageCatagory)catagories.get(i)).getID())),3,i+2);
+    contentTable.add(new CheckBox(deleteTextInputName, Integer.toString(((ICFileCategory)catagories.get(i)).getID())),3,i+2);
   }
 
   Text catagoryText = new Text("Flokkur");
