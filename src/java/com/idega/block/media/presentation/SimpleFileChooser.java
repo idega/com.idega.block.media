@@ -166,7 +166,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
 	      table.add(change,1,1);
 	      //table.add(busy,1,2);
 	     
-	      table.add(new HiddenInput(name,Integer.toString(icFile.getID())),1,2);
+	      table.add(new HiddenInput(name,icFile.getPrimaryKey().toString()),1,2);
 	      
 				if( showPreviewLink){
 			    Link preview = new Link("Preview");
@@ -177,7 +177,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
 	      this.add(table);
 			}
 			else{
-				add(new HiddenInput(name,Integer.toString(icFile.getID())));
+				add(new HiddenInput(name,icFile.getPrimaryKey().toString()));
 			}
       //this.add(new Image(file.getWebPath(),file.getName()));
     } else if(selectedFileId != -1) {
@@ -187,7 +187,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
 	      table.setCellpadding(0);
 	      table.setCellspacing(0);
 	
-	      ICFile icFile = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).findByPrimaryKeyLegacy(selectedFileId);
+	      ICFile icFile = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(selectedFileId));
 	      TextInput tInput = new TextInput("ic_uploaded_file",icFile.getName());
 	      tInput.setDisabled(true);
 	      SubmitButton change = new SubmitButton("Change...","change_file","true");

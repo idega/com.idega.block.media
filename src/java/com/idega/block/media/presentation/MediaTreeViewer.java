@@ -1,17 +1,21 @@
 package com.idega.block.media.presentation;
 
+import java.util.Iterator;
+import java.util.List;
+
+import javax.ejb.FinderException;
+
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.core.data.ICFile;
-import com.idega.data.EntityFinder;
+import com.idega.core.data.ICFileHome;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.idegaweb.IWResourceBundle;
+import com.idega.presentation.Block;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
-import com.idega.presentation.*;
 
 /**
  * Title: com.idega.block.media.presentation.MediaTreeViewer
@@ -84,7 +88,7 @@ public class MediaTreeViewer extends Block {
     Link L = new Link(file.getName(),MediaViewer.class);
     L.setFontSize(1);
     //L.setOnClick("top.iImageId = "+file.getID() );
-    L.addParameter(fileInSessionParameter,file.getID());
+    L.addParameter(fileInSessionParameter,file.getPrimaryKey().toString());
 
     L.setTarget(target);
     return L;
@@ -93,12 +97,11 @@ public class MediaTreeViewer extends Block {
   public List listOfMedia(){
     List L = null;
     try {
-      ICFile file = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).createLegacy();
-      L = EntityFinder.findAllDescendingOrdered(file,file.getIDColumnName());
-    }
-    catch (SQLException ex) {
-      L = null;
-    }
+      ICFileHome fileHome = (com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class);
+      L =   (List)fileHome.findAllDescendingOrdered();
+    } catch (FinderException e) {
+		e.printStackTrace();
+	}
     return L;
   }
 

@@ -87,7 +87,7 @@ public class MediaFolderEditorWindow extends Window {
       }
       else{
         ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
-        form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),Integer.toString(rootNode.getID())));
+        form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),rootNode.getPrimaryKey().toString()));
       }
 
       add(form);
@@ -102,14 +102,14 @@ public class MediaFolderEditorWindow extends Window {
       if( (folderName!=null) && !(folderName.equalsIgnoreCase("")) ){
 
 
-        ICFile folder = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).createLegacy();
+        ICFile folder = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).create();
         folder.setName(folderName);
         folder.setMimeType(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 
         folder = MediaBusiness.saveMediaToDB(folder,mediaId,iwc);
         setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
-        add(new MediaToolbar(folder.getID()));
-        add(new MediaViewer(folder.getID()));
+        add(new MediaToolbar(((Integer)folder.getPrimaryKey()).intValue()));
+        add(new MediaViewer(((Integer)folder.getPrimaryKey()).intValue()));
 
 //        Text created = new Text(iwrb.getLocalizedString("mediafoldereditwindow.folder.saved","Folder created"));
 //        created.setStyle(Text.FONT_FACE_ARIAL);

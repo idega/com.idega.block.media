@@ -457,7 +457,7 @@ public class MediaToolbar extends Block {
 
     if(choosingImage){
 
-      use.setOnClick( "top.window.opener.setImageId('" + file.getID() + "','" + fileInSessionParameter + "');");
+      use.setOnClick( "top.window.opener.setImageId('" + file.getPrimaryKey() + "','" + fileInSessionParameter + "');");
 
     }
 
@@ -465,7 +465,7 @@ public class MediaToolbar extends Block {
 
       use.setURL( "#" );
 
-      use.setOnClick( ONCLICK_FUNCTION_NAME + "('" + file.getName() + "','" + file.getID() + "');top.window.close()" );
+      use.setOnClick( ONCLICK_FUNCTION_NAME + "('" + file.getName() + "','" + file.getPrimaryKey() + "');top.window.close()" );
 
     }
 

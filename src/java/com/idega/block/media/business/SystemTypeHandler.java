@@ -77,7 +77,7 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
           //table.add(new CheckBox(Integer.toString(item.getID())),x++,y);
           Link view = MediaBusiness.getMediaViewerLink();
           view.setText(((item.getName() != null ) ? item.getName() : ""));
-          view.addParameter(MediaBusiness.getMediaParameterNameInSession(iwc),item.getID());
+          view.addParameter(MediaBusiness.getMediaParameterNameInSession(iwc),item.getPrimaryKey().toString());
           table.add(view,x++,y);
           table.add( ((item.getModificationDate() != null ) ? item.getModificationDate().toString() : item.getCreationDate().toString()),x++,y);
           table.add( ((item.getFileSize() != null ) ? item.getFileSize().toString() : ""),x++,y);
@@ -138,7 +138,7 @@ return table;
 
   private Content getContentObject(ICFile item){
     Object[] objs = new Object[5];
-    objs[0] = new CheckBox(Integer.toString(item.getID()));
+    objs[0] = new CheckBox(item.getPrimaryKey().toString());
     objs[1] = (item.getName() != null ) ? item.getName() : "";
     objs[2] = (item.getModificationDate() != null ) ? item.getModificationDate().toString() : item.getCreationDate().toString();
     objs[3] = (item.getFileSize() != null ) ? item.getFileSize().toString() : "";
