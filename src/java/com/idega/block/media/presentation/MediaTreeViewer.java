@@ -1,20 +1,19 @@
 package com.idega.block.media.presentation;
 
-import com.idega.presentation.Table;
-import com.idega.presentation.text.Text;
-import com.idega.presentation.text.Link;
-import com.idega.presentation.IWContext;
-import com.idega.core.data.ICFile;
-import com.idega.util.idegaTimestamp;
-import com.idega.data.EntityFinder;
-import com.idega.block.media.business.MediaConstants;
 import com.idega.block.media.business.MediaBusiness;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Iterator;
-import com.idega.presentation.ui.TreeViewer;
+import com.idega.block.media.business.MediaConstants;
+import com.idega.core.data.ICFile;
+import com.idega.data.EntityFinder;
 import com.idega.idegaweb.IWCacheManager;
+import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.Block;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.Table;
+import com.idega.presentation.text.Link;
+import com.idega.presentation.text.Text;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Title: com.idega.block.media.presentation.MediaTreeViewer
@@ -29,8 +28,10 @@ public class MediaTreeViewer extends Block {
 
   private String fileInSessionParameter = "";
   private IWCacheManager cm;
+  private IWResourceBundle iwrb;
 
   public void  main(IWContext iwc){
+    iwrb = getResourceBundle(iwc);
     cm = iwc.getApplication().getIWCacheManager();
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
 
@@ -39,8 +40,7 @@ public class MediaTreeViewer extends Block {
     T.setCellpadding(2);
     T.setCellspacing(0);
 
-    //T.add(formatText("BETA!"),1,1);
-    Link proto = new Link(MediaViewer.class);
+    Link proto = new Link(MediaViewerWindow.class);
     proto.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
     ICFile rootNode = (ICFile)cm.getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
 
@@ -65,13 +65,13 @@ public class MediaTreeViewer extends Block {
     */
 
     Link upload = MediaBusiness.getNewFileLink();
-    upload.setText("New");
+    upload.setText(iwrb.getLocalizedString("mv.upload","upload"));
     upload.setAsImageButton(true);
     add(upload);
 
 
     Link folder = MediaBusiness.getNewFolderLink();
-    folder.setText("folder");
+    folder.setText(iwrb.getLocalizedString("mv.folder","folder"));
     folder.setAsImageButton(true);
     add(folder);
 

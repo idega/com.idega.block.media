@@ -60,22 +60,9 @@ public class MediaBusiness {
       file.setFileSize( ( int ) mediaProps.getSize() );
 
 
-      file.insert();
+      file = saveMediaToDB(file,icFileParentId,iwc);
       long time2 = System.currentTimeMillis();
       System.out.println("MediaBusiness saveMediaToDB :"+ (time2 - time1 )+ " ms for "+mediaProps.getSize()+" bytes");
-
-
-      if( icFileParentId == -1 ) {//add to root
-        ICFile rootNode = ( ICFile ) iwc.getApplication().getIWCacheManager().getCachedEntity( ICFile.IC_ROOT_FOLDER_CACHE_KEY );
-        rootNode.addChild( file );
-      }
-      else if(icFileParentId == 0){// no parent
-
-      }
-      else{//register this parent
-        ICFile rootNode = new ICFile( icFileParentId );
-        rootNode.addChild( file );
-      }
 
       id = file.getID();
       mediaProps.setId( id );
@@ -103,6 +90,43 @@ public class MediaBusiness {
   public static MediaProperties saveMediaToDBWithNoRoot( MediaProperties mediaProps,IWContext iwc ) {
     return saveMediaToDB(mediaProps,0,iwc);
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  file      The ICFile to insert
+   * @param  icFileParentId  The id of the media's parent in the database.
+   * <br> A value of -1 sets the parent to the default parent directory of the IWDBFS
+   * <br> A value of 0 saves the media with no parent.
+   * @param  iwc             The IWContext
+   * @return                 Returns the ICFile
+   */
+  public static ICFile saveMediaToDB( ICFile file, int parentId, IWContext iwc ) {
+    try{
+      file.insert();
+
+      if( parentId == -1 ) {//add to root
+        ICFile rootNode = ( ICFile ) iwc.getApplication().getIWCacheManager().getCachedEntity( ICFile.IC_ROOT_FOLDER_CACHE_KEY );
+        rootNode.addChild( file );
+      }
+      else if(parentId == 0){// no parent
+
+      }
+      else{//register this parent
+        ICFile rootNode = new ICFile( parentId );
+        rootNode.addChild( file );
+      }
+    }
+    catch(Exception ex){
+      ex.printStackTrace();
+    }
+
+    return file;
+  }
+
+
+
 
   /**
    * @param  iwc            The IWContext used to get the multipart form
@@ -168,15 +192,14 @@ public class MediaBusiness {
    * @param  iwc  The IWContext
    * @return      The mediaId value
    */
-  public static String getMediaId( IWContext iwc ) {
+  public static int getMediaId( IWContext iwc ) {
     String fileInSessionParameter = getMediaParameterNameInSession( iwc );
-
-    String id = "-1";
+    int id = -1;
 
     if( iwc.getParameter( fileInSessionParameter ) != null ) {
-      id = iwc.getParameter( fileInSessionParameter );
+      id = Integer.parseInt(iwc.getParameter(fileInSessionParameter));//check parameters
     } else if( iwc.getSessionAttribute( fileInSessionParameter ) != null ) {
-      id = ( String ) iwc.getSessionAttribute( fileInSessionParameter );
+      id = Integer.parseInt((String)iwc.getSessionAttribute(fileInSessionParameter));//check the session parameters
     }
 
     return id;
@@ -199,8 +222,8 @@ public class MediaBusiness {
    * @param  iwc      Description of the Parameter
    * @param  mediaId  Description of the Parameter
    */
-  public static void saveMediaIdToSession( IWContext iwc, String mediaId ) {
-    iwc.setSessionAttribute( getMediaParameterNameInSession( iwc ), mediaId );
+  public static void saveMediaIdToSession( IWContext iwc, int mediaId ) {
+    iwc.setSessionAttribute(getMediaParameterNameInSession( iwc ),String.valueOf(mediaId) );
   }
 
 
@@ -390,7 +413,7 @@ public class MediaBusiness {
    * @ todo reimplement
    */
   public static ICFile SaveMediaToDB(UploadFile uploadFile, IWContext iwc){
-    String parentId = getMediaId(iwc);
+    int parentId = getMediaId(iwc);
     ICFile file = null;
     int id = -1;
     try{
@@ -405,13 +428,12 @@ public class MediaBusiness {
       file.setFileSize((int)uploadFile.getSize());
       file.insert();
 
-      if( (parentId==null) || (parentId.equals("-1")) ){
+      if( parentId==-1 ){
         ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
         rootNode.addChild(file);
       }
       else {
-        int iParentId = Integer.parseInt(parentId);
-        ICFile rootNode = new ICFile(iParentId);
+        ICFile rootNode = new ICFile(parentId);
         rootNode.addChild(file);
       }
 

@@ -1,9 +1,6 @@
 package com.idega.block.media.business;
 
-import com.idega.block.media.presentation.MediaUploaderWindow;
-import com.idega.block.media.presentation.MediaViewer;
-import com.idega.block.media.presentation.MediaTreeViewer;
-import com.idega.block.media.presentation.MediaFolderEditorWindow;
+import com.idega.block.media.presentation.*;
 import com.idega.presentation.text.Link;
 
 /**
@@ -25,6 +22,7 @@ public class MediaConstants {
   public static final String target3 = "buttons";
 
   public static final String MEDIA_ACTION_VIEW = "me_act_v";
+  public static final String MEDIA_ACTION_FOLDER_SAVE = "me_act_fs";
   public static final String MEDIA_ACTION_SAVE = "me_act_s";
   public static final String MEDIA_ACTION_RELOAD = "me_act_r";
   public static final String MEDIA_ACTION_DELETE = "me_act_d";
@@ -52,7 +50,7 @@ public class MediaConstants {
 
   public static final int FILE_UPLOAD_MAXIMUM_SIZE = 20*1024*1024;//20MB
 
-  public static final Class MEDIA_VIEWER_CLASS = MediaViewer.class;
+  public static final Class MEDIA_VIEWER_CLASS = MediaViewerWindow.class;
   public static final Class MEDIA_UPLOADER_CLASS = MediaUploaderWindow.class;
   public static final Class MEDIA_TREE_VIEWER_CLASS = MediaTreeViewer.class;
   public static final Class MEDIA_FOLDER_EDITOR_CLASS = MediaFolderEditorWindow.class;

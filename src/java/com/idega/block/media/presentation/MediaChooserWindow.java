@@ -67,12 +67,7 @@ System.err.println(MediaBusiness.getMediaParameterNameInSession(iwc));
    }
   }
 
-  public static class FileViewer extends Page{
-   public FileViewer(){
-    setBackgroundColor(MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR);
-    setAllMargins(0);
-    add(new MediaViewer());
-   }
+  public static class FileViewer extends MediaViewerWindow{
   }
 
   public static class BottomFrameSet extends FrameSet{

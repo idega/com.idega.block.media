@@ -86,9 +86,7 @@ private IWResourceBundle iwrb;
 
         if( (action!=null) && action.equals(MediaConstants.MEDIA_ACTION_SAVE)  ){
           setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
-          String parentId = MediaBusiness.getMediaId( iwc );
-          int pId = -1;
-          if( parentId!= null ) pId = Integer.parseInt(parentId);
+          int pId = MediaBusiness.getMediaId( iwc );
 
           /* if saving a new mimetype */
           if( iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME)!=null ){
@@ -100,8 +98,8 @@ private IWResourceBundle iwrb;
 
           //also deletes the file from disk and return a MediaViewer
           mediaProps = MediaBusiness.saveMediaToDB( mediaProps, pId, iwc);
-          MediaViewer viewer = new MediaViewer(mediaProps);
-          add(viewer);
+          add(new MediaToolbar(mediaProps));
+          add(new MediaViewer(mediaProps));
         }
         else{//add a new file
           add(getMultiPartUploaderForm(iwc));
@@ -112,34 +110,20 @@ private IWResourceBundle iwrb;
     }
 
 
-  private void viewUploadedMedia(MediaProperties mediaProps){
+  protected void viewUploadedMedia(MediaProperties mediaProps){
     Table T = new Table(1,2);
     T.setHeight(1,1,"16");
     T.setHeight(1,2,Table.HUNDRED_PERCENT);
     T.setWidthAndHeightToHundredPercent();
-    /**@todo: insert a generated localized generated button**/
-    Link submitSave = new Link("Save");
-    submitSave.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
-    submitSave.setAsImageButton(true);
-    submitSave.addParameter(fileInSessionParameter,(String)mediaProps.getParameterMap().get(fileInSessionParameter));
 
-    /**@todo: insert a generated localized generated button**/
-    Link submitNew = new Link("New");
-    submitNew.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_NEW);
-    submitNew.addParameter(fileInSessionParameter,(String)mediaProps.getParameterMap().get(fileInSessionParameter));
-    submitNew.setAsImageButton(true);
-
-    T.add(submitNew,1,1);
-
-    T.add(submitSave,1,1);
-
+    T.add(new MediaToolbar(mediaProps),1,1);
     T.add(new MediaViewer(mediaProps),1,2);
 
     add(T);
   }
 
 
-  private Form getMultiPartUploaderForm(IWContext iwc){
+  protected Form getMultiPartUploaderForm(IWContext iwc){
     Table table = new Table(1,3);
     table.setWidth(300);
     table.setHeight(120);
@@ -168,7 +152,7 @@ private IWResourceBundle iwrb;
     table.add(transparent,1,2);
     table.add(new FileInput(),1,3);
     table.add(new SubmitButton(),1,3);
-    table.add(new HiddenInput(fileInSessionParameter,MediaBusiness.getMediaId(iwc)),1,3);
+    table.add(new HiddenInput(fileInSessionParameter,String.valueOf(MediaBusiness.getMediaId(iwc))),1,3);
 
     f.setOnSubmit("swapImage('"+transparent.getID()+"','','"+busy.getURL()+"',1);return true");
 
