@@ -47,6 +47,8 @@ public class MediaTreeViewer extends Block {
     ICFile rootNode = (ICFile)cm.getCachedEntity(com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
     ICFileTree tree = new ICFileTree();
+    tree.getLocation().setApplicationClass(MediaTreeViewer.class);
+    tree.getLocation().setTarget("legacy_mediaviewer");
 
     Iterator it = rootNode.getChildren();
     if(it!=null) tree.setFirstLevelNodes(it);
