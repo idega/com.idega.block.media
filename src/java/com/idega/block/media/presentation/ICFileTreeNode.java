@@ -118,7 +118,12 @@ public class ICFileTreeNode implements ICTreeNode {
 	 * @see com.idega.core.data.ICTreeNode#getChildrenIterator()
 	 */
 	public Iterator getChildrenIterator() {
-		return getChildren().iterator();
+	    Iterator it = null;
+	    Collection children = getChildren();
+	    if (children != null) {
+	        it = children.iterator();
+	    }
+	    return it;
 	}	
 
 	/* (non-Javadoc)
