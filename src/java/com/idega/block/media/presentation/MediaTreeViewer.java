@@ -44,7 +44,7 @@ public class MediaTreeViewer extends Block {
 
     Link proto = new Link(MediaViewerWindow.class);
     proto.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
-    ICFile rootNode = (ICFile)cm.getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
+    ICFile rootNode = (ICFile)cm.getCachedEntity(com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
     ICFileTree tree = new ICFileTree();
 
@@ -95,7 +95,7 @@ public class MediaTreeViewer extends Block {
   public List listOfMedia(){
     List L = null;
     try {
-      ICFile file = new ICFile();
+      ICFile file = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).createLegacy();
       L = EntityFinder.findAllDescendingOrdered(file,file.getIDColumnName());
     }
     catch (SQLException ex) {

@@ -31,7 +31,7 @@ public class MediaBundleStarter implements IWBundleStartable{
   private IWCacheManager cm;
 
   private String[] system = {
-			    "A Folder",ICMimeType.IC_MIME_TYPE_FOLDER
+			    "A Folder",com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER
 			    };
 
   private String[] application = {
@@ -51,7 +51,7 @@ public class MediaBundleStarter implements IWBundleStartable{
   private String[] document = {
 			      "HTML text data (RFC 1866) html htm","text/html",
 			      "Plain text: documents; program listings txt c c++ pl cc h","text/plain",
-			      "An xml document such as .ibxml",ICMimeType.IC_MIME_TYPE_XML,
+			      "An xml document such as .ibxml",com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_XML,
 			      "Richtext","text/richtext",
 			      "Richtext newer","text/enriched",
 			      "Style sheet","text/css",
@@ -140,23 +140,23 @@ public class MediaBundleStarter implements IWBundleStartable{
 
     //cache file types ICFileType extends CacheableEntity
     cm = iwma.getIWCacheManager();
-    ICFileTypeHandler handlers = new ICFileTypeHandler();
+    ICFileTypeHandler handlers = ((com.idega.core.data.ICFileTypeHandlerHome)com.idega.data.IDOLookup.getHomeLegacy(ICFileTypeHandler.class)).createLegacy();
     handlers.cacheEntity();
     //cache file types ICFileType extends CacheableEntity
-    ICFileType types = new ICFileType();
+    ICFileType types = ((com.idega.core.data.ICFileTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICFileType.class)).createLegacy();
     types.cacheEntity();
 
     //get the default file types
-    ICFileType applications = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_APPLICATION);
-    ICFileType audios = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_AUDIO);
-    ICFileType documents = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_DOCUMENT);
-    ICFileType images = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_IMAGE);
-    ICFileType vectors = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_VECTOR_GRAPHICS);
-    ICFileType videos = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_VIDEO);
-    ICFileType systems = (ICFileType) cm.getFromCachedTable(ICFileType.class,ICFileType.IC_FILE_TYPE_SYSTEM);
+    ICFileType applications = (ICFileType) cm.getFromCachedTable(ICFileType.class,com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_APPLICATION);
+    ICFileType audios = (ICFileType) cm.getFromCachedTable(ICFileType.class,com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_AUDIO);
+    ICFileType documents = (ICFileType) cm.getFromCachedTable(ICFileType.class,com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_DOCUMENT);
+    ICFileType images = (ICFileType) cm.getFromCachedTable(ICFileType.class,com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_IMAGE);
+    ICFileType vectors = (ICFileType) cm.getFromCachedTable(ICFileType.class,com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_VECTOR_GRAPHICS);
+    ICFileType videos = (ICFileType) cm.getFromCachedTable(ICFileType.class,com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_VIDEO);
+    ICFileType systems = (ICFileType) cm.getFromCachedTable(ICFileType.class,com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_SYSTEM);
 
     //cache
-    ICMimeType mimes = new ICMimeType();
+    ICMimeType mimes = ((com.idega.core.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
     mimes.cacheEntity();
 
     try {
@@ -182,11 +182,11 @@ public class MediaBundleStarter implements IWBundleStartable{
 
     try {
       //**insert the Root folder if it doesn't exist yet**/
-      ICFile file = new ICFile();
-      List root = EntityFinder.findAllByColumn(file,ICFile.getColumnNameName(),ICFile.IC_ROOT_FOLDER_NAME,ICFile.getColumnNameMimeType(),ICMimeType.IC_MIME_TYPE_FOLDER);
+      ICFile file = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).createLegacy();
+      List root = EntityFinder.findAllByColumn(file,com.idega.core.data.ICFileBMPBean.getColumnNameName(),com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_NAME,com.idega.core.data.ICFileBMPBean.getColumnNameMimeType(),com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
       if( root == null ){
-       file.setName(ICFile.IC_ROOT_FOLDER_NAME);
-       file.setMimeType(ICMimeType.IC_MIME_TYPE_FOLDER);
+       file.setName(com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_NAME);
+       file.setMimeType(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
        file.setDescription("This is the top level folder it shouldn't be visible");
        file.insert();
       }
@@ -197,7 +197,7 @@ public class MediaBundleStarter implements IWBundleStartable{
        }
       }
       //cache it!
-      cm.cacheEntity(file,ICFile.IC_ROOT_FOLDER_CACHE_KEY);
+      cm.cacheEntity(file,com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
     }
     catch (SQLException ex) {
@@ -215,7 +215,7 @@ public class MediaBundleStarter implements IWBundleStartable{
       //check if these common mimetypes exist and insert if not.
       mimetype = (ICMimeType) cm.getFromCachedTable(ICMimeType.class,array[i+1]);
       if( mimetype == null ){
-	mimetype = new ICMimeType();
+	mimetype = ((com.idega.core.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
 	mimetype.setMimeTypeAndDescription(array[i+1],array[i]);
 	mimetype.setFileTypeId(typeId);
 	try {

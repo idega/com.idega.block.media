@@ -251,7 +251,7 @@ public class ICFileTree extends AbstractTreeViewer {
     //else get type from cache
     //return if not of filter type
 return true;
-    //return ((ICFile)node).getMimeType().equals(ICMimeType.IC_MIME_TYPE_FOLDER);
+    //return ((ICFile)node).getMimeType().equals(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
   }
 
 }

@@ -159,7 +159,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
       table.setCellpadding(0);
       table.setCellspacing(0);
 
-      ICFile icFile = new ICFile(_selectedFileId);
+      ICFile icFile = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).findByPrimaryKeyLegacy(_selectedFileId);
       TextInput tInput = new TextInput("ic_uploaded_file",icFile.getName());
       tInput.setDisabled(true);
       SubmitButton change = new SubmitButton("Change...","change_file","true");

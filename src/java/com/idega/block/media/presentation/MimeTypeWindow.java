@@ -73,7 +73,7 @@ private String mimeType = null;
     int fileTypeId = Integer.parseInt(iwc.getParameter(MediaConstants.MEDIA_FILE_TYPE_PARAMETER_NAME));
 
     try{
-      ICMimeType mime = new ICMimeType();
+      ICMimeType mime = ((com.idega.core.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
       mime.setMimeTypeAndDescription(mimeType,mimeDescription);
       mime.setFileTypeId(fileTypeId);
       mime.insert();
