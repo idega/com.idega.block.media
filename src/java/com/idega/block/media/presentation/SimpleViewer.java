@@ -11,10 +11,10 @@ import java.sql.*;
 /**
  * Title:
  * Description:
- * Copyright:    Copyright (c) 2001
- * Company:
- * @author
- * @version 1.0
+ * Copyright:    Copyright (c) 2000-2001 idega.is All Rights Reserved
+ * Company:      idega
+  *@author <a href="mailto:aron@idega.is">Aron Birkir</a>
+ * @version 1.1
  */
 
 public class SimpleViewer extends ModuleObjectContainer{
@@ -95,13 +95,13 @@ public class SimpleViewer extends ModuleObjectContainer{
       else if(modinfo.getSessionAttribute(sessImageParameterName)!=null){
         sessImageParameter = (String) modinfo.getSessionAttribute(sessImageParameterName);
       }
+      //add(sessImageParameter);
       String s = null;
       if(modinfo.getParameter(sessImageParameter)!=null){
         s = modinfo.getParameter(sessImageParameter);
       }
       else if(modinfo.getSessionAttribute(sessImageParameter)!=null)
         s = (String) modinfo.getSessionAttribute(sessImageParameter);
-
       return s;
     }
 

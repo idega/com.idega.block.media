@@ -37,8 +37,11 @@ private int maxImageWidth = 140;
 private boolean hasUseBox = true;
 private boolean selected = false;
 private boolean openInWindow = false;
-private Class windowClass = ImageEditorWindow.class;
+private Class windowClass = SimpleUploaderWindow.class;
 private Image setImage;
+private boolean limitWidth = true;
+public final String sessionImageParameterName = "im_image_session_name";
+private String prmUseBox = "insertImage";
 
 private IWBundle iwb;
 private IWResourceBundle iwrb;
@@ -62,6 +65,11 @@ public ImageInserter(int imageId) {
 public ImageInserter(String imSessionImageName) {
   this.imSessionImageName=imSessionImageName;
   this.sHiddenInputName = imSessionImageName;
+}
+
+public ImageInserter(String imSessionImageName, boolean hasUseBox) {
+  this(imSessionImageName);
+  setHasUseBox(hasUseBox);
 }
 
 public ImageInserter(int imageId, String imSessionImageName) {
@@ -88,7 +96,8 @@ public ImageInserter(Class WindowToOpen) {
       sUseBoxString = iwrb.getLocalizedString("use_image","Use image");
 
       String imageSessionId = (String) modinfo.getSession().getAttribute(imSessionImageName);
-
+      // debug
+      //add(imSessionImageName + " "+imageSessionId);
 
       if ( imageSessionId != null ) {
         imageId = Integer.parseInt(imageSessionId);
@@ -103,7 +112,7 @@ public ImageInserter(Class WindowToOpen) {
           else {
             image = new Image(imageId);
           }
-          image.setMaxImageWidth(this.maxImageWidth);
+          if( limitWidth ) image.setMaxImageWidth(this.maxImageWidth);
           image.setNoImageLink();
         }
 
@@ -117,12 +126,12 @@ public ImageInserter(Class WindowToOpen) {
         imageAdmin = new Link(image,insertNewsImageWindow);
       }
       imageAdmin.addParameter("submit","new");
-      imageAdmin.addParameter("im_image_session_name",imSessionImageName);
+      imageAdmin.addParameter(sessionImageParameterName,imSessionImageName);
       if ( imageId != -1 )
         imageAdmin.addParameter(imSessionImageName,imageId);
 
-      HiddenInput hidden = new HiddenInput(sHiddenInputName,imageId+"");
-      CheckBox insertImage = new CheckBox("insertImage","Y");
+      HiddenInput hidden = new HiddenInput(sHiddenInputName,Integer.toString(imageId));
+      CheckBox insertImage = new CheckBox(prmUseBox,"Y");
         insertImage.setChecked(selected);
 
       Text imageText = new Text(sUseBoxString+":&nbsp;");
@@ -149,6 +158,15 @@ public ImageInserter(Class WindowToOpen) {
 
   public void setHasUseBox(boolean useBox){
     this.hasUseBox = useBox;
+  }
+
+  public void setHasUseBox(boolean useBox,String prmUseBox){
+    this.hasUseBox = useBox;
+    this.prmUseBox = prmUseBox;
+  }
+
+  public void setUseBoxParameterName(String prmUseBox){
+    this.prmUseBox = prmUseBox;
   }
 
   public void setSelected(boolean selected){
@@ -195,5 +213,9 @@ public ImageInserter(Class WindowToOpen) {
 
   public String getBundleIdentifier(){
     return IW_BUNDLE_IDENTIFIER;
+  }
+
+  public void limitImageWidth(boolean limitWidth){
+   this.limitWidth = limitWidth;
   }
 }

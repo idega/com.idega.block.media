@@ -7,6 +7,7 @@ import com.idega.jmodule.object.textObject.*;
 import com.idega.jmodule.object.interfaceobject.*;
 import com.idega.block.media.data.ImageEntity;
 import com.idega.util.idegaTimestamp;
+import com.idega.idegaweb.IWBundle;
 
 /**
  * Title:
@@ -17,16 +18,31 @@ import com.idega.util.idegaTimestamp;
  * @version 1.0
  */
 
+/**
+ * Title:
+ * Description:
+ * Copyright:    Copyright (c) 2000-2001 idega.is All Rights Reserved
+ * Company:      idega
+  *@author <a href="mailto:aron@idega.is">Aron Birkir</a>
+ * @version 1.1
+ */
+
  public class SimpleChooser extends ModuleObjectContainer implements SimpleImage{
 
     private String sessImageParameter = "image_id";
     private boolean includeLinks;
+    private IWBundle iwb;
+    private String IW_BUNDLE_IDENTIFIER="com.idega.block.image";
 
     public void setToIncludeLinks(boolean includeLinks){
       this.includeLinks = includeLinks;
     }
+    public String getBundleIdentifier(){
+      return IW_BUNDLE_IDENTIFIER;
+    }
 
     public void  main(ModuleInfo modinfo){
+      iwb = getBundle(modinfo);
       checkParameterName(modinfo);
       Table Frame = new Table();
       Frame.setCellpadding(0);
@@ -44,7 +60,7 @@ import com.idega.util.idegaTimestamp;
       Frame.add(ifViewer,2,1);
       Frame.setBorderColor("#00FF00");
       if(includeLinks)
-        Frame.add(getLinkTable(),2,2);
+        Frame.add(getLinkTable(iwb),2,2);
 
       add(Frame);
     }
@@ -58,22 +74,24 @@ import com.idega.util.idegaTimestamp;
      public void checkParameterName(ModuleInfo modinfo){
        if(modinfo.getParameter(sessImageParameterName)!=null){
         sessImageParameter = modinfo.getParameter(sessImageParameterName);
+        //add(sessImageParameter);
         modinfo.setSessionAttribute(sessImageParameterName,sessImageParameter);
       }
       else if(modinfo.getSessionAttribute(sessImageParameterName)!=null)
         sessImageParameter = (String) modinfo.getSessionAttribute(sessImageParameterName);
     }
 
-    public ModuleObject getLinkTable(){
+    public ModuleObject getLinkTable(IWBundle iwb){
       Table T = new Table();
+
       Link btnAdd = getNewImageLink("add");
         btnAdd.setFontStyle("text-decoration: none");
         btnAdd.setFontColor("#FFFFFF");
         btnAdd.setBold();
-      Link btnDelete = getDeleteLink("delete");
-        btnDelete.setFontStyle("text-decoration: none");
-        btnDelete.setFontColor("#FFFFFF");
-        btnDelete.setBold();
+      Link btnDelete = getDeleteLink(iwb.getImage("sdelete.gif","sdelete.gif","Delete"));//"delete");
+        //btnDelete.setFontStyle("text-decoration: none");
+        //btnDelete.setFontColor("#FFFFFF");
+        //btnDelete.setBold();
       Link btnSave = getSaveLink("save");
         btnSave.setFontStyle("text-decoration: none");
         btnSave.setFontColor("#FFFFFF");
@@ -91,11 +109,9 @@ import com.idega.util.idegaTimestamp;
     }
 
     public Link getNewImageLink(String mo){
-      Link L = new Link(mo,"/image/insertimage.jsp");
-      //Link L = new Link(mo,SimpleUploaderWindow.class);
+      Link L = new Link(mo,SimpleUploaderWindow.class);
+      L.addParameter("action","upload");
       L.addParameter("submit","new");
-      L.addParameter(sessImageParameterName,sessImageParameter);
-
       L.setTarget(target2);
       return L;
     }
@@ -108,7 +124,7 @@ import com.idega.util.idegaTimestamp;
       return L;
     }
 
-    public Link getDeleteLink(String mo){
+    public Link getDeleteLink(ModuleObject mo){
       Link L = new Link(mo,SimpleViewer.class);
       L.addParameter(prmAction,actDelete);
       L.setOnClick("top.setTimeout('top.frames.lister.location.reload()',150)");
