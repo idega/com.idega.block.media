@@ -33,6 +33,8 @@ private String adminURL = null;
 private String nameOfWindow;
 private String sUseBoxString;
 private int maxImageWidth = 140;
+private int imageWidth = 0;
+private int imageHeight = 0;
 private boolean hasUseBox = true;
 private boolean selected = false;
 private boolean openInWindow = false;
@@ -116,7 +118,15 @@ public ImageInserter(Class WindowToOpen) {
           else {
             image = new Image(imageId);//,"rugl");
           }
-          if( limitWidth ) image.setMaxImageWidth(this.maxImageWidth);
+          if( limitWidth ) {
+            image.setMaxImageWidth(this.maxImageWidth);
+          }
+          if(imageWidth > 0 ){
+            image.setWidth(imageWidth);
+          }
+          if(imageHeight > 0){
+            image.setHeight(imageHeight );
+          }
           image.setNoImageLink();
         }
         image.setName("rugl");
@@ -214,6 +224,14 @@ public ImageInserter(Class WindowToOpen) {
 
   public void setMaxImageWidth(int maxWidth){
     this.maxImageWidth = maxWidth;
+  }
+
+  public void setImageHeight(int imageHeight){
+    this.imageHeight = imageHeight;
+  }
+
+  public void setImageWidth(int imageWidth){
+    this.imageWidth = imageWidth;
   }
 
   public void setAdminURL(String adminURL) {
