@@ -266,13 +266,15 @@ public static void makeDefaultSizes(IWContext iwc){
 
     try{
       FileInputStream input = new FileInputStream(ip.getRealPath());
-      System.out.println("ImageBusiness XXXXX FileSize:"+input.available());
+      System.out.println("ImageBusiness FileSize:"+input.available());
       ImageEntity image = new ImageEntity();
       image.setName(ip.getName());
       /**@todo make this non image specific*/
 
 
       image.setMimeType(ip.getContentType());
+
+      System.out.println("ImageBusiness mimetype:"+ip.getContentType());
 
       image.setFileValue(input);
       image.setFileSize((int)ip.getSize());
