@@ -7,7 +7,7 @@ package com.idega.block.media.servlet;
  * Description: A servlet for streaming data from the blob field of the ic_file table.
  * Copyright: Idega software Copyright (c) 2001
  * Company: idega
- * @author <a href = "mailto:eiki@idega.is">Eirikur Hrafnsson</a>
+ * @author <a href = "mailto:eiki@idega.is">Eirdebikur Hrafnsson</a>
  * @version 1.0
  *
  */
@@ -66,7 +66,8 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
           Stmt = conn.createStatement();
 
           RS = Stmt.executeQuery(sql+mediaId);
-System.err.println("Mediaservlet debug:"+sql+mediaId);
+
+          //System.err.println("Mediaservlet debug:"+sql+mediaId);
           InputStream myInputStream = null;
 
          // while(RS.next()){
@@ -80,8 +81,6 @@ System.err.println("Mediaservlet debug:"+sql+mediaId);
           //response.setContentType(contentType);
 
           if(myInputStream!=null){
-
-    //      System.err.println("FileSize: "+myInputStream.available());
 
             if (!RS.wasNull()){
               DataOutputStream output = new DataOutputStream( response.getOutputStream() );
