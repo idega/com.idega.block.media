@@ -16,6 +16,7 @@ import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.core.data.ICMimeType;
 import com.idega.core.data.ICFileType;
+import com.idega.core.data.ICFileTypeHandler;
 import java.sql.SQLException;
 
 import java.util.HashMap;
@@ -94,8 +95,10 @@ public class MediaBundleStarter implements IWBundleStartable{
   }
 
   public void start(IWBundle bundle){
+    //cache file types ICFileType extends CacheableEntity
     cm = bundle.getApplication().getIWCacheManager();
-
+    ICFileTypeHandler handlers = new ICFileTypeHandler();
+    handlers.cacheEntity();
     //cache file types ICFileType extends CacheableEntity
     ICFileType types = new ICFileType();
     types.cacheEntity();
@@ -128,25 +131,24 @@ public class MediaBundleStarter implements IWBundleStartable{
   }
 
 
-  public void registerMimeType(String[] array,ICFileType type){
+  public void registerMimeType(String[] array,ICFileType type) throws SQLException{
     int typeId = type.getID();
     ICMimeType mimetype;
 
     for (int i = 0; i < (array.length); i++) {
       //check if these common mimetypes exist and insert if not.
-      mimetype = (ICMimeType) cm.getFromCachedTable(ICMimeType.class,array[i]);
+      mimetype = (ICMimeType) cm.getFromCachedTable(ICMimeType.class,array[i+1]);
       if( mimetype == null ){
         mimetype = new ICMimeType();
         mimetype.setMimeTypeAndDescription(array[i+1],array[i]);
         mimetype.setFileTypeId(typeId);
+        try {
+          mimetype.insert();
+        }
+        catch (SQLException ex) {
+          ex.printStackTrace(System.err);
+        }
       }
-      try {
-        mimetype.insert();
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace(System.err);
-      }
-
       i++;
 
     }
