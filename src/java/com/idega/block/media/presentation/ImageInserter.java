@@ -25,7 +25,7 @@ import com.idega.block.media.business.*;
 
 public class ImageInserter extends Block{
 
-private final static String IW_BUNDLE_IDENTIFIER="com.idega.block.image";
+private final static String IW_BUNDLE_IDENTIFIER="com.idega.block.media";
 private int imageId = -1;
 private boolean nullImageIDDefault = false;
 private String imSessionImageName =null;
