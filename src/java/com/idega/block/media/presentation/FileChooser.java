@@ -3,6 +3,7 @@ package com.idega.block.media.presentation;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.core.builder.business.BuilderConstants;
+import com.idega.core.builder.business.BuilderFileChooser;
 import com.idega.core.file.data.ICFile;
 import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.IWContext;
@@ -17,7 +18,7 @@ import com.idega.presentation.ui.AbstractChooser;
  * @version 1.0
  */
 
-public class FileChooser extends AbstractChooser {
+public class FileChooser extends AbstractChooser implements BuilderFileChooser {
   private String style;
   private final String defaultChooserName = "f_c_n";
 
