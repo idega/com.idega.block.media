@@ -115,7 +115,7 @@ private IWResourceBundle iwrb;
   private void viewUploadedMedia(MediaProperties mediaProps){
     Table T = new Table(1,2);
     T.setHeight(1,1,"16");
-    T.setHeight(1,1,Table.HUNDRED_PERCENT);
+    T.setHeight(1,2,Table.HUNDRED_PERCENT);
     T.setWidthAndHeightToHundredPercent();
     /**@todo: insert a generated localized generated button**/
     Link submitSave = new Link("Save");
