@@ -110,7 +110,7 @@ public class MediaBundleStarter implements IWBundleStartable{
   }
 
   public void start(IWBundle bundle){
-    start(bundle.getApplication());/**@todo remove from every server**/
+    //start(bundle.getApplication());/**@todo remove from every server**/
   }
 
   public void start(IWMainApplication iwma){
