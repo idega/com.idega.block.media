@@ -2,12 +2,14 @@ package com.idega.block.media.presentation;
 
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
+import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.FrameSet;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Page;
 import com.idega.presentation.Table;
 import com.idega.presentation.ui.AbstractChooserWindow;
+import com.idega.user.business.UserBusiness;
 /**
  * Title: com.idega.block.media.presentation.MediaChooserWindow
  * Description: The frame window that displays the filesystem
@@ -21,6 +23,8 @@ import com.idega.presentation.ui.AbstractChooserWindow;
  public class MediaChooserWindow extends AbstractChooserWindow {
  	
 	private static final String IW_BUNDLE_IDENTIFIER = "com.idega.user";
+	
+	 
 	
   private IWBundle iwb;
   //  public static String prmReloadParent = "simple_upl_wind_rp";
@@ -110,25 +114,52 @@ import com.idega.presentation.ui.AbstractChooserWindow;
   }
 
   public static class Top extends Page{
+		private UserBusiness userBusiness = null;
+		private String styleSrc = ""; 
 
     public Top(){
      setAllMargins(0);
-     setBackgroundColor("#9DB308");//IWAdminWindow.HEADER_COLOR);
     }
 
    public void main(IWContext iwc) throws Exception{
    	//IWResourceBundle iwrb = getResourceBundle(iwc);
+   	Page parentPage = null;
     Table headerTable = new Table();
     headerTable.setCellpadding(0);
     headerTable.setCellspacing(0);
+    headerTable.setStyleClass("banner");
     headerTable.setWidth("100%");
     headerTable.setHeight("100%");
     headerTable.setAlignment(1,1,"left");//changed from right
  //   headerTable.addText(iwrb.getLocalizedString("user_property_window", "User Property Window"), IWConstants.BUILDER_FONT_STYLE_TITLE);
-    headerTable.add(getBundle(iwc).getImage("top.gif"));
+ //   headerTable.add(getBundle(iwc).getImage(this.getBundle(iwc).getProperty("logo_image_name","top.gif")));
+    
+		parentPage = this.getParentPage();
+		userBusiness = getUserBusiness(iwc); 
+		styleSrc = userBusiness.getUserApplicationStyleSheet(parentPage, iwc);
+		parentPage.addStyleSheetURL(styleSrc);
+    
+    
  //   headerTable.add(iwc.getApplication().getCoreBundle().getImage("/editorwindow/idegaweb.gif","idegaWeb"),1,1);
     add(headerTable);
    }
+	 protected UserBusiness getUserBusiness(IWApplicationContext iwc) {
+			 if (userBusiness == null) {
+				 try {
+					 userBusiness = (UserBusiness) com.idega.business.IBOLookup.getServiceInstance(iwc, UserBusiness.class);
+				 }
+				 catch (java.rmi.RemoteException rme) {
+					 throw new RuntimeException(rme.getMessage());
+				 }
+			 }
+			 return userBusiness;
+		 }
+   
+   
+   
+   
+   
+   
 
   }
 
