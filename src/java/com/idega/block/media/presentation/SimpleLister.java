@@ -84,7 +84,14 @@ public class SimpleLister extends PresentationObjectContainer {
     List L = null;
     try {
       ImageEntity image = new ImageEntity();
-      L = EntityFinder.findAllDescendingOrdered(image,image.getIDColumnName());
+      StringBuffer sql = new StringBuffer("select f.* ");
+      sql.append(" from ic_file f, ic_mime_type m ,ic_file_type t ");
+      sql.append(" where f.mime_type = m.mime_type ");
+      sql.append(" and m.ic_file_type_id = t.ic_file_type_id ");
+      sql.append(" and t.unique_name = 'ic_image' ");
+      EntityFinder.debug = true;
+      L = EntityFinder.findAll(image,sql.toString());
+      EntityFinder.debug = false;
     }
     catch (SQLException ex) {
       L = null;
