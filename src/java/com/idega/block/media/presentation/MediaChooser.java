@@ -30,6 +30,7 @@ import com.idega.block.media.business.MediaBusiness;
       IWBundle iwb = getBundle(iwc);
       fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
 
+
 /**@todo make a FrameSet rather than IFrames**/
 
       Table Frame = new Table();
@@ -42,8 +43,8 @@ import com.idega.block.media.business.MediaBusiness;
 
       ifList.setWidth(210);
       ifList.setHeight(410);
-      ifViewer.setWidth(500);
-      ifViewer.setHeight(410);
+      ifViewer.setWidth(500);//500
+      ifViewer.setHeight(410);//410
 
       ifList.setBorder(1);
       ifViewer.setBorder(1);

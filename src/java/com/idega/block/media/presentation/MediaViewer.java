@@ -41,26 +41,31 @@ public class MediaViewer extends  Window {
 */
     public void  main(IWContext iwc) throws Exception{
 
-      String sMediaId = MediaBusiness.getMediaId(iwc);
-      String sAction = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
+      String mediaId = MediaBusiness.getMediaId(iwc);
+      String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
+      fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
 
-      if(!sMediaId.equalsIgnoreCase("-1")){
-        //saveMediaId(iwc,sMediaId);
-        if(sAction != null){
-          if(sAction.equals(MediaConstants.MEDIA_ACTION_SAVE)){
-            MediaBusiness.saveMediaId(iwc,sMediaId);
+
+
+      System.out.println("Media ID :"+mediaId);
+
+      if( (mediaId!=null) && !(mediaId.equalsIgnoreCase("-1")) ){
+        //saveMediaId(iwc,mediaId);
+        if(action != null){
+          if(action.equals(MediaConstants.MEDIA_ACTION_SAVE)){
+            MediaBusiness.saveMediaId(iwc,mediaId);
           }
-          else if(sAction.equals(MediaConstants.MEDIA_ACTION_DELETE)){
-           ConfirmDeleteMedia(sMediaId);
+          else if(action.equals(MediaConstants.MEDIA_ACTION_DELETE)){
+           ConfirmDeleteMedia(mediaId);
           }
-          else if(sAction.equals(MediaConstants.MEDIA_ACTION_DELETE_CONFIRM)){
-            deleteMedia( sMediaId);
+          else if(action.equals(MediaConstants.MEDIA_ACTION_DELETE_CONFIRM)){
+            deleteMedia( mediaId);
             MediaBusiness.removeMediaIdFromSession(iwc);
           }
         }
         else{
 
-          int id = Integer.parseInt(sMediaId);
+          int id = Integer.parseInt(mediaId);
           Cache cache = FileTypeHandler.getCachedFileInfo(id,iwc);
           ICFile file = (ICFile) cache.getEntity();
           Table T = new Table();
@@ -83,6 +88,7 @@ public class MediaViewer extends  Window {
           Link L = new Link("New",C);
           L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
           L.setAsImageButton(true);
+          L.addParameter(fileInSessionParameter,id);
           add(L);
 
           add(T);
@@ -90,32 +96,27 @@ public class MediaViewer extends  Window {
       }
     }
 
-
-
-
-
-
-
-    public boolean deleteMedia(String sMediaId){
+    public boolean deleteMedia(String mediaId){
       try {
-        int iMediaId = Integer.parseInt(sMediaId);
+        int iMediaId = Integer.parseInt(mediaId);
         new ICFile(iMediaId).delete();
         return true;
       }
       catch (SQLException ex) {
-        ex.printStackTrace();
+        ex.printStackTrace(System.err);
         return false;
       }
       catch (NumberFormatException ex){
+        ex.printStackTrace(System.err);
         return false;
       }
     }
 
-    public void ConfirmDeleteMedia(String sMediaId){
+    public void ConfirmDeleteMedia(String mediaId){
        Table T = new Table();
        T.setWidth("100%");
        T.setHeight("100%");
-       int id = Integer.parseInt(sMediaId);
+       int id = Integer.parseInt(mediaId);
           try {
             ICFile file = new ICFile(id);
 
@@ -134,12 +135,13 @@ public class MediaViewer extends  Window {
             T.setAlignment(1,2,"center");
             Link confirm = new Link("delete");
             confirm.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME ,MediaConstants.MEDIA_ACTION_DELETE_CONFIRM);
-            confirm.addParameter(fileInSessionParameter,sMediaId);
+            confirm.addParameter(fileInSessionParameter,mediaId);
             T.add(confirm,1,3);
 
           }
           catch (SQLException ex) {
-            T.add("error");
+            T.add("An unexpected error");
+            ex.printStackTrace(System.err);
           }
         add(T);
     }

@@ -33,8 +33,7 @@ public class MediaBusiness  {
 
 
   public static int SaveMediaToDB(MediaProperties mediaProps, IWContext iwc){
-
-    int parentId = Integer.parseInt(getMediaId(iwc));
+    String parentId = getMediaId(iwc);
 
     int id = -1;
 
@@ -44,14 +43,19 @@ public class MediaBusiness  {
       file.setName(mediaProps.getName());
       file.setMimeType(mediaProps.getContentType());
 
-      System.out.println("MIMETYPE"+mediaProps.getContentType());
+      System.out.println("MIMETYPE: "+mediaProps.getContentType());
 
       file.setFileValue(input);
       file.setFileSize((int)mediaProps.getSize());
       file.insert();
 
-      if(parentId==-1){
+      if( (parentId==null) || (parentId.equals("-1")) ){
         ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
+        rootNode.addChild(file);
+      }
+      else {
+        int iParentId = Integer.parseInt(parentId);
+        ICFile rootNode = new ICFile(iParentId);
         rootNode.addChild(file);
       }
 
