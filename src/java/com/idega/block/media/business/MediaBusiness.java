@@ -117,7 +117,7 @@ public class MediaBusiness {
 		try {
 			file.store();
 			if (parentId == -1) { //add to root
-				ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+				ICFile rootNode = (ICFile)iwc.getIWMainApplication().getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 				rootNode.addChild(file);
 			} else if (parentId == 0) { // no parent
 			} else { //register this parent
@@ -273,9 +273,9 @@ public class MediaBusiness {
 	 */
 	public static FileTypeHandler getFileTypeHandler(IWContext iwc, String mimeType) throws MissingMimeTypeException {
 		try {
-			IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 			ICFileTypeHandler typeHandler = (ICFileTypeHandler)cm.getFromCachedTable(ICFileTypeHandler.class, String.valueOf(getFileType(iwc, mimeType).getFileTypeHandlerID()));
-			FileTypeHandler handler = FileTypeHandler.getInstance(iwc.getApplication(), typeHandler.getHandlerClass());
+			FileTypeHandler handler = FileTypeHandler.getInstance(iwc.getIWMainApplication(), typeHandler.getHandlerClass());
 			//System.out.println("SELECTED HANDLER IS : "+typeHandler.getHandlerName());
 			return handler;
 		} catch (NullPointerException x) {
@@ -291,7 +291,7 @@ public class MediaBusiness {
 	}
 	public static ICFileType getFileType(IWContext iwc, String mimeType) throws MissingMimeTypeException {
 		try {
-			IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 			ICFileType type = (ICFileType)cm.getFromCachedTable(ICFileType.class, String.valueOf(getFileTypeId(iwc, mimeType)));
 			return type;
 		} catch (NullPointerException x) {
@@ -300,7 +300,7 @@ public class MediaBusiness {
 	}
 	public static int getFileTypeId(IWContext iwc, String mimeType) throws MissingMimeTypeException {
 		try {
-			IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 			ICMimeType mime = (ICMimeType)cm.getFromCachedTable(ICMimeType.class, mimeType);
 			return mime.getFileTypeID();
 		} catch (NullPointerException x) {
@@ -329,7 +329,7 @@ public class MediaBusiness {
 	
 	*/
 	public static Map getICMimeTypeMap(IWContext iwc) {
-		IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 		return cm.getCachedTableMap(ICMimeType.class);
 	}
 	/**
@@ -344,7 +344,7 @@ public class MediaBusiness {
 	
 	 */
 	public static Map getICFileTypeMap(IWContext iwc) {
-		IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 		return cm.getCachedTableMap(ICFileType.class);
 	}
 	/**
@@ -359,7 +359,7 @@ public class MediaBusiness {
 	
 	*/
 	public static Map getICFileTypeHandlerMap(IWContext iwc) {
-		IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 		return cm.getCachedTableMap(ICFileTypeHandler.class);
 	}
 	/**

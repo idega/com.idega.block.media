@@ -41,7 +41,7 @@ public class FileChooser extends AbstractChooser {
   }
 
   public void main(IWContext iwc){
-    IWBundle iwb = iwc.getApplication().getBundle(BuilderConstants.STANDARD_IW_BUNDLE_IDENTIFIER);
+    IWBundle iwb = iwc.getIWMainApplication().getBundle(BuilderConstants.STANDARD_IW_BUNDLE_IDENTIFIER);
     
     
     setChooseButtonImage(iwb.getImage("open.gif","Choose file"));

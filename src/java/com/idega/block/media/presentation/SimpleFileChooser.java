@@ -84,7 +84,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
 
 
   public void main(IWContext iwc) throws Exception{
-		coreBundle = iwc.getApplication().getCoreBundle();
+		coreBundle = iwc.getIWMainApplication().getCoreBundle();
 		iwrb = coreBundle.getResourceBundle(iwc);
 
     if(deleteOnChange && "true".equals(iwc.getParameter("change_file"))&&iwc.getParameter(name) != null){
@@ -170,7 +170,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
 	      
 				if( showPreviewLink){
 			    Link preview = new Link("Preview");
-			    preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
+			    preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getIWMainApplication()));
 			    preview.setTarget(Link.TARGET_NEW_WINDOW);
 			    table.add(preview,1,2);
 				}
@@ -205,7 +205,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
 	      
 	      if( showPreviewLink){
 		      Link preview = new Link("Preview");
-		      preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getApplication()));
+		      preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getIWMainApplication()));
 		      preview.setTarget(Link.TARGET_NEW_WINDOW);
 		      table.add(preview,1,2);
 	      }

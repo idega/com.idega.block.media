@@ -94,7 +94,7 @@ private String mimeType = null;
     Form form = new Form();
     Table table = new Table(3,4);
     DropdownMenu typemenu = new DropdownMenu(MediaConstants.MEDIA_FILE_TYPE_PARAMETER_NAME);
-    IWCacheManager cm = iwc.getApplication().getIWCacheManager();
+    IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
     HashMap types =  (HashMap) cm.getCachedTableMap(ICFileType.class);
     Iterator iter = types.keySet().iterator();
     while (iter.hasNext()) {

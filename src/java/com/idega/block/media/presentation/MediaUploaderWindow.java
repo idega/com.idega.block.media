@@ -172,7 +172,7 @@ private IWResourceBundle iwrb;
     //f.setAction(s);
     f.setClassToInstanciateAndSendTo(this.getClass(),iwc);
 
-    IWBundle core = iwc.getApplication().getCoreBundle();
+    IWBundle core = iwc.getIWMainApplication().getCoreBundle();
     Image transparent = core.getImage("transparentcell.gif");
     Image busy = core.getImage("busy.gif");
 

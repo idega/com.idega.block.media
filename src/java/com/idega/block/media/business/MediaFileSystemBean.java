@@ -20,14 +20,14 @@ public class MediaFileSystemBean extends IBOServiceBean implements MediaFileSyst
 	 */
 	public String getFileURI(ICFile file)
 	{
-		return MediaBusiness.getMediaURL(file,this.getIWApplicationContext().getApplication());
+		return MediaBusiness.getMediaURL(file,this.getIWApplicationContext().getIWMainApplication());
 	}
 	/* (non-Javadoc)
 	 * @see com.idega.core.file.business.ICFileSystem#getFileURL(int)
 	 */
 	public String getFileURI(int fileId)
 	{
-		return MediaBusiness.getMediaURL(fileId,this.getIWApplicationContext().getApplication());
+		return MediaBusiness.getMediaURL(fileId,this.getIWApplicationContext().getIWMainApplication());
 	}
 	/* (non-Javadoc)
 	 * @see com.idega.core.file.business.ICFileSystem#initialize()
@@ -35,7 +35,7 @@ public class MediaFileSystemBean extends IBOServiceBean implements MediaFileSyst
 	public void initialize()
 	{
 		MediaBundleStarter starter = new MediaBundleStarter();  		
-		starter.start(getIWApplicationContext().getApplication());
+		starter.start(getIWApplicationContext().getIWMainApplication());
 	}
 
 }

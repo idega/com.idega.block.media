@@ -34,7 +34,7 @@ public class MediaTreeViewer extends Block {
 
   public void  main(IWContext iwc){
     iwrb = getResourceBundle(iwc);
-    cm = iwc.getApplication().getIWCacheManager();
+    cm = iwc.getIWMainApplication().getIWCacheManager();
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
 
     Table T = new Table(1,2);

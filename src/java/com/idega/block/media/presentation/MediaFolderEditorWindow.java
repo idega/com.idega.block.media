@@ -86,7 +86,7 @@ public class MediaFolderEditorWindow extends Window {
         form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),String.valueOf(mediaId)));
       }
       else{
-        ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+        ICFile rootNode = (ICFile)iwc.getIWMainApplication().getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
         form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),rootNode.getPrimaryKey().toString()));
       }
 

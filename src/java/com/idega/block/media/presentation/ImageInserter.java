@@ -342,7 +342,7 @@ public ImageInserter(Class WindowToOpen) {
   }
 
   public String getBuilderName(IWUserContext iwc) {
-    return iwc.getApplicationContext().getApplication().getCoreBundle().getComponentName(Image.class,iwc.getCurrentLocale());
+    return iwc.getApplicationContext().getIWMainApplication().getCoreBundle().getComponentName(Image.class,iwc.getCurrentLocale());
   }
 
 
