@@ -23,6 +23,8 @@ import com.idega.util.database.ConnectionBroker;
 
 public class MediaServlet extends IWCoreServlet{
 
+public static final String PARAMETER_NAME="media_id";
+
 public void doGet( HttpServletRequest _req, HttpServletResponse _res) throws IOException{
   doPost(_req,_res);
 }
@@ -34,7 +36,21 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
   ResultSet RS;
 
   String contentType=null;
-  String mediaId = request.getParameter("media_id");
+  String sql = "select file_value,mime_type from ic_file where ic_file_id=";
+  String mediaId = request.getParameter(PARAMETER_NAME);
+
+  //debug temporary backward compatability
+  if( mediaId == null){
+     mediaId = request.getParameter("image_id");
+     if( mediaId != null){
+      sql = "select image_value,content_type from image where image_id=";
+     }
+     else{
+      mediaId = request.getParameter("file_id");
+      if(mediaId!=null) sql = "select file_value,content_type from file_ where file_id=";
+     }
+  }
+  //
 
   try{
     if( mediaId!=null){
@@ -44,20 +60,21 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
         if( conn!=null ){
           Stmt = conn.createStatement();
 
-          RS = Stmt.executeQuery("select file_value,mime_type from ic_file where ic_file_id='"+mediaId+"'");
+          RS = Stmt.executeQuery(sql+mediaId);
 
           InputStream myInputStream = null;
 
           while(RS.next()){
-            contentType = RS.getString("mime_type");
-            myInputStream = RS.getBinaryStream("file_value");
+            myInputStream = RS.getBinaryStream(1);
+            contentType = RS.getString(2);
           }
-
-
 
           response.setContentType(contentType);
 
           if(myInputStream!=null){
+
+          System.err.println("FileSize: "+myInputStream.available());
+
             DataOutputStream output = new DataOutputStream( response.getOutputStream() );
 
             byte buffer[]= new byte[1024];
@@ -76,6 +93,7 @@ public void doPost( HttpServletRequest request, HttpServletResponse response) th
             output.close();
             myInputStream.close();
           }
+          else System.err.println("InputStream is null");
 
           RS.close();
 
