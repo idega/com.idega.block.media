@@ -4,10 +4,13 @@ import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWConstants;
+import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.FrameSet;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Page;
 import com.idega.presentation.Table;
+import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.AbstractChooserWindow;
 import com.idega.user.business.UserBusiness;
 /**
@@ -49,12 +52,15 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 		frame.setScrolling(2, false);
 		frame.setSpanAdaptive(2);
 		frame.setResizable(true);
-
 	}
 
 	public void displaySelection(IWContext iwc) {
 		//store the parameter in session
 		//MediaBusiness.getMediaParameterNameInSession(iwc);
+//		IWContext iwc = IWContext.getInstance();
+		IWResourceBundle iwrb = getResourceBundle(iwc);
+		setTitle(iwrb.getLocalizedString("media_chooser_window.media_chooser","Media chooser"));
+
 		MediaBusiness.saveMediaIdToSession(iwc, MediaBusiness.getMediaId(iwc));
 
 		String chooserType = iwc.getParameter(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME);
@@ -114,7 +120,8 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 		}
 
 		public void main(IWContext iwc) throws Exception {
-			//IWResourceBundle iwrb = getResourceBundle(iwc);
+			IWResourceBundle iwrb = getResourceBundle(iwc);
+
 			Page parentPage = null;
 			Table headerTable = new Table();
 			headerTable.setCellpadding(0);
@@ -122,8 +129,15 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 			headerTable.setStyleClass("banner");
 			headerTable.setWidth("100%");
 			headerTable.setHeight("100%");
-			headerTable.setAlignment(1, 1, "left"); //changed from right
-			//   headerTable.addText(iwrb.getLocalizedString("user_property_window", "User Property Window"), IWConstants.BUILDER_FONT_STYLE_TITLE);
+			Table t = new Table();
+			t.setCellpadding(10);
+			t.setCellspacing(0);
+			Text text = new Text(iwrb.getLocalizedString("media_chooser_window.media_chooser","Media chooser"));
+			text.setStyleAttribute(IWConstants.BUILDER_FONT_STYLE_TITLE);
+			t.add(text,1,1);
+			headerTable.setAlignment(2,1,Table.HORIZONTAL_ALIGN_RIGHT);
+			headerTable.add(t,2,1);
+			//			headerTable.addText(iwrb.getLocalizedString("media_chooser_window.media_chooser", "Media chooser"), IWConstants.BUILDER_FONT_STYLE_TITLE);
 			//   headerTable.add(getBundle(iwc).getImage(this.getBundle(iwc).getProperty("logo_image_name","top.gif")));
 
 			parentPage = this.getParentPage();
