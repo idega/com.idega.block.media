@@ -1,9 +1,12 @@
 package com.idega.block.media;
 
+import com.idega.block.media.business.MediaFileSystemBean;
 import com.idega.block.media.presentation.FileChooser;
 import com.idega.block.media.presentation.ImageInserter;
 import com.idega.builder.business.IBFileChooser;
 import com.idega.builder.business.IBImageInserter;
+import com.idega.business.IBOLookup;
+import com.idega.core.file.business.ICFileSystem;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWBundleStartable;
 import com.idega.repository.data.ImplementorRepository;
@@ -20,9 +23,14 @@ import com.idega.repository.data.ImplementorRepository;
 public class IWBundleStarter implements IWBundleStartable {
 
 	public void start(IWBundle starterBundle) {
+		
+		// implementors
 		ImplementorRepository repository = ImplementorRepository.getInstance();
 		repository.addImplementor(IBImageInserter.class, ImageInserter.class);
 		repository.addImplementor(IBFileChooser.class, FileChooser.class);
+		
+		// services
+		IBOLookup.registerImplementationForBean(ICFileSystem.class, MediaFileSystemBean.class);
 	}
 	
 	public void stop(IWBundle starterBundle) {
