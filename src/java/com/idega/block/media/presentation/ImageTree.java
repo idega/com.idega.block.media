@@ -3,9 +3,9 @@ package com.idega.block.media.presentation;
 import java.sql.*;
 import java.util.*;
 import com.idega.util.*;
-import com.idega.jmodule.object.textObject.*;
-import	com.idega.jmodule.object.*;
-import	com.idega.jmodule.object.interfaceobject.*;
+import com.idega.presentation.text.*;
+import	com.idega.presentation.*;
+import	com.idega.presentation.ui.*;
 import	com.idega.block.media.data.*;
 import	com.idega.data.*;
 import com.idega.util.text.*;
@@ -13,19 +13,19 @@ import com.idega.core.data.ICFileCategory;
 
 
 
-public class ImageTree extends JModuleObject{
+public class ImageTree extends Block{
 
 private String width = "100%";
 private boolean showAll = false;
 private boolean refresh = false;
 
-public Table getTreeTable(ModuleInfo modinfo) throws SQLException {
+public Table getTreeTable(IWContext iwc) throws SQLException {
 
     ICFileCategory[] catagory = (ICFileCategory[]) (new ICFileCategory()).findAll();
     ImageEntity[] images;
     Vector items = null;
 
-    items = (Vector) modinfo.getServletContext().getAttribute("image_tree_vector");
+    items = (Vector) iwc.getServletContext().getAttribute("image_tree_vector");
 
     Integer[] intArr = new Integer[3];
     int pos;
@@ -55,7 +55,7 @@ public Table getTreeTable(ModuleInfo modinfo) throws SQLException {
               }
             }
 
-          modinfo.getServletContext().setAttribute("image_tree_vector",items);
+          iwc.getServletContext().setAttribute("image_tree_vector",items);
           }
         }
       }
@@ -63,16 +63,16 @@ public Table getTreeTable(ModuleInfo modinfo) throws SQLException {
 
 
     if (items.size() > 0) {
-      String openCat = modinfo.getParameter("open_catagory_id");
+      String openCat = iwc.getParameter("open_catagory_id");
 
       if (openCat == null) { openCat = "-3";}
-        Table isTable = (Table) modinfo.getServletContext().getAttribute("image_tree_table"+openCat);
+        Table isTable = (Table) iwc.getServletContext().getAttribute("image_tree_table"+openCat);
 
         if (isTable != null) {
           returnTable = isTable;
         }
         else {
-          returnTable = writeTable(items,modinfo);
+          returnTable = writeTable(items,iwc);
         }
     }
 
@@ -91,7 +91,7 @@ public void setShowAll(boolean showAll){
   this.showAll =  showAll;
 }
 
-public Table writeTable(Vector items,ModuleInfo modinfo) throws SQLException {
+public Table writeTable(Vector items,IWContext iwc) throws SQLException {
   Table table = new Table();
     table.setBorder(0);
     table.setWidth(getWidth());
@@ -101,10 +101,10 @@ public Table writeTable(Vector items,ModuleInfo modinfo) throws SQLException {
 
   Text more = new Text("+");
     more.setFontColor("#FFFFFF");
-  String imageId = modinfo.getParameter("image_id");
-  String openCat = modinfo.getParameter("open_catagory_id");
+  String imageId = iwc.getParameter("image_id");
+  String openCat = iwc.getParameter("open_catagory_id");
     if (openCat == null) { openCat = "-3";}
-  String openImg = modinfo.getParameter("open_image_id");
+  String openImg = iwc.getParameter("open_image_id");
     if (openImg == null) { openImg = "-3";}
 
   Link openLink;
@@ -218,7 +218,7 @@ public Table writeTable(Vector items,ModuleInfo modinfo) throws SQLException {
 
   }
 
-  modinfo.getServletContext().setAttribute("image_tree_table"+openCat,table);
+  iwc.getServletContext().setAttribute("image_tree_table"+openCat,table);
 
   return table;
 //  add(table);
@@ -258,27 +258,27 @@ public Table writeTable(Vector items,ModuleInfo modinfo) throws SQLException {
     }
 
 
-private void refresh(ModuleInfo modinfo) throws SQLException{
+private void refresh(IWContext iwc) throws SQLException{
     Table table;
     Vector vector;
     String test;
 
-    table = (Table) modinfo.getServletContext().getAttribute("image_tree_table-3");
-    vector = (Vector) modinfo.getServletContext().getAttribute("image_tree_vector");
+    table = (Table) iwc.getServletContext().getAttribute("image_tree_table-3");
+    vector = (Vector) iwc.getServletContext().getAttribute("image_tree_vector");
     if (table != null) {
-      modinfo.getServletContext().removeAttribute("image_tree_table-3");
+      iwc.getServletContext().removeAttribute("image_tree_table-3");
     }
     if (vector != null) {
-      modinfo.getServletContext().removeAttribute("image_tree_vector");
+      iwc.getServletContext().removeAttribute("image_tree_vector");
     }
 
-    test = (String) modinfo.getSessionAttribute("image_tree_catagory_id");
+    test = (String) iwc.getSessionAttribute("image_tree_catagory_id");
     if (test != null) {
-      modinfo.removeSessionAttribute("image_tree_catagory_id");
+      iwc.removeSessionAttribute("image_tree_catagory_id");
     }
-    test = (String) modinfo.getSessionAttribute("image_tree_image_id");
+    test = (String) iwc.getSessionAttribute("image_tree_image_id");
     if (test != null) {
-      modinfo.removeSessionAttribute("image_tree_image_id");
+      iwc.removeSessionAttribute("image_tree_image_id");
     }
 
 
@@ -287,9 +287,9 @@ private void refresh(ModuleInfo modinfo) throws SQLException{
         if (catagories != null) {
             if (catagories.length > 0 ) {
                 for (int i = 0 ; i < catagories.length ; i++ ) {
-                    table = (Table) modinfo.getServletContext().getAttribute("image_tree_table"+catagories[i].getID());
+                    table = (Table) iwc.getServletContext().getAttribute("image_tree_table"+catagories[i].getID());
                     if (table != null) {
-                        modinfo.getServletContext().removeAttribute("image_tree_table"+catagories[i].getID());
+                        iwc.getServletContext().removeAttribute("image_tree_table"+catagories[i].getID());
                     }
                 }
             }
@@ -301,29 +301,29 @@ public void refresh(){
   this.refresh=true;
 }
 
-public void main(ModuleInfo modinfo)throws Exception{
-  //this.isAdmin=this.isAdministrator(modinfo);
-  //setSpokenLanguage(modinfo);
+public void main(IWContext iwc)throws Exception{
+  //this.isAdmin=this.isAdministrator(iwc);
+  //setSpokenLanguage(iwc);
 
-  if(refresh) refresh(modinfo);
+  if(refresh) refresh(iwc);
 
-  String tempImageId = modinfo.getParameter("image_id");
-  String tempCatagoryId = modinfo.getParameter("catagory_id");
+  String tempImageId = iwc.getParameter("image_id");
+  String tempCatagoryId = iwc.getParameter("catagory_id");
   String imageId = null;
   String catagoryId = null;
 
   if (tempImageId != null) {
-     modinfo.setSessionAttribute("image_tree_image_id",tempImageId);
-     modinfo.removeSessionAttribute("image_tree_catagory_id");
+     iwc.setSessionAttribute("image_tree_image_id",tempImageId);
+     iwc.removeSessionAttribute("image_tree_catagory_id");
   }
   if (tempCatagoryId != null) {
-     modinfo.setSessionAttribute("image_tree_catagory_id",tempCatagoryId);
-     modinfo.removeSessionAttribute("image_tree_image_id");
+     iwc.setSessionAttribute("image_tree_catagory_id",tempCatagoryId);
+     iwc.removeSessionAttribute("image_tree_image_id");
   }
-     imageId = (String) modinfo.getSessionAttribute("image_tree_image_id");
-     catagoryId = (String) modinfo.getSessionAttribute("image_tree_catagory_id");
+     imageId = (String) iwc.getSessionAttribute("image_tree_image_id");
+     catagoryId = (String) iwc.getSessionAttribute("image_tree_catagory_id");
 
-  add(getTreeTable(modinfo));
+  add(getTreeTable(iwc));
 
   }
 

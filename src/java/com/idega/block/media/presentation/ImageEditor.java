@@ -1,17 +1,17 @@
 package com.idega.block.media.presentation;
 
-import com.idega.jmodule.object.textObject.*;
-import com.idega.jmodule.object.*;
-import com.idega.jmodule.object.interfaceobject.*;
+import com.idega.presentation.text.*;
+import com.idega.presentation.*;
+import com.idega.presentation.ui.*;
 import com.idega.block.media.presentation.*;
 
-public class ImageEditor extends JModuleObject{
+public class ImageEditor extends Block{
 private boolean refresh = false;
 private boolean showAll = true;
 
-  public void main(ModuleInfo modinfo)throws Exception{
-    String refreshing = (String) modinfo.getSessionAttribute("refresh");
-    String sRefresh = modinfo.getParameter("refresh");
+  public void main(IWContext iwc)throws Exception{
+    String refreshing = (String) iwc.getSessionAttribute("refresh");
+    String sRefresh = iwc.getParameter("refresh");
     ImageBrowser browser = new ImageBrowser();
     browser.setShowAll(showAll);
 

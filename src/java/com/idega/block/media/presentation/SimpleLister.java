@@ -1,15 +1,15 @@
 package com.idega.block.media.presentation;
 
-import com.idega.jmodule.object.*;
-import com.idega.jmodule.object.textObject.*;
-import com.idega.jmodule.object.interfaceobject.*;
+import com.idega.presentation.*;
+import com.idega.presentation.text.*;
+import com.idega.presentation.ui.*;
 import com.idega.block.media.data.ImageEntity;
 import com.idega.util.idegaTimestamp;
 import com.idega.data.EntityFinder;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.idega.jmodule.object.ModuleObjectContainer;
+import com.idega.presentation.PresentationObjectContainer;
 
 /**
  * Title:
@@ -20,7 +20,7 @@ import com.idega.jmodule.object.ModuleObjectContainer;
  * @version 1.1
  */
 
-public class SimpleLister extends ModuleObjectContainer {
+public class SimpleLister extends PresentationObjectContainer {
 
     private String target = "viewer";
     public String viewUrl = "/image/singleview.jsp";
@@ -28,11 +28,11 @@ public class SimpleLister extends ModuleObjectContainer {
     public String sessImageParameterName = "im_image_session_name";
     public String sessImageParameter = "image_id";
 
-    public void  main(ModuleInfo modinfo){
+    public void  main(IWContext iwc){
       getParentPage().setAllMargins(0);
       List L = listOfImages();
 
-      checkParameterName(modinfo);
+      checkParameterName(iwc);
 
       if(L!= null){
         Table Frame = new Table();
@@ -62,13 +62,13 @@ public class SimpleLister extends ModuleObjectContainer {
       }
     }
 
-  public void checkParameterName(ModuleInfo modinfo){
-     if(modinfo.getParameter(sessImageParameterName)!=null){
-      sessImageParameter = modinfo.getParameter(sessImageParameterName);
-      modinfo.setSessionAttribute(sessImageParameterName,sessImageParameter);
+  public void checkParameterName(IWContext iwc){
+     if(iwc.getParameter(sessImageParameterName)!=null){
+      sessImageParameter = iwc.getParameter(sessImageParameterName);
+      iwc.setSessionAttribute(sessImageParameterName,sessImageParameter);
     }
-    else if(modinfo.getSessionAttribute(sessImageParameterName)!=null)
-      sessImageParameter = (String) modinfo.getSessionAttribute(sessImageParameterName);
+    else if(iwc.getSessionAttribute(sessImageParameterName)!=null)
+      sessImageParameter = (String) iwc.getSessionAttribute(sessImageParameterName);
   }
 
   public Link getImageLink(ImageEntity image,String target,String prm){

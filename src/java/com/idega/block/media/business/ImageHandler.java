@@ -20,7 +20,7 @@ import com.idega.data.GenericEntity;
 import com.idega.util.database.ConnectionBroker;
 import com.idega.data.BlobWrapper;
 import com.idega.block.media.data.*;
-import com.idega.jmodule.object.ModuleInfo;
+import com.idega.presentation.IWContext;
 import com.idega.servlet.IWCoreServlet;
 import com.idega.io.ImageSave;
 
@@ -357,12 +357,12 @@ protected float getQuality(){
   return this.quality;
 }
 
-public com.idega.jmodule.object.Image getModifiedImageAsImageObject(ModuleInfo modinfo) throws Exception{
+public com.idega.presentation.Image getModifiedImageAsImageObject(IWContext iwc) throws Exception{
   if( modifiedImageCounter != 1 ) ImageBusiness.deleteImageFile(modifiedImageURL);
   String seperator = System.getProperty("file.separator");
-  modifiedImageURL = modinfo.getServletContext().getRealPath(seperator)+seperator+"pics"+seperator+modinfo.getSession().getId()+"ModifiedImagetemp"+modifiedImageCounter+".jpg";
+  modifiedImageURL = iwc.getServletContext().getRealPath(seperator)+seperator+"pics"+seperator+iwc.getSession().getId()+"ModifiedImagetemp"+modifiedImageCounter+".jpg";
   writeModifiedImageToFile(modifiedImageURL);//temporary storage
-  com.idega.jmodule.object.Image image = new com.idega.jmodule.object.Image(modifiedImageURL,getImageName(),getModifiedWidth(),getModifiedHeight());
+  com.idega.presentation.Image image = new com.idega.presentation.Image(modifiedImageURL,getImageName(),getModifiedWidth(),getModifiedHeight());
   modifiedImageCounter++;
 return image;
 }

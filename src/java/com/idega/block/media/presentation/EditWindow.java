@@ -1,13 +1,13 @@
 package com.idega.block.media.presentation;
 
-import com.idega.jmodule.object.interfaceobject.Window;
-import com.idega.jmodule.object.ModuleInfo;
+import com.idega.presentation.ui.Window;
+import com.idega.presentation.IWContext;
 import com.idega.block.media.data.*;
 import com.idega.block.media.business.ImageBusiness;
 import com.idega.block.media.business.ImageProperties;
-import com.idega.jmodule.object.textObject.*;
-import com.idega.jmodule.object.*;
-import com.idega.jmodule.object.interfaceobject.*;
+import com.idega.presentation.text.*;
+import com.idega.presentation.*;
+import com.idega.presentation.ui.*;
 import com.idega.core.data.ICFileCategory;
 /**
  * Title:
@@ -54,7 +54,7 @@ public class EditWindow extends Window {
     super(name, width, height, url);
   }
 
-  public void main(ModuleInfo modinfo)throws Exception{
+  public void main(IWContext iwc)throws Exception{
     setBackgroundColor(windowColor);
     setAllMargins(0);
     setTitle("IdegaWeb : Image");
@@ -71,37 +71,37 @@ public class EditWindow extends Window {
     outerTable.setBackgroundImage(1,1,new Image("/pics/jmodules/image/myndamodule/topp/topptiler.gif"));
     outerTable.setVerticalAlignment(1,2,"top");
 
-    String action = modinfo.getParameter("action");
+    String action = iwc.getParameter("action");
     if("save_text".equalsIgnoreCase(action)){
-       ImageBusiness.handleTextSave(modinfo);
-       close(modinfo);
+       ImageBusiness.handleTextSave(iwc);
+       close(iwc);
     }
     else if("upload".equalsIgnoreCase(action)){
-      outerTable.add(getUploadForm(modinfo),1,2);
+      outerTable.add(getUploadForm(iwc),1,2);
     }
     else if("text".equalsIgnoreCase(action)){
-      outerTable.add(getEditForm(modinfo),1,2);
+      outerTable.add(getEditForm(iwc),1,2);
     }
     else if("save_image".equalsIgnoreCase(action)){
-      ImageBusiness.handleSaveImage(modinfo);
-      close(modinfo);
+      ImageBusiness.handleSaveImage(iwc);
+      close(iwc);
     }
     else{
-      uploadAndSaveToCategory(modinfo);
+      uploadAndSaveToCategory(iwc);
     }
     add(outerTable);
 
   }
 
 
-  private void close(ModuleInfo modinfo){
+  private void close(IWContext iwc){
     setParentToReload();
     close();
   }
 
 
-  private Form getEditForm(ModuleInfo modinfo) throws Exception{
-    String imageId = modinfo.getParameter("image_id");
+  private Form getEditForm(IWContext iwc) throws Exception{
+    String imageId = iwc.getParameter("image_id");
     Form form = new Form();
     form.add(new HiddenInput("image_id",imageId));
     form.add(new HiddenInput("action","save_text"));
@@ -162,11 +162,11 @@ public class EditWindow extends Window {
     return form;
   }
 
-  private Form getUploadForm(ModuleInfo modinfo) throws Exception{
+  private Form getUploadForm(IWContext iwc) throws Exception{
     Form form = new Form();
     form.setMultiPart();
     //workaround
-    String uri = modinfo.getRequestURI();
+    String uri = iwc.getRequestURI();
     if(uri.indexOf("Instanciator")==-1){
       form.setAction(uri+"?"+Page.IW_FRAME_CLASS_PARAMETER+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass()));
     }
@@ -191,7 +191,7 @@ public class EditWindow extends Window {
     return form;
   }
 
-  private void uploadAndSaveToCategory(ModuleInfo modinfo) throws Exception{
+  private void uploadAndSaveToCategory(IWContext iwc) throws Exception{
     Form form = new Form();
     form.add(new HiddenInput("action","save_image"));
     Table upload = new Table(1,3);
@@ -203,8 +203,8 @@ public class EditWindow extends Window {
     upload.setVerticalAlignment(1,3,"top");
 
     try{
-      ImageProperties ip = ImageBusiness.doUpload(modinfo);
-      modinfo.setSessionAttribute("im_ip",ip);
+      ImageProperties ip = ImageBusiness.doUpload(iwc);
+      iwc.setSessionAttribute("im_ip",ip);
       Image imagefile = new Image(ip.getWebPath());
 
       Text texti = new Text("Veldu nú myndaflokk og hakaðu við þær aukastærðir af myndinni sem þú vilt fá.");

@@ -14,16 +14,16 @@ import java.sql.*;
 import java.util.*;
 import java.io.*;
 import com.idega.util.*;
-import com.idega.jmodule.object.textObject.*;
-import com.idega.jmodule.object.*;
-import com.idega.jmodule.object.interfaceobject.*;
+import com.idega.presentation.text.*;
+import com.idega.presentation.*;
+import com.idega.presentation.ui.*;
 import com.idega.jmodule.image.data.*;
 import com.idega.jmodule.image.business.*;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
 
-public class ImageInserter extends JModuleObject{
+public class ImageInserter extends Block{
 
 private final static String IW_BUNDLE_IDENTIFIER="com.idega.block.image";
 private int imageId = -1;
@@ -86,22 +86,22 @@ public ImageInserter(Class WindowToOpen) {
 
 }
 
-  public void main(ModuleInfo modinfo)throws Exception{
+  public void main(IWContext iwc)throws Exception{
       this.empty();
 
-      iwb = getBundle(modinfo);
-      iwrb = getResourceBundle(modinfo);
+      iwb = getBundle(iwc);
+      iwrb = getResourceBundle(iwc);
 
       nameOfWindow = iwrb.getLocalizedString("new_image","New image");
       sUseBoxString = iwrb.getLocalizedString("use_image","Use image");
 
-      String imageSessionId = (String) modinfo.getSession().getAttribute(imSessionImageName);
+      String imageSessionId = (String) iwc.getSession().getAttribute(imSessionImageName);
       // debug
       //add(imSessionImageName + " "+imageSessionId);
 
       if ( imageSessionId != null ) {
         imageId = Integer.parseInt(imageSessionId);
-        modinfo.removeSessionAttribute(imSessionImageName);
+        iwc.removeSessionAttribute(imSessionImageName);
       }
 
       Image image=setImage;

@@ -1,6 +1,6 @@
 package com.idega.block.media.presentation;
 
-import com.idega.jmodule.object.interfaceobject.Window;
+import com.idega.presentation.ui.Window;
 
 /**
  * Title:        IdegaWeb

@@ -15,9 +15,9 @@ import java.sql.*;
 import java.util.*;
 import java.io.*;
 import com.idega.util.*;
-import com.idega.jmodule.object.textObject.*;
-import com.idega.jmodule.object.*;
-import com.idega.jmodule.object.interfaceobject.*;
+import com.idega.presentation.text.*;
+import com.idega.presentation.*;
+import com.idega.presentation.ui.*;
 import com.idega.block.media.data.*;
 import com.idega.block.media.business.*;
 import com.idega.util.text.*;
@@ -26,7 +26,7 @@ import com.oreilly.servlet.MultipartRequest;
 import com.idega.core.data.ICFileCategory;
 
 
-public class ImageViewer extends JModuleObject{
+public class ImageViewer extends Block{
 
 private int categoryId = -1;
 private boolean limitNumberOfImages=true;
@@ -106,35 +106,35 @@ public void setConnectionAttributes(String attributeName, String attributeId) {
 
 
 
-public void main(ModuleInfo modinfo)throws Exception{
-  isAdmin= isAdministrator(modinfo);
+public void main(IWContext iwc)throws Exception{
+  isAdmin= isAdministrator(iwc);
 
   /**@todo : add localisation support
    *
    */
   ImageEntity[] image =  new ImageEntity[1];
-  String imageId = modinfo.getParameter("image_id");
-  String imageCategoryId = modinfo.getParameter("image_catagory_id");
+  String imageId = iwc.getParameter("image_id");
+  String imageCategoryId = iwc.getParameter("image_catagory_id");
 
-  percent = modinfo.getParameter("percent");
-  String sEdit = modinfo.getParameter("edit");
-  String action = modinfo.getParameter("action");
+  percent = iwc.getParameter("percent");
+  String sEdit = iwc.getParameter("edit");
+  String action = iwc.getParameter("action");
 
-  String refreshing = (String) modinfo.getSessionAttribute("im_refresh");
-  String sessionImageId = (String) modinfo.getSessionAttribute("im_image_id");
-  String imageSessionName = (String) modinfo.getParameter("im_image_session_name");
+  String refreshing = (String) iwc.getSessionAttribute("im_refresh");
+  String sessionImageId = (String) iwc.getSessionAttribute("im_image_id");
+  String imageSessionName = (String) iwc.getParameter("im_image_session_name");
   if( imageSessionName!=null ) callingModule = imageSessionName;
 
   if( sessionImageId!=null ){// new uploaded image
      imageId = sessionImageId;
-     modinfo.removeSessionAttribute("im_image_id");
+     iwc.removeSessionAttribute("im_image_id");
   }
 
   if( refreshing!=null ) refresh = true;
 
   if( refresh ){
-    refresh(modinfo);
-    modinfo.removeSessionAttribute("im_refresh");
+    refresh(iwc);
+    iwc.removeSessionAttribute("im_refresh");
   }
 
   view = new Image("/pics/jmodules/image/"+language+"/view.gif","View all sizes");
@@ -159,7 +159,7 @@ public void main(ModuleInfo modinfo)throws Exception{
 
   Link reloads = new Link(reload);
   reloads.addParameter("refresh","true");
-  reloads.addParameter("idega","best&"+modinfo.getQueryString());
+  reloads.addParameter("idega","best&"+iwc.getQueryString());
 
   Link categories = new Link(newCategory);
   categories.addParameter("action","editcategories");
@@ -201,7 +201,7 @@ public void main(ModuleInfo modinfo)throws Exception{
 
   if(sEdit!=null){
     try{
-      getEditor(modinfo);
+      getEditor(iwc);
       outerTable.setColor(1,2,"FFFFFF");
     }
     catch(Throwable e){
@@ -229,7 +229,7 @@ public void main(ModuleInfo modinfo)throws Exception{
           outerTable.add(links,1,3);
         }
         else{
-//continueRefresh.addParameter("idega","best&"+modinfo.getQueryString());
+//continueRefresh.addParameter("idega","best&"+iwc.getQueryString());
           Text texti = new Text("");
           ImageHandler handler = null;
           if( "delete".equalsIgnoreCase(action) ){
@@ -237,15 +237,15 @@ public void main(ModuleInfo modinfo)throws Exception{
           }
           else if( "save".equalsIgnoreCase(action) ){
              texti = new Text("Image saved.");
-             handler = (ImageHandler) modinfo.getSessionAttribute("handler");
+             handler = (ImageHandler) iwc.getSessionAttribute("handler");
 
           }
           else if( "savenew".equalsIgnoreCase(action) ){
              texti = new Text("Image saved as a new image.");
-             handler = (ImageHandler) modinfo.getSessionAttribute("handler");
+             handler = (ImageHandler) iwc.getSessionAttribute("handler");
           }
           else if( "use".equalsIgnoreCase(action) ){
-            modinfo.setSessionAttribute(callingModule,imageId);
+            iwc.setSessionAttribute(callingModule,imageId);
             //debug is this legal? check if opened from another page or not. close or not
             Page parent = getParentPage();
             parent.close();
@@ -261,11 +261,11 @@ public void main(ModuleInfo modinfo)throws Exception{
           }
           else if( "savecategories".equalsIgnoreCase(action) ){
             texti = new Text("Imagecategories saved.");
-            ImageBusiness.storeEditForm(modinfo);
+            ImageBusiness.storeEditForm(iwc);
           }
 
           if( !("use".equalsIgnoreCase(action)) ){
-            ImageBusiness.handleEvent(modinfo,handler);
+            ImageBusiness.handleEvent(iwc,handler);
 
             texti.setBold();
             texti.setFontColor("#FFFFFF");
@@ -290,19 +290,19 @@ public void main(ModuleInfo modinfo)throws Exception{
       try{
         if ( (imageCategoryId != null) || (entities!=null) ){
           ImageEntity[] imageEntity;
-          String sFirst = modinfo.getParameter("iv_first");//browsing from this image
+          String sFirst = iwc.getParameter("iv_first");//browsing from this image
           if (sFirst!=null) ifirst = Integer.parseInt(sFirst);
 
-          String previousCatagory =  (String)modinfo.getSessionAttribute("image_previous_catagory_id");
+          String previousCatagory =  (String)iwc.getSessionAttribute("image_previous_catagory_id");
 
           if ( imageCategoryId != null){
 
             if( (previousCatagory!=null) && (!previousCatagory.equalsIgnoreCase(imageCategoryId)) ){
-              modinfo.getSession().removeAttribute("image_previous_catagory_id");
+              iwc.getSession().removeAttribute("image_previous_catagory_id");
             }
 
-            ImageEntity[] inApplication = (ImageEntity[]) modinfo.getServletContext().getAttribute("image_entities_"+imageCategoryId);
-            modinfo.setSessionAttribute("image_previous_catagory_id",imageCategoryId);
+            ImageEntity[] inApplication = (ImageEntity[]) iwc.getServletContext().getAttribute("image_entities_"+imageCategoryId);
+            iwc.setSessionAttribute("image_previous_catagory_id",imageCategoryId);
 
             categoryId = Integer.parseInt(imageCategoryId);
             ICFileCategory category = new ICFileCategory(categoryId);
@@ -312,8 +312,8 @@ public void main(ModuleInfo modinfo)throws Exception{
             else imageEntity = inApplication;
 
             if( imageEntity!=null ){
-              modinfo.getServletContext().removeAttribute("image_entities_"+imageCategoryId);
-              modinfo.getServletContext().setAttribute("image_entities_"+imageCategoryId,imageEntity);
+              iwc.getServletContext().removeAttribute("image_entities_"+imageCategoryId);
+              iwc.getServletContext().setAttribute("image_entities_"+imageCategoryId,imageEntity);
             }
 
             Text categoryName = new Text(category.getName());
@@ -611,8 +611,8 @@ public void refresh(){
   this.refresh = true;
 }
 
-private void refresh(ModuleInfo modinfo) throws SQLException{
-  modinfo.removeSessionAttribute("image_previous_catagory_id");
+private void refresh(IWContext iwc) throws SQLException{
+  iwc.removeSessionAttribute("image_previous_catagory_id");
   /**@todo : use business object to get categories and folders
    *
    */
@@ -621,7 +621,7 @@ private void refresh(ModuleInfo modinfo) throws SQLException{
   if (catagories != null) {
     if (catagories.length > 0 ) {
       for (int i = 0 ; i < catagories.length ; i++ ) {
-        modinfo.getApplication().removeAttribute("image_entities_"+catagories[i].getID());
+        iwc.getApplication().removeAttribute("image_entities_"+catagories[i].getID());
       }
     }
   }
@@ -633,7 +633,7 @@ private Table getImageInfoTable(){
  table.setColor("");
 return table;
 }
-private Form getEditorForm(ImageHandler handler, String ImageId, ModuleInfo modinfo) throws Exception{
+private Form getEditorForm(ImageHandler handler, String ImageId, IWContext iwc) throws Exception{
 
   Table toolbarBelow = new Table(4,2);
   Table toolbarRight = new Table(2,5);
@@ -750,8 +750,8 @@ private Form getEditorForm(ImageHandler handler, String ImageId, ModuleInfo modi
 
 
   if( handler != null) {
-    Image myndin = handler.getModifiedImageAsImageObject(modinfo);
-    String percent2  = modinfo.getParameter("percent");
+    Image myndin = handler.getModifiedImageAsImageObject(iwc);
+    String percent2  = iwc.getParameter("percent");
     if (percent2!=null) percent = TextSoap.findAndReplace(percent2,"%","");
     int iPercent = 100;
     if(percent==null) percent = "100";
@@ -874,35 +874,35 @@ private Form getCategoryEditForm(){
 }
 
 
-private void getEditor(ModuleInfo modinfo) throws Exception{
-  String whichButton = modinfo.getParameter("submit");
-  String ImageId = modinfo.getParameter("image_id");
-  String imageInSession = (String) modinfo.getSessionAttribute("image_in_session");
-  ImageHandler handler = (ImageHandler) modinfo.getSessionAttribute("handler");
+private void getEditor(IWContext iwc) throws Exception{
+  String whichButton = iwc.getParameter("submit");
+  String ImageId = iwc.getParameter("image_id");
+  String imageInSession = (String) iwc.getSessionAttribute("image_in_session");
+  ImageHandler handler = (ImageHandler) iwc.getSessionAttribute("handler");
 
   if (imageInSession!=null){
     if (ImageId != null) {
       if( !ImageId.equalsIgnoreCase(imageInSession) ){
-        modinfo.setSessionAttribute("image_in_session",ImageId);
+        iwc.setSessionAttribute("image_in_session",ImageId);
         handler = new ImageHandler(Integer.parseInt(ImageId));
-        modinfo.setSessionAttribute("handler",handler);
+        iwc.setSessionAttribute("handler",handler);
       }
-      ImageBusiness.handleEvent(modinfo,handler);
-      outerTable.add(getEditorForm(handler,ImageId,modinfo),1,2);
+      ImageBusiness.handleEvent(iwc,handler);
+      outerTable.add(getEditorForm(handler,ImageId,iwc),1,2);
     }
     else {
       ImageId = imageInSession;
-      ImageBusiness.handleEvent(modinfo,handler);
-      outerTable.add(getEditorForm(handler,ImageId,modinfo),1,2);
+      ImageBusiness.handleEvent(iwc,handler);
+      outerTable.add(getEditorForm(handler,ImageId,iwc),1,2);
     }
   }
    else{
     if( ImageId!=null ) {
-      modinfo.setSessionAttribute("image_in_session",ImageId);
+      iwc.setSessionAttribute("image_in_session",ImageId);
       handler = new ImageHandler(Integer.parseInt(ImageId));
-      modinfo.setSessionAttribute("handler",handler);
-      ImageBusiness.handleEvent(modinfo,handler);
-      outerTable.add(getEditorForm(handler,ImageId,modinfo),1,2);
+      iwc.setSessionAttribute("handler",handler);
+      ImageBusiness.handleEvent(iwc,handler);
+      outerTable.add(getEditorForm(handler,ImageId,iwc),1,2);
     }
    }
 }

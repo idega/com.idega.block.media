@@ -4,14 +4,14 @@ import java.io.*;
 import java.util.*;
 import java.sql.*;
 import javax.servlet.http.HttpServlet;
-import com.idega.jmodule.object.ModuleInfo;
+import com.idega.presentation.IWContext;
 import com.idega.data.GenericEntity;
 import com.idega.data.DatastoreInterface;
 import com.idega.data.EntityFinder;
 import com.idega.block.media.data.*;
-import com.idega.jmodule.object.*;
-import com.idega.jmodule.object.textObject.*;
-import com.idega.jmodule.object.interfaceobject.*;
+import com.idega.presentation.*;
+import com.idega.presentation.text.*;
+import com.idega.presentation.ui.*;
 import com.oreilly.servlet.multipart.*;
 import com.idega.io.ImageSave;
 import com.idega.block.media.business.ImageProperties;
@@ -57,11 +57,11 @@ public static void saveImageToCategories(int imageId, String[] categoryId)throws
 
 */
 
-public static void handleEvent(ModuleInfo modinfo,ImageHandler handler) throws Exception{
+public static void handleEvent(IWContext iwc,ImageHandler handler) throws Exception{
 
-  String action = modinfo.getParameter("action");
-  String scaling = modinfo.getParameter("scale.x");
-  String imageId2 = modinfo.getParameter("image_id");
+  String action = iwc.getParameter("action");
+  String scaling = iwc.getParameter("scale.x");
+  String imageId2 = iwc.getParameter("image_id");
 
   int imageId = (handler!=null)? handler.getOriginalImageId() : Integer.parseInt(imageId2);
 
@@ -87,8 +87,8 @@ public static void handleEvent(ModuleInfo modinfo,ImageHandler handler) throws E
             ImageEntity image = new ImageEntity( imageId );
             image.removeFrom(new ICFileCategory());
             image.delete();
-            modinfo.removeSessionAttribute("image_in_session");
-            modinfo.removeSessionAttribute("handler");
+            iwc.removeSessionAttribute("image_in_session");
+            iwc.removeSessionAttribute("handler");
 
             /*ImageEntity parent = (ImageEntity) this.getParentNode();
             Iterator iter = (ImageEntity[]) image.getChildren();
@@ -127,9 +127,9 @@ public static void handleEvent(ModuleInfo modinfo,ImageHandler handler) throws E
   if( scaling!=null ){
     if(!scaling.equalsIgnoreCase("0")){//didn't push the button
 
-      String height = modinfo.getRequest().getParameter("height");
-      String width = modinfo.getRequest().getParameter("width");
-      String constraint = modinfo.getRequest().getParameter("constraint");
+      String height = iwc.getRequest().getParameter("height");
+      String width = iwc.getRequest().getParameter("width");
+      String constraint = iwc.getRequest().getParameter("constraint");
 
       if( constraint!=null ) {
 
@@ -163,7 +163,7 @@ public static void handleEvent(ModuleInfo modinfo,ImageHandler handler) throws E
 }
 
 
-public static void makeDefaultSizes(ModuleInfo modinfo){
+public static void makeDefaultSizes(IWContext iwc){
   try{
     /**
     *@todo : get the image bundle and make these default image sizes
@@ -190,14 +190,14 @@ public static void makeDefaultSizes(ModuleInfo modinfo){
 
 
 
-    public static void storeEditForm(ModuleInfo modinfo){
+    public static void storeEditForm(IWContext iwc){
         String catagoriTextInputName = "category";  // same as in ImageViewer getEditForm
         String deleteTextInputName = "delete";      // same as in ImageViewer getEditForm
         String idees = "ids";      // same as in ImageViewer getEditForm
 
-        String[] categoryName = modinfo.getParameterValues(catagoriTextInputName);
-        String[] deleteValue = modinfo.getParameterValues(deleteTextInputName);
-        String[] ids = modinfo.getParameterValues(idees);
+        String[] categoryName = iwc.getParameterValues(catagoriTextInputName);
+        String[] deleteValue = iwc.getParameterValues(deleteTextInputName);
+        String[] ids = iwc.getParameterValues(idees);
 
         ICFileCategory category = new ICFileCategory();
 
@@ -304,10 +304,10 @@ public static void makeDefaultSizes(ModuleInfo modinfo){
     return id;
   }
 
-  public static ImageProperties doUpload(ModuleInfo modinfo) throws Exception{
+  public static ImageProperties doUpload(IWContext iwc) throws Exception{
     String sep = FileUtil.getFileSeparator();
     StringBuffer pathToFile = new StringBuffer();
-    pathToFile.append(modinfo.getApplication().getApplicationRealPath());
+    pathToFile.append(iwc.getApplication().getApplicationRealPath());
     //pathToFile.append(sep);
     pathToFile.append(IWCacheManager.IW_ROOT_CACHE_DIRECTORY);
     pathToFile.append(sep);
@@ -317,7 +317,7 @@ public static void makeDefaultSizes(ModuleInfo modinfo){
 
     ImageProperties  ip = null;
 
-    MultipartParser mp = new MultipartParser(modinfo.getRequest(), 10*1024*1024); // 10MB
+    MultipartParser mp = new MultipartParser(iwc.getRequest(), 10*1024*1024); // 10MB
     Part part;
     File dir = null;
     String value = null;
@@ -379,17 +379,17 @@ public static void setImageDimensions(ImageProperties ip) {
 
 }
 
-  public static void handleSaveImage(ModuleInfo modinfo){
-    ImageProperties ip = (ImageProperties) modinfo.getSessionAttribute("im_ip");
-    String submit = modinfo.getParameter("submit");
-    String categoryId = modinfo.getParameter("category_id");
+  public static void handleSaveImage(IWContext iwc){
+    ImageProperties ip = (ImageProperties) iwc.getSessionAttribute("im_ip");
+    String submit = iwc.getParameter("submit");
+    String categoryId = iwc.getParameter("category_id");
 
     if( (ip!=null) && !("cancel".equalsIgnoreCase(submit)) ){
       int imageId = SaveImage(ip);
       ip.setId(imageId);
 
       setImageDimensions(ip);//adds width height and size in bytes to database
-      makeDefaultSizes(modinfo);
+      makeDefaultSizes(iwc);
 
       try{
         ImageEntity image = new ImageEntity(imageId);
@@ -401,10 +401,10 @@ public static void setImageDimensions(ImageProperties ip) {
         System.err.println("ImageBusiness : failed to add to image_image_category");
       }
 
-      modinfo.setSessionAttribute("im_image_id",Integer.toString(imageId));
+      iwc.setSessionAttribute("im_image_id",Integer.toString(imageId));
       deleteImageFile(ip.getRealPath());
-      modinfo.removeSessionAttribute("im_ip");
-      modinfo.setSessionAttribute("refresh",new String("true"));
+      iwc.removeSessionAttribute("im_ip");
+      iwc.setSessionAttribute("refresh",new String("true"));
 
     }
     else {
@@ -412,13 +412,13 @@ public static void setImageDimensions(ImageProperties ip) {
     }
   }
 
-  public static void handleTextSave(ModuleInfo modinfo) throws Exception{
-    String submit = modinfo.getParameter("submit");
+  public static void handleTextSave(IWContext iwc) throws Exception{
+    String submit = iwc.getParameter("submit");
     if( !"cancel".equalsIgnoreCase(submit) ){
       boolean update = true;
-      String imageId = modinfo.getParameter("image_id");
-      String imageText = modinfo.getParameter("image_text");
-      String imageLink = modinfo.getParameter("image_link");
+      String imageId = iwc.getParameter("image_id");
+      String imageText = iwc.getParameter("image_text");
+      String imageLink = iwc.getParameter("image_link");
       ImageEntity image = new ImageEntity(Integer.parseInt(imageId));
 
       if( imageText!=null ) image.setDescription(imageText);
@@ -432,7 +432,7 @@ public static void setImageDimensions(ImageProperties ip) {
 
       if(update){
         image.update();
-        modinfo.setSessionAttribute("im_refresh",new String("true"));
+        iwc.setSessionAttribute("im_refresh",new String("true"));
       }
     }
   }

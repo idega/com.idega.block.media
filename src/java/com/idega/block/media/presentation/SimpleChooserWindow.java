@@ -2,9 +2,9 @@ package com.idega.block.media.presentation;
 
 import com.idega.idegaweb.presentation.IWAdminWindow;
 import com.idega.block.media.business.SimpleImage;
-import com.idega.jmodule.object.*;
-import com.idega.jmodule.object.textObject.*;
-import com.idega.jmodule.object.interfaceobject.*;
+import com.idega.presentation.*;
+import com.idega.presentation.text.*;
+import com.idega.presentation.ui.*;
 import com.idega.block.media.data.ImageEntity;
 import com.idega.util.idegaTimestamp;
 import com.idega.idegaweb.IWBundle;
@@ -33,8 +33,8 @@ import com.idega.idegaweb.IWBundle;
       return IW_BUNDLE_IDENTIFIER;
     }
 
-    public void  main(ModuleInfo modinfo) throws Exception{
-      iwb = getBundle(modinfo);
+    public void  main(IWContext iwc) throws Exception{
+      iwb = getBundle(iwc);
       SimpleChooser SC = new SimpleChooser();
       SC.setToIncludeLinks(false);
       add(SC);

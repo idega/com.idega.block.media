@@ -2,9 +2,9 @@ package com.idega.block.media.presentation;
 
 import com.idega.idegaweb.presentation.IWAdminWindow;
 import com.idega.block.media.business.SimpleImage;
-import com.idega.jmodule.object.*;
-import com.idega.jmodule.object.textObject.*;
-import com.idega.jmodule.object.interfaceobject.*;
+import com.idega.presentation.*;
+import com.idega.presentation.text.*;
+import com.idega.presentation.ui.*;
 import com.idega.block.media.data.ImageEntity;
 import com.idega.util.idegaTimestamp;
 import com.idega.idegaweb.IWBundle;
@@ -27,7 +27,7 @@ import com.idega.idegaweb.IWBundle;
  * @version 1.1
  */
 
- public class SimpleChooser extends ModuleObjectContainer implements SimpleImage{
+ public class SimpleChooser extends PresentationObjectContainer implements SimpleImage{
 
     private String sessImageParameter = "image_id";
     private boolean includeLinks;
@@ -41,9 +41,9 @@ import com.idega.idegaweb.IWBundle;
       return IW_BUNDLE_IDENTIFIER;
     }
 
-    public void  main(ModuleInfo modinfo){
-      iwb = getBundle(modinfo);
-      checkParameterName(modinfo);
+    public void  main(IWContext iwc){
+      iwb = getBundle(iwc);
+      checkParameterName(iwc);
       Table Frame = new Table();
       Frame.setCellpadding(0);
       Frame.setCellspacing(0);
@@ -71,17 +71,17 @@ import com.idega.idegaweb.IWBundle;
     public String getSessionSaveParameterName(){
       return sessImageParameter;
     }
-     public void checkParameterName(ModuleInfo modinfo){
-       if(modinfo.getParameter(sessImageParameterName)!=null){
-        sessImageParameter = modinfo.getParameter(sessImageParameterName);
+     public void checkParameterName(IWContext iwc){
+       if(iwc.getParameter(sessImageParameterName)!=null){
+        sessImageParameter = iwc.getParameter(sessImageParameterName);
         //add(sessImageParameter);
-        modinfo.setSessionAttribute(sessImageParameterName,sessImageParameter);
+        iwc.setSessionAttribute(sessImageParameterName,sessImageParameter);
       }
-      else if(modinfo.getSessionAttribute(sessImageParameterName)!=null)
-        sessImageParameter = (String) modinfo.getSessionAttribute(sessImageParameterName);
+      else if(iwc.getSessionAttribute(sessImageParameterName)!=null)
+        sessImageParameter = (String) iwc.getSessionAttribute(sessImageParameterName);
     }
 
-    public ModuleObject getLinkTable(IWBundle iwb){
+    public PresentationObject getLinkTable(IWBundle iwb){
       Table T = new Table();
 
       Link btnAdd = getNewImageLink(new Text("add"));
@@ -109,7 +109,7 @@ import com.idega.idegaweb.IWBundle;
       return T;
     }
 
-    public Link getNewImageLink(ModuleObject mo){
+    public Link getNewImageLink(PresentationObject mo){
       Link L = new Link(mo,SimpleUploaderWindow.class);
       L.addParameter("action","upload");
       L.addParameter("submit","new");
@@ -125,7 +125,7 @@ import com.idega.idegaweb.IWBundle;
       return L;
     }
 
-    public Link getDeleteLink(ModuleObject mo){
+    public Link getDeleteLink(PresentationObject mo){
       Link L = new Link(mo,SimpleViewer.class);
       L.addParameter(prmAction,actDelete);
       L.setOnClick("top.setTimeout('top.frames.lister.location.reload()',150)");

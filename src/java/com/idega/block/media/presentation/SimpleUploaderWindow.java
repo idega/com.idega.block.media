@@ -1,16 +1,16 @@
 package com.idega.block.media.presentation;
 
 import com.idega.block.media.data.*;
-import com.idega.jmodule.object.interfaceobject.Window;
+import com.idega.presentation.ui.Window;
 import com.idega.block.media.business.SimpleImage;
 import com.idega.block.media.business.ImageProperties;
 import com.idega.block.media.business.ImageBusiness;
-import com.idega.jmodule.object.interfaceobject.*;
-import com.idega.jmodule.object.textObject.*;
-import com.idega.jmodule.object.ModuleInfo;
-import com.idega.jmodule.object.ModuleObject;
-import com.idega.jmodule.object.Table;
-import com.idega.jmodule.object.Image;
+import com.idega.presentation.ui.*;
+import com.idega.presentation.text.*;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.PresentationObject;
+import com.idega.presentation.Table;
+import com.idega.presentation.Image;
 import com.idega.util.*;
 import java.sql.*;
 import java.io.*;
@@ -42,52 +42,52 @@ public class SimpleUploaderWindow extends Window implements SimpleImage{
     public String getSessionSaveParameterName(){
       return sessImageParameter;
     }
-     public void checkParameterName(ModuleInfo modinfo){
-       if(modinfo.getParameter(sessImageParameterName)!=null){
-        sessImageParameter = modinfo.getParameter(sessImageParameterName);
-        modinfo.setSessionAttribute(sessImageParameterName,sessImageParameter);
+     public void checkParameterName(IWContext iwc){
+       if(iwc.getParameter(sessImageParameterName)!=null){
+        sessImageParameter = iwc.getParameter(sessImageParameterName);
+        iwc.setSessionAttribute(sessImageParameterName,sessImageParameter);
       }
-      else if(modinfo.getSessionAttribute(sessImageParameterName)!=null)
-        sessImageParameter = (String) modinfo.getSessionAttribute(sessImageParameterName);
+      else if(iwc.getSessionAttribute(sessImageParameterName)!=null)
+        sessImageParameter = (String) iwc.getSessionAttribute(sessImageParameterName);
     }
 
-    public void main(ModuleInfo modinfo){
-      checkParameterName(modinfo);
+    public void main(IWContext iwc){
+      checkParameterName(iwc);
       this.setBackgroundColor("white");
       this.setTitle("Idega Uploader");
-      control(modinfo);
+      control(iwc);
     }
 
-    public void control(ModuleInfo modinfo){
+    public void control(IWContext iwc){
       //add(sessImageParameter);
-      String sContentType = modinfo.getRequest().getContentType();
+      String sContentType = iwc.getRequest().getContentType();
       if(sContentType !=null && sContentType.indexOf("multipart")!=-1){
        // add(sContentType);
-        add(parse(modinfo));
+        add(parse(iwc));
       }
       else{
-        if(modinfo.getParameter("save")!=null){
-          save(modinfo);
+        if(iwc.getParameter("save")!=null){
+          save(iwc);
         }
         else
-          add(getMultiForm(modinfo));
+          add(getMultiForm(iwc));
       }
 
     }
-    public Form getMultiForm(ModuleInfo modinfo){
+    public Form getMultiForm(IWContext iwc){
       Form f = new Form();
       f.setMultiPart();
-      f.setAction(modinfo.getRequestURI()+"?"+com.idega.jmodule.object.Page.IW_FRAME_CLASS_PARAMETER+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass()));
+      f.setAction(iwc.getRequestURI()+"?"+com.idega.presentation.Page.IW_FRAME_CLASS_PARAMETER+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass()));
       f.add(new FileInput());
       f.add(new SubmitButton());
       return f;
     }
 
-    public ModuleObject parse(ModuleInfo modinfo){
+    public PresentationObject parse(IWContext iwc){
       ImageProperties ip = null;
       try {
-        ip = ImageBusiness.doUpload(modinfo);
-        modinfo.setSessionAttribute("image_props",ip);
+        ip = ImageBusiness.doUpload(iwc);
+        iwc.setSessionAttribute("image_props",ip);
       }
       catch (Exception ex) {
         ex.printStackTrace();
@@ -103,20 +103,20 @@ public class SimpleUploaderWindow extends Window implements SimpleImage{
         return form;
       }
       else{
-        return getMultiForm(modinfo);
+        return getMultiForm(iwc);
       }
 
     }
 
-    public void save(ModuleInfo modinfo){
+    public void save(IWContext iwc){
       ImageProperties ip = null;
-      if(modinfo.getSessionAttribute("image_props")!=null){
-        ip = (ImageProperties) modinfo.getSessionAttribute("image_props");
-        modinfo.removeSessionAttribute("image_props");
+      if(iwc.getSessionAttribute("image_props")!=null){
+        ip = (ImageProperties) iwc.getSessionAttribute("image_props");
+        iwc.removeSessionAttribute("image_props");
       }
       if(ip !=null){
         int i = ImageBusiness.SaveImage(ip);
-        modinfo.setSessionAttribute(sessImageParameter,String.valueOf(i));
+        iwc.setSessionAttribute(sessImageParameter,String.valueOf(i));
         try {
           add(new Image(i));
         }
