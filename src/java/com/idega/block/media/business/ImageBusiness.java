@@ -352,12 +352,20 @@ public static void makeDefaultSizes(IWContext iwc){
           File file = new File(filePath);
           int size = (int) filePart.writeTo(file);
                   //debug
+
+        String mimetype = filePart.getContentType();
+        if(mimetype!=null){
+          StringTokenizer tokenizer = new StringTokenizer(mimetype," ;:");
+          if(tokenizer.hasMoreTokens())
+            mimetype = tokenizer.nextToken();
+        }
         System.out.println("ImageBusiness : File size"+size);
         System.out.println("ImageBusiness : File filePath"+filePath);
         System.out.println("ImageBusiness : File webPath"+webPath.toString());
-        System.out.println("ImageBusiness : File getContentType"+filePart.getContentType());
+        System.out.println("ImageBusiness : File getContentType"+mimetype);
         System.out.println("ImageBusiness : File fileName"+fileName);
-          ip = new ImageProperties(fileName,filePart.getContentType(),filePath,webPath.toString(),size);
+
+          ip = new ImageProperties(fileName,mimetype,filePath,webPath.toString(),size);
         }
       }
     }
