@@ -16,7 +16,7 @@ import com.idega.util.caching.Cache;
  * @version 1.0
  */
 
-public abstract class FileTypeHandler extends java.lang.Object implements Singleton {
+public abstract class FileTypeHandler extends java.lang.Object {
 
 public abstract PresentationObject getPresentationObject(int icFileId, IWContext iwc);
 
