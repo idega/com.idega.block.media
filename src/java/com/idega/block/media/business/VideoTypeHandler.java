@@ -13,6 +13,8 @@ import com.idega.presentation.*;
 import com.idega.presentation.text.*;
 import java.util.Iterator;
 import com.idega.presentation.IWContext;
+import com.idega.util.caching.Cache;
+import com.idega.presentation.Quicktime;
 
 import com.idega.core.data.ICFile;
 public class VideoTypeHandler extends FileTypeHandler {
@@ -23,23 +25,29 @@ public class VideoTypeHandler extends FileTypeHandler {
     table.setWidth("100%");
     table.setHeight("100%");
 
-    try {
-      ICFile file = new ICFile(icFileId);
-      Link link;
+    Cache cache = this.getCachedFileInfo(icFileId,iwc);
+    Quicktime mov = new Quicktime(cache.getVirtualPathToFile(),cache.getEntity().getName());
 
-      Iterator iter = file.getChildren();
-      while (iter.hasNext()) {
-        ICFile item = (ICFile) iter.next();
-        link = new Link();
-        link.setFile(item);
-        table.add(link);
-      }
-    }
-    catch (Exception ex) {
-      ex.printStackTrace(System.err);
-    }
+    mov.setWidth("200");
+    mov.setHeight("200");
+    table.add(mov);
+
     return table;
+  }
 
-  };
+  public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc){
+    Table table = new Table();
+
+    table.setWidth("100%");
+    table.setHeight("100%");
+
+    Quicktime mov = new Quicktime(props.getWebPath(),props.getName());
+
+    mov.setWidth("200");
+    mov.setHeight("200");
+    table.add(mov);
+
+    return table;
+  }
 
 }

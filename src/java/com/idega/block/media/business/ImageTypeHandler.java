@@ -32,4 +32,17 @@ public class ImageTypeHandler extends FileTypeHandler {
     return table;
   }
 
+  public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc){
+    Table table = new Table();
+
+    table.setWidth("100%");
+    table.setHeight("100%");
+
+    Image image = new Image(props.getWebPath(),props.getName());
+    table.add(image);
+
+    return table;
+  }
+
+
 }

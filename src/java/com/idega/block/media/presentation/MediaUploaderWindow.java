@@ -71,7 +71,7 @@ public class MediaUploaderWindow extends Window{
 
           FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,mediaProps.getContentType());
 
-          T.add(new IFrame("uploaded",mediaProps.getWebPath()),1,2);
+          T.add(handler.getPresentationObject(mediaProps,iwc),1,2);
 
           add(T);
         }
@@ -119,7 +119,8 @@ public class MediaUploaderWindow extends Window{
         //try {
          // add(new Image(i));/**@todo: add filehandler here**/
          //mediaProps.getContentType()
-          add(new IFrame("saved",MediaServlet.getMediaURL(mediaProps.getId()) ));
+         FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,mediaProps.getContentType());
+         add(handler.getPresentationObject(i,iwc));
         //}
        // catch (SQLException ex) {
 

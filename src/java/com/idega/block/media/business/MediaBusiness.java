@@ -169,7 +169,12 @@ public class MediaBusiness  {
     IWCacheManager cm = iwc.getApplication().getIWCacheManager();
 
     ICMimeType mime = (ICMimeType) cm.getFromCachedTable(ICMimeType.class,mimeType);
+
+    System.out.println("type id "+mime.getFileTypeID());
+
     ICFileType type = (ICFileType) cm.getFromCachedTable(ICFileType.class,Integer.toString(mime.getFileTypeID()));
+
+    System.out.println("handler id"+type.getFileTypeHandlerID());
     ICFileTypeHandler typeHandler = (ICFileTypeHandler) cm.getFromCachedTable(ICFileTypeHandler.class,Integer.toString(type.getFileTypeHandlerID()));
 
     FileTypeHandler handler = FileTypeHandler.getInstance(iwc.getApplication(),typeHandler.getHandlerClass());

@@ -133,6 +133,7 @@ public class MediaBundleStarter implements IWBundleStartable{
     }
 
     cm.removeTableFromCache(ICFileTypeHandler.class);
+
     handlers.cacheEntityByID();
 
     cm.removeTableFromCache(ICFileType.class);

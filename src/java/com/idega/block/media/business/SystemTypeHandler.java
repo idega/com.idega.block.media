@@ -18,6 +18,8 @@ import com.idega.block.reports.presentation.ContentViewer;
 import com.idega.presentation.IWContext;
 import java.util.Iterator;
 import java.util.Vector;
+import com.idega.util.caching.Cache;
+import com.idega.presentation.Image;
 
 
 import com.idega.core.data.ICFile;
@@ -59,6 +61,17 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
 
   }
 
+  public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc){
+    Table table = new Table();
+
+    table.setWidth("100%");
+    table.setHeight("100%");
+
+    Image image = new Image(props.getWebPath(),props.getName());
+    table.add(image);
+
+    return table;
+  }
   private Content getContentObject(ICFile item){
     Object[] objs = new Object[5];
     objs[0] = new CheckBox(Integer.toString(item.getID()));

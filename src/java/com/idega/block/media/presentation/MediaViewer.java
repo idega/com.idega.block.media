@@ -12,9 +12,11 @@ import com.idega.util.idegaTimestamp;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.SystemTypeHandler;
+import com.idega.block.media.business.FileTypeHandler;
 import java.sql.*;
 import com.idega.block.media.servlet.MediaServlet;
 import com.idega.presentation.ui.AbstractChooserWindow;
+import com.idega.util.caching.Cache;
 
 /**
  * Title: com.idega.block.media.presentation.MediaViewer
@@ -59,41 +61,36 @@ public class MediaViewer extends  Window {
         else{
 
           int id = Integer.parseInt(sMediaId);
-          try {
-            ICFile file = new ICFile(id);
-            Table T = new Table();
-            T.add(file.getName(),1,1);
+          Cache cache = FileTypeHandler.getCachedFileInfo(id,iwc);
+          ICFile file = (ICFile) cache.getEntity();
+          Table T = new Table();
+          T.add(file.getName(),1,1);
 
-            /** @todo insert fileHandler */
-            T.add(new IFrame("media", MediaServlet.getMediaURL(file.getID())), 1,2);
+          /** @todo insert fileHandler */
+          FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,file.getMimeType());
+          T.add(handler.getPresentationObject(id,iwc),1,2);
 
-            getAssociatedScript().addFunction(ONCLICK_FUNCTION_NAME,"function "+ONCLICK_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+"){ }");
-            getAssociatedScript().addToFunction(ONCLICK_FUNCTION_NAME,"top."+AbstractChooserWindow.SELECT_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+")");
+          getAssociatedScript().addFunction(ONCLICK_FUNCTION_NAME,"function "+ONCLICK_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+"){ }");
+          getAssociatedScript().addToFunction(ONCLICK_FUNCTION_NAME,"top."+AbstractChooserWindow.SELECT_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+")");
 
-            Link l = new Link();
-            l.setTextOnLink("Use");
-            l.setAsImageButton(true);
-            l.setURL("#");
-            l.setOnClick(ONCLICK_FUNCTION_NAME+"('"+file.getName()+"','"+file.getID()+"')");
-            add(l);
+          Link l = new Link();
+          l.setTextOnLink("Use");
+          l.setAsImageButton(true);
+          l.setURL("#");
+          l.setOnClick(ONCLICK_FUNCTION_NAME+"('"+file.getName()+"','"+file.getID()+"')");
+          add(l);
 
-            Class C = MediaUploaderWindow.class;
-            Link L = new Link("New",C);
-            L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
-            L.setAsImageButton(true);
-            add(L);
+          Class C = MediaUploaderWindow.class;
+          Link L = new Link("New",C);
+          L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
+          L.setAsImageButton(true);
+          add(L);
 
-            add(T);
+          add(T);
 
-            SystemTypeHandler handler = new SystemTypeHandler();
+          SystemTypeHandler listview = new SystemTypeHandler();
 
-            add(handler.getPresentationObject(file.getID(),iwc));
-
-
-          }
-          catch (SQLException ex) {
-            ex.printStackTrace(System.err);
-          }
+          add(listview.getPresentationObject(file.getID(),iwc));
         }
       }
     }

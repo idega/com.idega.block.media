@@ -19,6 +19,8 @@ public abstract class FileTypeHandler extends java.lang.Object{
 
 public abstract PresentationObject getPresentationObject(int icFileId, IWContext iwc);
 
+public abstract PresentationObject getPresentationObject(MediaProperties props, IWContext iwc);
+
 public static FileTypeHandler getInstance(IWMainApplication iwma, String handlerClass){
   FileTypeHandler handler = (FileTypeHandler)iwma.getAttribute(handlerClass);
   if(handler==null){
