@@ -28,7 +28,7 @@ public class SimpleLister extends PresentationObjectContainer {
     public String sessImageParameter = "image_id";
 
     public void  main(IWContext iwc){
-      add("block.media");
+      //add("block.media");
       getParentPage().setAllMargins(0);
       List L = listOfImages();
 

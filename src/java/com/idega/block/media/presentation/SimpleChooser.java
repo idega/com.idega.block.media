@@ -58,7 +58,7 @@ import com.idega.block.media.servlet.MediaServlet;
         getParentPage().getAssociatedScript().addFunction("callbim",getSaveImageFunction(sessImageParameter) );
 
 
-      add("block.media");
+      //add("block.media");
       Table Frame = new Table();
       Frame.setCellpadding(0);
       Frame.setCellspacing(0);
