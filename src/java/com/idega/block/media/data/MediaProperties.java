@@ -16,7 +16,7 @@ import com.idega.io.UploadFile;
 public class MediaProperties {
 
 //  private String sName,sMimeType,sRealPath,sWebPath;
-  private Map parameterMap;
+  private Map _parameterMap;
 //  private long lSize;
 //  private int iId;
   private UploadFile _uploadFile = null;
@@ -26,8 +26,8 @@ public class MediaProperties {
   }
 
   public MediaProperties(UploadFile uploadFile, Map parameterMap){
-    _uploadFile = _uploadFile;
-    parameterMap = parameterMap;
+    _uploadFile = uploadFile;
+    _parameterMap = parameterMap;
   }
 
 //  public MediaProperties(){
@@ -137,10 +137,10 @@ public class MediaProperties {
 //  }
 
   public Map getParameterMap(){
-    return this.parameterMap;
+    return this._parameterMap;
   }
   public void setParameterMap(Map parameterMap){
-    this.parameterMap = parameterMap;
+    this._parameterMap = parameterMap;
   }
 
 }
