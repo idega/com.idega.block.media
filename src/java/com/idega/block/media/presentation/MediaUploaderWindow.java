@@ -137,14 +137,15 @@ private IWResourceBundle iwrb;
 
     f.add(busy);
     f.add(new FileInput());
+    f.setOnSubmit("javascript:document.images['"+busy.getID()+"'].src='"+iwc.getApplication().getCoreBundle().getImage("busy.gif").getURL()+"';return true");
 
     Link submit = new Link("Submit");
     submit.setToFormSubmit(f);
    // submit.setAsImageButton(true);
 
-    submit.setOnClick("javascript:document.images['"+busy.getID()+"'].src='"+iwc.getApplication().getCoreBundle().getImage("busy.gif").getURL()+"';"+submit.getOnClick());
+    //submit.setOnClick("javascript:document.images['"+busy.getID()+"'].src='"+iwc.getApplication().getCoreBundle().getImage("busy.gif").getURL()+"';"+submit.getOnClick());
 
-    f.add(submit);
+    f.add(new SubmitButton());
 
     f.add(new HiddenInput(fileInSessionParameter,MediaBusiness.getMediaId(iwc)));
 
