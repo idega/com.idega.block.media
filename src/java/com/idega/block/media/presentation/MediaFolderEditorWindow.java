@@ -6,10 +6,10 @@ import java.util.Map;
 
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
-import com.idega.core.ICTreeNode;
-import com.idega.core.data.ICFile;
-import com.idega.core.data.ICFileHome;
-import com.idega.core.data.ICFileType;
+import com.idega.core.data.ICTreeNode;
+import com.idega.core.file.data.ICFile;
+import com.idega.core.file.data.ICFileHome;
+import com.idega.core.file.data.ICFileType;
 import com.idega.data.IDOLookup;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
@@ -86,7 +86,7 @@ public class MediaFolderEditorWindow extends Window {
         form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),String.valueOf(mediaId)));
       }
       else{
-        ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+        ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
         form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),rootNode.getPrimaryKey().toString()));
       }
 
@@ -102,9 +102,9 @@ public class MediaFolderEditorWindow extends Window {
       if( (folderName!=null) && !(folderName.equalsIgnoreCase("")) ){
 
 
-        ICFile folder = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).create();
+        ICFile folder = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).create();
         folder.setName(folderName);
-        folder.setMimeType(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
+        folder.setMimeType(com.idega.core.file.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 
         folder = MediaBusiness.saveMediaToDB(folder,mediaId,iwc);
         setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");

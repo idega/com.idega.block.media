@@ -1,5 +1,5 @@
 package com.idega.block.media.business;
-import com.idega.core.data.ICFileType;
+import com.idega.core.file.data.ICFileType;
 
 /**
  * Title: com.idega.block.media.business.MissingMimeTypeException

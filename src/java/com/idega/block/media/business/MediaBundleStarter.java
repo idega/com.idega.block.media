@@ -20,12 +20,12 @@ import javax.ejb.FinderException;
 
 import com.idega.block.media.presentation.MediaToolbarButton;
 import com.idega.builder.app.IBApplication;
-import com.idega.core.data.ICFile;
-import com.idega.core.data.ICFileHome;
-import com.idega.core.data.ICFileType;
-import com.idega.core.data.ICFileTypeHandler;
-import com.idega.core.data.ICMimeType;
-import com.idega.core.data.ICMimeTypeHome;
+import com.idega.core.file.data.ICFile;
+import com.idega.core.file.data.ICFileHome;
+import com.idega.core.file.data.ICFileType;
+import com.idega.core.file.data.ICFileTypeHandler;
+import com.idega.core.file.data.ICMimeType;
+import com.idega.core.file.data.ICMimeTypeHome;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWBundleStartable;
 import com.idega.idegaweb.IWCacheManager;
@@ -35,7 +35,7 @@ public class MediaBundleStarter implements IWBundleStartable {
 
 	private IWCacheManager cm;
 
-	private String[] system = { "A Folder", com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER };
+	private String[] system = { "A Folder", com.idega.core.file.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER };
 
 	private String[] application = { "Undefined binary data (often executable progs)", "application/octet-stream" };
 
@@ -48,7 +48,7 @@ public class MediaBundleStarter implements IWBundleStartable {
 			"Plain text: documents; program listings txt c c++ pl cc h",
 			"text/plain",
 			"An xml document such as .ibxml",
-			com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_XML,
+			com.idega.core.file.data.ICMimeTypeBMPBean.IC_MIME_TYPE_XML,
 			"Richtext",
 			"text/richtext",
 			"Richtext newer",
@@ -165,23 +165,23 @@ public class MediaBundleStarter implements IWBundleStartable {
 
 		//cache file types ICFileType extends CacheableEntity
 		cm = iwma.getIWCacheManager();
-		ICFileTypeHandler handlers = ((com.idega.core.data.ICFileTypeHandler)com.idega.data.IDOLookup.instanciateEntity(ICFileTypeHandler.class));
+		ICFileTypeHandler handlers = ((com.idega.core.file.data.ICFileTypeHandler)com.idega.data.IDOLookup.instanciateEntity(ICFileTypeHandler.class));
 		handlers.cacheEntity();
 		//cache file types ICFileType extends CacheableEntity
-		ICFileType types = ((com.idega.core.data.ICFileType)com.idega.data.IDOLookup.instanciateEntity(ICFileType.class));
+		ICFileType types = ((com.idega.core.file.data.ICFileType)com.idega.data.IDOLookup.instanciateEntity(ICFileType.class));
 		types.cacheEntity();
 
 		//get the default file types
-		ICFileType applications = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_APPLICATION);
-		ICFileType audios = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_AUDIO);
-		ICFileType documents = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_DOCUMENT);
-		ICFileType images = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_IMAGE);
-		ICFileType vectors = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_VECTOR_GRAPHICS);
-		ICFileType videos = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_VIDEO);
-		ICFileType systems = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.data.ICFileTypeBMPBean.IC_FILE_TYPE_SYSTEM);
+		ICFileType applications = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_APPLICATION);
+		ICFileType audios = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_AUDIO);
+		ICFileType documents = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_DOCUMENT);
+		ICFileType images = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_IMAGE);
+		ICFileType vectors = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_VECTOR_GRAPHICS);
+		ICFileType videos = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_VIDEO);
+		ICFileType systems = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_SYSTEM);
 
 		//cache
-		ICMimeType mimes = ((com.idega.core.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
+		ICMimeType mimes = ((com.idega.core.file.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
 		mimes.cacheEntity();
 
 		try {
@@ -206,22 +206,22 @@ public class MediaBundleStarter implements IWBundleStartable {
 
 		try {
 			//**insert the Root folder if it doesn't exist yet**/
-			ICFileHome fileHome = (com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class);
+			ICFileHome fileHome = (com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class);
 
 			ICFile root;
 			try {
 				root = fileHome.findRootFolder();
 			} catch (FinderException e) {
 				ICFile file = fileHome.create();
-				file.setName(com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_NAME);
-				file.setMimeType(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
+				file.setName(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_NAME);
+				file.setMimeType(com.idega.core.file.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 				file.setDescription("This is the top level folder it shouldn't be visible");
 				file.store();
 				root = file;
 			}
 
 			//cache it!
-			cm.cacheEntity(root, com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+			cm.cacheEntity(root, com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
 		} catch (RemoteException rex) {
 			throw new EJBException(rex.getMessage());

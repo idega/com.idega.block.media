@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.idega.block.media.business.MediaConstants;
-import com.idega.core.data.ICFileType;
-import com.idega.core.data.ICMimeType;
+import com.idega.core.file.data.ICFileType;
+import com.idega.core.file.data.ICMimeType;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.idegaweb.IWResourceBundle;
@@ -76,7 +76,7 @@ private String mimeType = null;
 
     try{
     	System.out.println("storing new mimetype");
-      ICMimeType mime = ((com.idega.core.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
+      ICMimeType mime = ((com.idega.core.file.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
       mime.setMimeTypeAndDescription(mimeType,mimeDescription);
       mime.setFileTypeId(fileTypeId);
       mime.insert();

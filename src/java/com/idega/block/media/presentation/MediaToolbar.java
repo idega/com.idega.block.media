@@ -12,7 +12,7 @@ import com.idega.block.media.business.MediaConstants;
 
 import com.idega.block.media.data.MediaProperties;
 
-import com.idega.core.data.ICFile;
+import com.idega.core.file.data.ICFile;
 
 import com.idega.idegaweb.IWResourceBundle;
 

@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.idega.block.media.business.MediaBusiness;
-import com.idega.core.data.ICFile;
+import com.idega.core.file.data.ICFile;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.presentation.BusyBar;
@@ -187,7 +187,7 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
 	      table.setCellpadding(0);
 	      table.setCellspacing(0);
 	
-	      ICFile icFile = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(selectedFileId));
+	      ICFile icFile = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(selectedFileId));
 	      TextInput tInput = new TextInput("ic_uploaded_file",icFile.getName());
 	      tInput.setDisabled(true);
 	      SubmitButton change = new SubmitButton("Change...","change_file","true");

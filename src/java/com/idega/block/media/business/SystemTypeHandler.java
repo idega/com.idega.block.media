@@ -3,7 +3,7 @@ package com.idega.block.media.business;
 
 import com.idega.block.media.data.MediaProperties;
 import com.idega.block.reports.business.Content;
-import com.idega.core.data.ICFile;
+import com.idega.core.file.data.ICFile;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.Table;

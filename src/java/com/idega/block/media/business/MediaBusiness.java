@@ -10,11 +10,11 @@ import java.util.Map;
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import com.idega.block.media.data.MediaProperties;
-import com.idega.core.data.ICFile;
-import com.idega.core.data.ICFileHome;
-import com.idega.core.data.ICFileType;
-import com.idega.core.data.ICFileTypeHandler;
-import com.idega.core.data.ICMimeType;
+import com.idega.core.file.data.ICFile;
+import com.idega.core.file.data.ICFileHome;
+import com.idega.core.file.data.ICFileType;
+import com.idega.core.file.data.ICFileTypeHandler;
+import com.idega.core.file.data.ICMimeType;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.idegaweb.IWApplicationContext;
@@ -117,11 +117,11 @@ public class MediaBusiness {
 		try {
 			file.store();
 			if (parentId == -1) { //add to root
-				ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+				ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 				rootNode.addChild(file);
 			} else if (parentId == 0) { // no parent
 			} else { //register this parent
-				ICFile rootNode = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(parentId));
+				ICFile rootNode = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(parentId));
 				rootNode.addChild(file);
 			}
 		} catch (Exception ex) {
@@ -133,7 +133,7 @@ public class MediaBusiness {
 		try {
 			file.store();
 			if (parentId > 0) { //add to root
-				ICFile rootNode = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(parentId));
+				ICFile rootNode = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(parentId));
 				rootNode.addChild(file);
 			}
 		} catch (Exception ex) {
@@ -309,7 +309,7 @@ public class MediaBusiness {
 	}
 	public static void saveMimeType(String mimeType, String description, int fileTypeId) {
 		try {
-			ICMimeType mime = ((com.idega.core.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
+			ICMimeType mime = ((com.idega.core.file.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
 			mime.setMimeTypeAndDescription(mimeType, description);
 			mime.setFileTypeId(fileTypeId);
 			mime.insert();
@@ -375,7 +375,7 @@ public class MediaBusiness {
 	 */
 	public static boolean deleteMedia(int mediaId) {
 		try {
-			((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(mediaId)).delete();
+			((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(mediaId)).delete();
 			return true;
 		} catch (SQLException ex) {
 			ex.printStackTrace(System.err);
@@ -491,11 +491,7 @@ public class MediaBusiness {
 	
 	 */
 	public static boolean isFolder(ICFile file) {
-		if (file.getMimeType().equals(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER)) {
-			return true;
-		} else {
-			return false;
-		}
+		return file.isFolder();
 	}
 	/**
 	
@@ -541,7 +537,7 @@ public class MediaBusiness {
 		try {
 			long time1 = System.currentTimeMillis();
 			FileInputStream input = new FileInputStream(uploadFile.getRealPath());
-			file = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).create();
+			file = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).create();
 			file.setName(uploadFile.getName());
 			file.setMimeType(uploadFile.getMimeType());
 			file.setFileValue(input);
@@ -613,8 +609,8 @@ public class MediaBusiness {
 	}
 	public static boolean moveMedia(int mediaId, int newParentId) {
 		try {
-			ICFile media = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(mediaId));
-			ICFile newParent = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(newParentId));
+			ICFile media = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(mediaId));
+			ICFile newParent = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(newParentId));
 			return moveMedia(media, newParent);
 		}catch (IDOLookupException e) {
 			e.printStackTrace();
@@ -647,7 +643,7 @@ public class MediaBusiness {
 	public static ICFile createSubFolder(ICFile parent, String name) throws java.rmi.RemoteException, IDOLookupException, CreateException, SQLException {
 		ICFile folder = ((ICFileHome)IDOLookup.getHome(ICFile.class)).create();
 		folder.setName(name);
-		folder.setMimeType(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
+		folder.setMimeType(com.idega.core.file.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 		folder.store();
 		parent.addChild(folder);
 		return folder;

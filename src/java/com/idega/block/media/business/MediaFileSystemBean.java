@@ -4,8 +4,8 @@
 package com.idega.block.media.business;
 
 import com.idega.business.IBOServiceBean;
-import com.idega.core.data.ICFile;
 import com.idega.core.file.business.ICFileSystem;
+import com.idega.core.file.data.ICFile;
 
 /**
  * MediaFileSystemBean The implementation of the FileSystem interface for the Media block
@@ -29,4 +29,13 @@ public class MediaFileSystemBean extends IBOServiceBean implements MediaFileSyst
 	{
 		return MediaBusiness.getMediaURL(fileId,this.getIWApplicationContext().getApplication());
 	}
+	/* (non-Javadoc)
+	 * @see com.idega.core.file.business.ICFileSystem#initialize()
+	 */
+	public void initialize()
+	{
+		MediaBundleStarter starter = new MediaBundleStarter();  		
+		starter.start(getIWApplicationContext().getApplication());
+	}
+
 }

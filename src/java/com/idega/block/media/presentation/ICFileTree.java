@@ -6,9 +6,9 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import com.idega.block.media.business.MediaBusiness;
-import com.idega.core.ICTreeNode;
-import com.idega.core.data.ICFile;
-import com.idega.core.data.ICMimeType;
+import com.idega.core.data.ICTreeNode;
+import com.idega.core.file.data.ICFile;
+import com.idega.core.file.data.ICMimeType;
 import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;

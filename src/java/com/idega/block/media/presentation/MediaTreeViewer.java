@@ -7,8 +7,8 @@ import javax.ejb.FinderException;
 
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
-import com.idega.core.data.ICFile;
-import com.idega.core.data.ICFileHome;
+import com.idega.core.file.data.ICFile;
+import com.idega.core.file.data.ICFileHome;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.Block;
@@ -44,7 +44,7 @@ public class MediaTreeViewer extends Block {
 
     Link proto = new Link(MediaViewerWindow.class);
     proto.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
-    ICFile rootNode = (ICFile)cm.getCachedEntity(com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+    ICFile rootNode = (ICFile)cm.getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
     ICFileTree tree = new ICFileTree();
     tree.getLocation().setApplicationClass(MediaTreeViewer.class);
@@ -97,7 +97,7 @@ public class MediaTreeViewer extends Block {
   public List listOfMedia(){
     List L = null;
     try {
-      ICFileHome fileHome = (com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class);
+      ICFileHome fileHome = (com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class);
       L =   (List)fileHome.findAllDescendingOrdered();
     } catch (FinderException e) {
 		e.printStackTrace();

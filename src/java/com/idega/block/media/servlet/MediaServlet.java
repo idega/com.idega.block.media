@@ -16,6 +16,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.idega.core.file.business.FileSystemConstants;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.io.MediaWritable;
 import com.idega.io.MemoryFileBufferWriter;
@@ -25,7 +26,7 @@ import com.idega.servlet.IWCoreServlet;
 
 public class MediaServlet extends IWCoreServlet{
 
-  public static final String PARAMETER_NAME = "media_id";
+  public static final String PARAMETER_NAME = FileSystemConstants.PARAM_FILE_ID;
   public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
   private boolean usesOldTables = false;
   private static IWMainApplication iwma;
