@@ -19,12 +19,15 @@ import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.core.data.ICMimeType;
+import com.idega.core.data.ICMimeTypeHome;
 import com.idega.core.data.ICFileType;
 import com.idega.core.data.ICFile;
+import com.idega.core.data.ICFileHome;
 import com.idega.core.data.ICFileTypeHandler;
 import com.idega.data.EntityFinder;
 import java.sql.SQLException;
-
+import javax.ejb.*;
+import java.rmi.RemoteException;
 
 public class MediaBundleStarter implements IWBundleStartable{
 
@@ -140,10 +143,10 @@ public class MediaBundleStarter implements IWBundleStartable{
 
     //cache file types ICFileType extends CacheableEntity
     cm = iwma.getIWCacheManager();
-    ICFileTypeHandler handlers = ((com.idega.core.data.ICFileTypeHandlerHome)com.idega.data.IDOLookup.getHomeLegacy(ICFileTypeHandler.class)).createLegacy();
+    ICFileTypeHandler handlers = ((com.idega.core.data.ICFileTypeHandler)com.idega.data.IDOLookup.instanciateEntity(ICFileTypeHandler.class));
     handlers.cacheEntity();
     //cache file types ICFileType extends CacheableEntity
-    ICFileType types = ((com.idega.core.data.ICFileTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICFileType.class)).createLegacy();
+    ICFileType types = ((com.idega.core.data.ICFileType)com.idega.data.IDOLookup.instanciateEntity(ICFileType.class));
     types.cacheEntity();
 
     //get the default file types
@@ -182,13 +185,14 @@ public class MediaBundleStarter implements IWBundleStartable{
 
     try {
       //**insert the Root folder if it doesn't exist yet**/
-      ICFile file = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).createLegacy();
+      ICFileHome fileHome = (com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class);
+      ICFile file = fileHome.create();
       List root = EntityFinder.findAllByColumn(file,com.idega.core.data.ICFileBMPBean.getColumnNameName(),com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_NAME,com.idega.core.data.ICFileBMPBean.getColumnNameMimeType(),com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
       if( root == null ){
        file.setName(com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_NAME);
        file.setMimeType(com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
        file.setDescription("This is the top level folder it shouldn't be visible");
-       file.insert();
+       file.store();
       }
       else{
        Iterator iter = root.iterator();
@@ -200,6 +204,12 @@ public class MediaBundleStarter implements IWBundleStartable{
       cm.cacheEntity(file,com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
     }
+    catch (RemoteException rex) {
+      throw new EJBException(rex.getMessage());
+    }
+    catch (CreateException cex) {
+      throw new EJBException(cex.getMessage());
+    }
     catch (SQLException ex) {
       ex.printStackTrace(System.err);
     }
@@ -207,7 +217,7 @@ public class MediaBundleStarter implements IWBundleStartable{
   }
 
 
-  public void registerMimeType(String[] array,ICFileType type) throws SQLException{
+  public void registerMimeType(String[] array,ICFileType type) throws RemoteException{
     int typeId = type.getID();
     ICMimeType mimetype;
 
@@ -216,21 +226,24 @@ public class MediaBundleStarter implements IWBundleStartable{
       mimetype = (ICMimeType) cm.getFromCachedTable(ICMimeType.class,array[i+1]);
       if( mimetype == null ){
         String mimeType = array[i+1];
-        mimetype = ((com.idega.core.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
-        mimetype.setMimeTypeAndDescription(mimeType,array[i]);
-        mimetype.setFileTypeId(typeId);
+        ICMimeTypeHome mimeHome = (ICMimeTypeHome)com.idega.data.IDOLookup.getHome(ICMimeType.class);
         try {
-          mimetype.insert();
+          mimetype = mimeHome.create();
+          mimetype.setMimeTypeAndDescription(mimeType,array[i]);
+          mimetype.setFileTypeId(typeId);
+          mimetype.store();
         }
-        catch (SQLException ex) {
+        catch (CreateException cex) {
+          //ex.printStackTrace(System.err);
+          System.err.println("[MediBundleStarter] : Error inserting MIME-TYPE for: "+mimeType);
+        }
+        catch (com.idega.data.IDOStoreException ex) {
           //ex.printStackTrace(System.err);
           System.err.println("[MediBundleStarter] : Error inserting MIME-TYPE for: "+mimeType);
         }
       }
       i++;
-
     }
-
   }
 
 
