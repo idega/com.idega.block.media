@@ -160,12 +160,12 @@ public class MediaViewer extends  Window {
     use.setAsImageButton(true);
 //**@todo filter out types and use this differently for each plugin?
     if( handler instanceof com.idega.block.media.business.ImageTypeHandler ){
-      use.setOnClick("top.window.opener.setImageId('"+file.getID()+"','"+fileInSessionParameter+"')");
+      use.setOnClick("top.window.opener.setImageId('"+file.getID()+"','"+fileInSessionParameter+"');parent.close()");
       use.addParameter(fileInSessionParameter,id);
     }
     else{
       use.setURL("#");
-      use.setOnClick(ONCLICK_FUNCTION_NAME+"('"+file.getName()+"','"+file.getID()+"')");
+      use.setOnClick(ONCLICK_FUNCTION_NAME+"('"+file.getName()+"','"+file.getID()+"');parent.close()");
     }
     T.add(use,1,1);
 
