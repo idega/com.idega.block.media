@@ -40,4 +40,9 @@ public class FileChooser extends AbstractChooser {
   public void setSelectedFile(ICFile file){
     super.setChooserValue(file.getName(),file.getID());
   }
+
+  public void setValue(Object file){
+    setSelectedFile((ICFile)file);
+  }
+
 }
