@@ -43,11 +43,11 @@ public class ICFileTree extends AbstractTreeViewer {
   private String icon_suffix = _DEFAULT_ICON_SUFFIX;
   private static Hashtable _icFileIcons = null;
 
-
-
   private Link _fileLink = new Link();
   private Link _folderLink = new Link();
 
+  private String nodeNameTarget = null;
+  private String nodeActionPrm = null;
 
   public ICFileTree(){
     super();
@@ -100,10 +100,26 @@ public class ICFileTree extends AbstractTreeViewer {
         if(!node.isLeaf()){
           Link l = this.getFolderLinkClone(node.getNodeName());
           this.setLinkToOpenOrCloseNode(l,node,nodeIsOpen);
+          if( nodeNameTarget != null ){
+           l.setTarget(nodeNameTarget);
+          }
+          if( nodeActionPrm!=null ){
+            l.addParameter(nodeActionPrm,node.getNodeID());
+          }
+
           return l;
-        } else {
+        }
+        else {
           Link l = this.getFileLinkClone(node.getNodeName());
           this.setLinkToMaintainOpenAndClosedNodes(l);
+
+          if( nodeNameTarget != null ){
+           l.setTarget(nodeNameTarget);
+          }
+          if( nodeActionPrm!=null ){
+            l.addParameter(nodeActionPrm,node.getNodeID());
+          }
+
           return l;
         }
     }
@@ -130,6 +146,21 @@ public class ICFileTree extends AbstractTreeViewer {
     return l;
   }
 
+  public void setNodeActionParameter(String prm){
+    nodeActionPrm = prm;
+  }
+
+  public void setTarget(String target){
+    nodeNameTarget = target;
+  }
+
+  public void setFileLinkPrototype(Link link){
+    _fileLink = link;
+  }
+
+  public void setFolderLinkPrototype(Link link){
+    _folderLink = link;
+  }
 
   protected void updateIconDimansions(){
     super.updateIconDimansions();

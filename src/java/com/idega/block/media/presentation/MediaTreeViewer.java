@@ -51,13 +51,20 @@ public class MediaTreeViewer extends PresentationObjectContainer {
     proto.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
     ICFile rootNode = (ICFile)cm.getCachedEntity(ICFile.IC_ROOT_FOLDER_CACHE_KEY);
 
-    TreeViewer viewer = TreeViewer.getTreeViewerInstance(rootNode ,iwc);
-    viewer.setLinkProtototype(proto);
-    viewer.setNodeActionParameter(fileInSessionParameter);
+    ICFileTree tree = new ICFileTree();
+    tree.setRootNode(rootNode);
+    tree.setNodeActionParameter(fileInSessionParameter);
+    tree.setFileLinkPrototype(proto);
+    tree.setUI(tree._UI_MAC);
+
+    //viewer.setLinkProtototype(proto);
+
+
+
     //viewer.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
 
 
-    T.add(viewer,1,2);
+    T.add(tree,1,2);
 //    viewer.setToMaintainParameter(fileInSessionParameter,file.getID());
 /*
     viewer.setToMaintainParameter(SCRIPT_PREFIX_PARAMETER,iwc);
