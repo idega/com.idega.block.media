@@ -13,6 +13,7 @@ import java.sql.*;
 import java.io.*;
 import java.util.*;
 import com.oreilly.servlet.MultipartRequest;
+import com.idega.core.data.ICFileCategory;
 /**
  * Title:
  * Description:
@@ -154,10 +155,10 @@ public class SimpleUploaderWindow extends Window implements SimpleImage{
       try {
 
         multi = new MultipartRequest(getRequest(),Conn,".", 5 * 1024 * 1024);
-        ImageCatagory[] imgCat = (ImageCatagory[]) (new ImageCatagory()).findAll();
+        ICFileCategory[] imgCat = (ICFileCategory[]) (new ICFileCategory()).findAll();
         DropdownMenu category = new DropdownMenu("category");
         for (int i = 0 ; i < imgCat.length ; i++ ) {
-                category.addMenuElement(imgCat[i].getID(),imgCat[i].getImageCatagoryName());
+                category.addMenuElement(imgCat[i].getID(),imgCat[i].getName());
         }
 
         Table UploadDoneTable = new Table(2,3);
