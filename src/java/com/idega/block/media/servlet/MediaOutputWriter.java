@@ -31,7 +31,7 @@ public class MediaOutputWriter {
 
     Connection conn = null;
     Statement Stmt = null;
-    ResultSet RS;
+    ResultSet RS = null;
 
     String mmProp = iwma.getSettings().getProperty(MediaServlet.USES_OLD_TABLES);
     boolean usesOldTables = false;
@@ -91,7 +91,6 @@ public class MediaOutputWriter {
             output.flush();
             output.close();
             myInputStream.close();
-            RS.close();
           }
           else System.err.println("MediaServlet: Was null");
         }
@@ -103,6 +102,16 @@ public class MediaOutputWriter {
       E.printStackTrace(System.err);
   }
   finally{
+	// do not hide an existing exception
+	try { 
+		if (RS != null) {
+			RS.close();
+      	}
+	}
+    catch (SQLException resultCloseEx) {
+     	System.err.println("MediaOutputWriter] result set could not be closed");
+     	resultCloseEx.printStackTrace(System.err);
+    }
     try{
      if(Stmt != null){
       Stmt.close();
