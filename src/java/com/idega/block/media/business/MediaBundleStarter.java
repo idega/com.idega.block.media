@@ -70,7 +70,10 @@ public class MediaBundleStarter implements IWBundleStartable{
                             "X-Windows pixelmap (8-bit color)  xpm","image/x-xpix",
                             "Portable Network Graphics png","image/x-png",
                             "Image Exchange Format (RFC 1314) ief","image/ief",
-                            "JPEG  jpeg jpg jpe","image/jpeg",
+                            "JPEG  jpeg jpg jpe pjpeg","image/jpeg",
+                            "JPEG  jpeg jpg jpe pjpeg","image/pjpeg",
+                            "JPEG  jpeg jpg jpe pjpeg","image/jpg",
+                            "JPEG  jpeg jpg jpe pjpeg","image/jpe",
                             "TIFF  tiff tif","image/tiff",
                             "Macintosh PICT format pict","image/x-pict",
                             "Microsoft Windows bitmap  bmp","image/x-ms-bmp"
