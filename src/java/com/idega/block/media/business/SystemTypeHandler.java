@@ -30,11 +30,77 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
 
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
-    ContentViewer listView = null;
-    try {
+    //ContentViewer listView = null;
+    //try {
+      Table table = new Table();
+      table.setColor("#ECECEC");
+      table.setWidth(Table.HUNDRED_PERCENT);
+      table.setHeight(Table.HUNDRED_PERCENT);
+      table.setCellpadding(2);
+      table.setCellspacing(0);
 
       ICFile file = (ICFile)this.getCachedFileInfo(icFileId,iwc).getEntity();
-      Vector V = new Vector();
+
+      Iterator iter = file.getChildren();
+      int x = 1;
+      int y = 1;
+
+      Text proto = new Text();
+      proto.setFontSize(Text.FONT_SIZE_7_HTML_1);
+      proto.setFontFace(Text.FONT_FACE_VERDANA);
+
+
+      Text name = new Text("Name");
+      name.setBold(true);
+      name.setFontSize(Text.FONT_SIZE_10_HTML_2);
+      Text date = new Text("Modified date");
+      date.setBold(true);
+      date.setFontSize(Text.FONT_SIZE_10_HTML_2);
+      Text size = new Text("Size");
+      size.setBold(true);
+      size.setFontSize(Text.FONT_SIZE_10_HTML_2);
+      Text mime = new Text("Mime type");
+      mime.setBold(true);
+      mime.setFontSize(Text.FONT_SIZE_10_HTML_2);
+
+      table.add(name,1,1);
+      table.add(date,2,1);
+      table.add(size,3,1);
+      table.add(mime,4,1);
+
+      table.setHeight(1,"15");
+
+
+      if( iter != null ){
+        while (iter.hasNext()) {
+          ++y;
+          ICFile item = (ICFile) iter.next();
+          //table.add(new CheckBox(Integer.toString(item.getID())),x++,y);
+          Link view = MediaBusiness.getMediaViewerLink();
+          view.setText(((item.getName() != null ) ? item.getName() : ""));
+          view.addParameter(MediaBusiness.getMediaParameterNameInSession(iwc),item.getID());
+          table.add(view,x++,y);
+          table.add( ((item.getModificationDate() != null ) ? item.getModificationDate().toString() : item.getCreationDate().toString()),x++,y);
+          table.add( ((item.getFileSize() != null ) ? item.getFileSize().toString() : ""),x++,y);
+          table.add( ((item.getMimeType() != null ) ? item.getMimeType() : ""),x++,y);
+          table.setRowVerticalAlignment(y,Table.VERTICAL_ALIGN_TOP);
+          table.setHeight(y,"15");
+          x=1;
+        }
+      }
+
+      table.add(Text.NON_BREAKING_SPACE,1,++y);
+      table.setHeight(y,Table.HUNDRED_PERCENT);
+
+      table.setColumnColor(2,"#FCFCFC");
+      table.setColumnColor(4,"#FCFCFC");
+      table.setAlignment(Table.HORIZONTAL_ALIGN_LEFT);
+
+
+
+
+
+      /*Vector V = new Vector();
 
       if(!MediaBusiness.isFolder(file)) V.add(getContentObject(file));
 
@@ -52,6 +118,8 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
       if( i>0 ) listView.setDisplayNumber(i);
       listView.setAllowOrder(true);
 
+      listView.setWidth("100%");
+
 
 
 
@@ -61,20 +129,14 @@ public static String[] LIST_VIEW_HEADERS = {"Select","Name","Date modified","Siz
       ex.printStackTrace(System.err);
     }
     return listView;
-
+*/
+return table;
   }
 
   public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc){
-    Table table = new Table();
-
-    table.setWidth("100%");
-    table.setHeight("100%");
-
-    Image image = new Image(props.getWebPath(),props.getName());
-    table.add(image);
-
-    return table;
+    return new Table();;
   }
+
   private Content getContentObject(ICFile item){
     Object[] objs = new Object[5];
     objs[0] = new CheckBox(Integer.toString(item.getID()));

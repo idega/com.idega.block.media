@@ -46,7 +46,8 @@ public class MediaConstants {
 
   public static final String MEDIA_ID_IN_SESSION = "me_id_in_sess";
 
-  public static final String MEDIA_VIEWER_BACKGROUND_COLOR = "#E4E0D8";
+  //public static final String MEDIA_VIEWER_BACKGROUND_COLOR = "#E4E0D8";
+  public static final String MEDIA_VIEWER_BACKGROUND_COLOR = "#ECECEC";
   public static final String MEDIA_TREE_VIEWER_BACKGROUND_COLOR = "#B0B29D";
 
   public static final int FILE_UPLOAD_MAXIMUM_SIZE = 20*1024*1024;//20MB

@@ -139,17 +139,21 @@ public class MediaViewer extends  Window {
     Cache cache = FileTypeHandler.getCachedFileInfo(id,iwc);
     ICFile file = (ICFile) cache.getEntity();
     FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc,file.getMimeType());
-    Table T = new Table(1,3);
-    T.setColumnVerticalAlignment(1,"top");
-    T.setColumnAlignment(1,"left");
+    Table T = new Table(1,2);
+    T.setVerticalAlignment(1,1,Table.VERTICAL_ALIGN_TOP);
+    T.setHeight(1,"15");
+    T.setCellpadding(0);
+    T.setCellspacing(0);
+    T.setVerticalAlignment(1,2,Table.VERTICAL_ALIGN_TOP);
+    T.setColumnAlignment(1,Table.HORIZONTAL_ALIGN_LEFT);
+    T.setHeight(Table.HUNDRED_PERCENT);
+    T.setWidth(Table.HUNDRED_PERCENT);
     getAssociatedScript().addFunction(ONCLICK_FUNCTION_NAME,"function "+ONCLICK_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+"){ }");
     getAssociatedScript().addToFunction(ONCLICK_FUNCTION_NAME,"top."+AbstractChooserWindow.SELECT_FUNCTION_NAME+"("+FILE_NAME_PARAMETER_NAME+","+FILE_ID_PARAMETER_NAME+")");
 
     if( action.equals(MediaConstants.MEDIA_ACTION_USE) ){
       MediaBusiness.saveMediaIdToSession(iwc,mediaId);
     }
-
-    T.add(file.getName(),1,2);
 
     Link use = MediaBusiness.getUseImageLink();
     use.setTextOnLink("Use");
@@ -188,7 +192,7 @@ public class MediaViewer extends  Window {
       T.add(folder,1,1);
     }
 
-    T.add(handler.getPresentationObject(id,iwc),1,3);
+    T.add(handler.getPresentationObject(id,iwc),1,2);
 
     add(T);
    }
