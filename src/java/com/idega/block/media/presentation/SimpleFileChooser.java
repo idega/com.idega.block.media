@@ -16,7 +16,6 @@ import com.idega.presentation.ui.FileInput;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.HiddenInput;
 import com.idega.presentation.ui.InterfaceObject;
-import com.idega.presentation.ui.InterfaceObjectContainer;
 import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.TextInput;
 
@@ -28,7 +27,7 @@ import com.idega.presentation.ui.TextInput;
  * @version 1.1
  */
 
-public class SimpleFileChooser extends InterfaceObjectContainer {
+public class SimpleFileChooser extends InterfaceObject {
   private boolean showChangeUploadedFileOption = true;
 	//private Stringstyle;
   private String name;
@@ -242,4 +241,16 @@ public class SimpleFileChooser extends InterfaceObjectContainer {
 		this.showPreviewLink = showPreviewLink;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.idega.presentation.ui.InterfaceObject#handleKeepStatus(com.idega.presentation.IWContext)
+	 */
+	public void handleKeepStatus(IWContext iwc) {
+	}
+
+	/* (non-Javadoc)
+	 * @see com.idega.presentation.PresentationObject#isContainer()
+	 */
+	public boolean isContainer() {
+		return false;
+	}
 }
