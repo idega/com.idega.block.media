@@ -166,6 +166,7 @@ private IWResourceBundle iwrb;
     table.add(select,1,1);
 
     Form f = new Form();
+	f.setToShowLoadingOnSubmit(false);
     f.setMultiPart();
    // String s = iwc.getRequestURI()+"?"+com.idega.+"="+com.idega.idegaweb.IWMainApplication.getEncryptedClassName(this.getClass());
     //String s = com.idega.idegaweb.IWMainApplication.getObjectInstanciatorURL(this.getClass());
