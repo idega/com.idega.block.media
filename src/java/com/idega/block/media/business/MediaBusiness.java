@@ -653,20 +653,27 @@ public class MediaBusiness {
 		return false;
 	}
 	public static Cache getCachedFileInfo(int icFileId, IWMainApplication iwma) {
-		return (Cache)getCachedFileInfo(icFileId, ICFile.class, iwma);
+		return (Cache)getCachedFileInfo(icFileId, ICFile.class, iwma, null);
 	}
-	public static Cache getCachedFileInfo(int id, Class entityClass, IWMainApplication iwma) {
-		return (Cache)iwma.getIWCacheManager().getCachedBlobObject(entityClass.getName(), id, iwma);
+	public static Cache getCachedFileInfo(int icFileId, IWMainApplication iwma,String datasource) {
+		return (Cache)getCachedFileInfo(icFileId, ICFile.class, iwma, datasource);
+	}
+	public static Cache getCachedFileInfo(int id, Class entityClass, IWMainApplication iwma, String datasource) {
+		return (Cache)iwma.getIWCacheManager().getCachedBlobObject(entityClass.getName(), id, iwma, datasource);
 	}
 	public static String getMediaURL(ICFile file, IWMainApplication iwma) {
-		return getMediaURL(((Integer)file.getPrimaryKey()).intValue(), iwma);
-	}
-	public static String getMediaURL(int fileID, IWMainApplication iwma) {
-		Cache cache = getCachedFileInfo(fileID, iwma);
+		Cache cache = getCachedFileInfo(((Integer)file.getPrimaryKey()).intValue(), iwma, file.getDatasource());
 		return cache.getVirtualPathToFile();
 	}
-	public static String getMediaURL(int id, Class entityClass, IWMainApplication iwma) {
-		Cache cache = getCachedFileInfo(id, entityClass, iwma);
+	public static String getMediaURL(int fileID, IWMainApplication iwma) {
+		return getMediaURL(fileID, iwma, null);
+	}
+	public static String getMediaURL(int fileID, IWMainApplication iwma, String datasource) {
+		Cache cache = getCachedFileInfo(fileID, iwma, datasource);
+		return cache.getVirtualPathToFile();
+	}
+	public static String getMediaURL(int id, Class entityClass, IWMainApplication iwma, String datasource) {
+		Cache cache = getCachedFileInfo(id, entityClass, iwma, datasource);
 		return cache.getVirtualPathToFile();
 	}
 	public static ICFile createSubFolder(int parentId, String name) throws FinderException, IDOLookupException, RemoteException, CreateException, SQLException {
