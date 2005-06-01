@@ -21,7 +21,7 @@ public class ImageTypeHandler extends FileTypeHandler {
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
     Cache cache = this.getCachedFileInfo(icFileId,iwc);
-    Image image = new Image(cache.getVirtualPathToFile(),cache.getEntity().getName());
+    Image image = new Image(cache.getVirtualPathToFile(),cache.getEntity().toString());
     return image;
   }
 

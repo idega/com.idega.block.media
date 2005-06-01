@@ -19,7 +19,7 @@ public class DocumentTypeHandler extends FileTypeHandler {
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
     Cache cache = getCachedFileInfo(icFileId,iwc);
-    Link link = new Link(cache.getEntity().getName(),cache.getVirtualPathToFile());
+    Link link = new Link(cache.getEntity().toString(),cache.getVirtualPathToFile());
     return link;
   }
 

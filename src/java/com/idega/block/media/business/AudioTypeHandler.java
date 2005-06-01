@@ -20,7 +20,7 @@ public class AudioTypeHandler extends FileTypeHandler {
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
     Cache cache = getCachedFileInfo(icFileId,iwc);
-    Quicktime qt = new Quicktime(cache.getVirtualPathToFile(),cache.getEntity().getName());
+    Quicktime qt = new Quicktime(cache.getVirtualPathToFile(),cache.getEntity().toString());
     qt.setWidth(200);
     qt.setHeight(15);
     return qt;
