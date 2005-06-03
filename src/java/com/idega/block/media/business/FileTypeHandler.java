@@ -4,6 +4,7 @@ import com.idega.block.media.data.MediaProperties;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.PresentationObject;
+import com.idega.repository.data.RefactorClassRegistry;
 import com.idega.util.caching.Cache;
 
 /**
@@ -25,7 +26,7 @@ public static FileTypeHandler getInstance(IWMainApplication iwma, String handler
   FileTypeHandler handler = (FileTypeHandler)iwma.getAttribute(handlerClass);
   if(handler==null){
     try {
-      handler = (FileTypeHandler) Class.forName(handlerClass).newInstance();
+      handler = (FileTypeHandler) RefactorClassRegistry.forName(handlerClass).newInstance();
       iwma.setAttribute(handlerClass,handler);
     }
     catch (Exception ex) {

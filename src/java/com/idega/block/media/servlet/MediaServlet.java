@@ -22,6 +22,7 @@ import com.idega.io.MediaWritable;
 import com.idega.io.MemoryFileBufferWriter;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.Parameter;
+import com.idega.repository.data.RefactorClassRegistry;
 import com.idega.servlet.IWCoreServlet;
 
 
@@ -59,7 +60,7 @@ public class MediaServlet extends IWCoreServlet{
       		IWContext iwc = new IWContext(request, response, getServletContext());
       	
       		
-        MediaWritable mw = (MediaWritable) Class.forName(IWMainApplication.decryptClassName(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS))).newInstance();
+        MediaWritable mw = (MediaWritable) RefactorClassRegistry.forName(IWMainApplication.decryptClassName(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS))).newInstance();
         mw.init(request,iwc);
         response.setContentType(mw.getMimeType());
         ServletOutputStream out = response.getOutputStream();
