@@ -11,15 +11,9 @@ package com.idega.block.media.business;
  */
 
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Vector;
-
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
-
-import com.idega.block.media.presentation.MediaToolbarButton;
-import com.idega.builder.app.IBApplication;
 import com.idega.core.data.ICApplicationBinding;
 import com.idega.core.data.ICApplicationBindingHome;
 import com.idega.core.file.data.ICFile;
