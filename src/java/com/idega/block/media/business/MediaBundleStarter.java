@@ -150,15 +150,15 @@ public class MediaBundleStarter implements IWBundleStartable {
 	public void start(IWBundle bundle) {
 		//add toolbar buttons
 		//    MediaToolbarButton separator = new MediaToolbarButton(bundle,true);
-		MediaToolbarButton button = new MediaToolbarButton(bundle, false);
-
-		List l = (List)bundle.getApplication().getAttribute(IBApplication.TOOLBAR_ITEMS);
-		if (l == null) {
-			l = new Vector();
-			bundle.getApplication().setAttribute(IBApplication.TOOLBAR_ITEMS, l);
-		}
-
-		l.add(button);
+//		MediaToolbarButton button = new MediaToolbarButton(bundle, false);
+//
+//		List l = (List)bundle.getApplication().getAttribute(IBApplication.TOOLBAR_ITEMS);
+//		if (l == null) {
+//			l = new Vector();
+//			bundle.getApplication().setAttribute(IBApplication.TOOLBAR_ITEMS, l);
+//		}
+//
+//		l.add(button);
 		//    l.add(separator);
 
 	}
