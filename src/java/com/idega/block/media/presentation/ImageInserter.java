@@ -206,10 +206,12 @@ public class ImageInserter extends Block  {
 	public String getImageChangeJSFunction(String hiddenInputID) {
 		StringBuffer function = new StringBuffer("");
 		function.append("function setImageId(imageId,imagename) { \n \t");
-		function.append("document.getElementById('im'+imagename).src = \"");
+//		function.append("document.getElementById('im'+imagename).src = \"");
+		function.append("findObj('im'+imagename).src = \"");
 		function.append(contextPath + "servlet/MediaServlet");
 		function.append("?media_id=\"+imageId; \n\t");
-		function.append("document.getElementById('").append(hiddenInputID).append("').value = imageId; \n}\n");
+//		function.append("document.getElementById('").append(hiddenInputID).append("').value = imageId; \n}\n");
+		function.append("findObj('").append(hiddenInputID).append("').value = imageId; \n}\n");
 		function.append("function getElementIndex(elementname){ \n \t");
 		function.append("len = document.forms[0].length \n \t");
 		function.append("for(i=0; i<len; i++){ \n \t \t");
