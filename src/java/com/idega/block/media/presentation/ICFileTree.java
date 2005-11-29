@@ -245,7 +245,7 @@ public class ICFileTree extends AbstractTreeViewer {
       if(mimeMap != null){
         Iterator iter = mimeMap.keySet().iterator();
         while (iter.hasNext()) {
-          ICMimeType item = (ICMimeType)(mimeMap.get((String)iter.next()));
+          ICMimeType item = (ICMimeType)(mimeMap.get(iter.next()));
           String mimeType = item.getMimeType();
           tmp.put(mimeType,bundle.getImage(_DEFAULT_ICON_PREFIX+getUI()+mimeType+_DEFAULT_ICON_SUFFIX));
         }

@@ -653,13 +653,13 @@ public class MediaBusiness {
 		return false;
 	}
 	public static Cache getCachedFileInfo(int icFileId, IWMainApplication iwma) {
-		return (Cache)getCachedFileInfo(icFileId, ICFile.class, iwma, null);
+		return getCachedFileInfo(icFileId, ICFile.class, iwma, null);
 	}
 	public static Cache getCachedFileInfo(int icFileId, IWMainApplication iwma,String datasource) {
-		return (Cache)getCachedFileInfo(icFileId, ICFile.class, iwma, datasource);
+		return getCachedFileInfo(icFileId, ICFile.class, iwma, datasource);
 	}
 	public static Cache getCachedFileInfo(int id, Class entityClass, IWMainApplication iwma, String datasource) {
-		return (Cache)iwma.getIWCacheManager().getCachedBlobObject(entityClass.getName(), id, iwma, datasource);
+		return iwma.getIWCacheManager().getCachedBlobObject(entityClass.getName(), id, iwma, datasource);
 	}
 	public static String getMediaURL(ICFile file, IWMainApplication iwma) {
 		Cache cache = getCachedFileInfo(((Integer)file.getPrimaryKey()).intValue(), iwma, file.getDatasource());

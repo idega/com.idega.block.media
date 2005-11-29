@@ -98,7 +98,7 @@ private String mimeType = null;
     HashMap types =  (HashMap) cm.getCachedTableMap(ICFileType.class);
     Iterator iter = types.keySet().iterator();
     while (iter.hasNext()) {
-      ICFileType type = (ICFileType) types.get((String)iter.next());
+      ICFileType type = (ICFileType) types.get(iter.next());
       typemenu.addMenuElement(type.getID(),type.getDisplayName());
     }
 
