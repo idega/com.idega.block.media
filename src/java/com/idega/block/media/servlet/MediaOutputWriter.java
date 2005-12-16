@@ -7,10 +7,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import com.idega.business.IBOLookup;
+import com.idega.business.IBOLookupException;
+import com.idega.business.IBORuntimeException;
+import com.idega.core.business.ICApplicationBindingBusiness;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.util.database.ConnectionBroker;
 
@@ -25,6 +28,10 @@ import com.idega.util.database.ConnectionBroker;
  */
 
 public class MediaOutputWriter {
+	
+	public static Logger getLogger() {
+		return Logger.getLogger(MediaOutputWriter.class.getName());
+	}
 
 
   public void doPost(HttpServletRequest request, HttpServletResponse response,IWMainApplication iwma) throws IOException{
@@ -32,11 +39,19 @@ public class MediaOutputWriter {
     Connection conn = null;
     Statement Stmt = null;
     ResultSet RS = null;
-
-    String mmProp = iwma.getSettings().getProperty(MediaServlet.USES_OLD_TABLES);
     boolean usesOldTables = false;
-    if(mmProp!=null) {
-      usesOldTables = true;
+    try {
+    	ICApplicationBindingBusiness applicationBindingBusiness = (ICApplicationBindingBusiness) IBOLookup.getServiceInstance(iwma.getIWApplicationContext(), ICApplicationBindingBusiness.class);
+    	String mmProp =applicationBindingBusiness.get(MediaServlet.USES_OLD_TABLES);
+    	// original condition, everything that is not null is true
+    	usesOldTables = (mmProp != null);
+    }
+    catch (IBOLookupException ex) {
+    	throw new IBORuntimeException(ex);
+    }
+    catch (IOException ex) {
+    	getLogger().warning("[MediaOutputWriter] Could not look up parameter " + MediaServlet.USES_OLD_TABLES);
+    	usesOldTables = false;
     }
 
     String contentType=null;
