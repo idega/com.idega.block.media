@@ -10,10 +10,6 @@ import java.sql.Statement;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.idega.business.IBOLookup;
-import com.idega.business.IBOLookupException;
-import com.idega.business.IBORuntimeException;
-import com.idega.core.business.ICApplicationBindingBusiness;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.util.database.ConnectionBroker;
 
@@ -39,20 +35,10 @@ public class MediaOutputWriter {
     Connection conn = null;
     Statement Stmt = null;
     ResultSet RS = null;
-    boolean usesOldTables = false;
-    try {
-    	ICApplicationBindingBusiness applicationBindingBusiness = (ICApplicationBindingBusiness) IBOLookup.getServiceInstance(iwma.getIWApplicationContext(), ICApplicationBindingBusiness.class);
-    	String mmProp =applicationBindingBusiness.get(MediaServlet.USES_OLD_TABLES);
-    	// original condition, everything that is not null is true
-    	usesOldTables = (mmProp != null);
-    }
-    catch (IBOLookupException ex) {
-    	throw new IBORuntimeException(ex);
-    }
-    catch (IOException ex) {
-    	getLogger().warning("[MediaOutputWriter] Could not look up parameter " + MediaServlet.USES_OLD_TABLES);
-    	usesOldTables = false;
-    }
+
+	String mmProp = iwma.getSettings().getProperty(MediaServlet.USES_OLD_TABLES);
+	// original condition, everything that is not null is true
+	boolean usesOldTables = (mmProp != null);
 
     String contentType=null;
     String sql = "select file_value,mime_type from ic_file where ic_file_id=";
