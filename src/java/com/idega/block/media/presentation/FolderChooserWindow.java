@@ -87,7 +87,7 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 	  tree.setFileLinkPrototype(proto);
 	  tree.setFolderLinkPrototype(proto);
 	  
-	  tree.setOnClick(SELECT_FUNCTION_NAME+"("+tree.ONCLICK_DEFAULT_NODE_NAME_PARAMETER_NAME+","+tree.ONCLICK_DEFAULT_NODE_ID_PARAMETER_NAME+");");
+	  tree.setOnClick(SELECT_FUNCTION_NAME+"("+ICFileTree.ONCLICK_DEFAULT_NODE_NAME_PARAMETER_NAME+","+ICFileTree.ONCLICK_DEFAULT_NODE_ID_PARAMETER_NAME+");");
 	
 		List firstLevelNodes = new ArrayList();
 		if(publicRootNodeOld != null){

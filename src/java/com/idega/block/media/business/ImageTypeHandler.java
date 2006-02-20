@@ -20,7 +20,7 @@ import com.idega.util.caching.Cache;
 public class ImageTypeHandler extends FileTypeHandler {
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
-    Cache cache = this.getCachedFileInfo(icFileId,iwc);
+    Cache cache = FileTypeHandler.getCachedFileInfo(icFileId,iwc);
     Image image = new Image(cache.getVirtualPathToFile(),cache.getEntity().toString());
     return image;
   }

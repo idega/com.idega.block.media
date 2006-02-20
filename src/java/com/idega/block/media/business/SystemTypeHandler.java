@@ -50,7 +50,7 @@ public class SystemTypeHandler extends FileTypeHandler {
 		table.setHeight(Table.HUNDRED_PERCENT);
 		table.setCellpadding(2);
 		table.setCellspacing(0);
-		ICFile file = (ICFile) this.getCachedFileInfo(icFileId, iwc).getEntity();
+		ICFile file = (ICFile) FileTypeHandler.getCachedFileInfo(icFileId, iwc).getEntity();
 		Iterator iter = file.getChildrenIterator();
 		int x = 1;
 		int y = 1;

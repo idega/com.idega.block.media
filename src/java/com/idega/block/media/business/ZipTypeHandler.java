@@ -53,7 +53,7 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 		
 		try {
 			int id = -1;
-			Cache cache =  this.getCachedFileInfo(icFileId,iwc);
+			Cache cache =  FileTypeHandler.getCachedFileInfo(icFileId,iwc);
 			String filePath =cache.getRealPathToFile();
 			
 			ICFile file = (ICFile) cache.getEntity();

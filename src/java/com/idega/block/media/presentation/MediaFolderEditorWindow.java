@@ -266,10 +266,10 @@ public class MediaFolderEditorWindow extends Window {
 		
 		table.mergeCells(1,row,2,row);
 		table.add(new HorizontalRule(),1,row++);
-		table.setAlignment(1,row,table.HORIZONTAL_ALIGN_CENTER);
-		table.setColumnVerticalAlignment(1,table.VERTICAL_ALIGN_TOP);
-		table.setColumnAlignment(1,table.HORIZONTAL_ALIGN_RIGHT);
-		table.setAlignment(1,1,table.HORIZONTAL_ALIGN_CENTER);
+		table.setAlignment(1,row,Table.HORIZONTAL_ALIGN_CENTER);
+		table.setColumnVerticalAlignment(1,Table.VERTICAL_ALIGN_TOP);
+		table.setColumnAlignment(1,Table.HORIZONTAL_ALIGN_RIGHT);
+		table.setAlignment(1,1,Table.HORIZONTAL_ALIGN_CENTER);
 		
 		
 		Table metaTable = new Table();
@@ -302,7 +302,7 @@ public class MediaFolderEditorWindow extends Window {
 		metaTable.add(inputKey,1,mrow);
 		metaTable.add(inputValue,2,mrow);
 		metaTable.add(save,3,mrow);
-		metaTable.setAlignment(1,1,metaTable.HORIZONTAL_ALIGN_CENTER);
+		metaTable.setAlignment(1,1,Table.HORIZONTAL_ALIGN_CENTER);
 	
 			 form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),String.valueOf(mediaId)));
 		

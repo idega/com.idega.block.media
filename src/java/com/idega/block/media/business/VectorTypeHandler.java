@@ -19,7 +19,7 @@ public class VectorTypeHandler extends FileTypeHandler {
 
   public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
 
-    Cache cache = this.getCachedFileInfo(icFileId,iwc);
+    Cache cache = FileTypeHandler.getCachedFileInfo(icFileId,iwc);
     Flash flash = new Flash(cache.getVirtualPathToFile());
     flash.setWidth("100%");
     flash.setHeight("100%");
