@@ -39,7 +39,6 @@ public class ImageInserter extends Block  {
 	private int imageHeight = 0;
 	private boolean hasUseBox = true;
 	private boolean selected = false;
-	private boolean openInWindow = false;
 	private Class windowClass = MediaChooserWindow.class;
 	private Image setImage;
 	private boolean limitWidth = true;
@@ -91,7 +90,6 @@ public class ImageInserter extends Block  {
 	public ImageInserter(Class WindowToOpen) {
 		this.sHiddenInputName = imSessionImageName;
 		windowClass = WindowToOpen;
-		openInWindow = true;
 	}
 
 	public void main(IWContext iwc) throws Exception {
@@ -307,7 +305,6 @@ public class ImageInserter extends Block  {
 
 	public void setWindowClassToOpen(Class WindowClass) {
 		windowClass = WindowClass;
-		openInWindow = true;
 	}
 
 	public String getBundleIdentifier() {

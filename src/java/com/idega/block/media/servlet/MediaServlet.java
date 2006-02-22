@@ -30,7 +30,6 @@ public class MediaServlet extends IWCoreServlet{
 
   public static final String PARAMETER_NAME = FileSystemConstants.PARAM_FILE_ID;
   public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
-  private boolean usesOldTables = false;
   private static IWMainApplication iwma;
   public static boolean debug = false;
 

@@ -3,7 +3,6 @@ package com.idega.block.media.presentation;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.idegaweb.IWApplicationContext;
-import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWConstants;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.FrameSet;
@@ -25,13 +24,8 @@ import com.idega.user.business.UserBusiness;
 //public class MediaChooserWindow extends FrameSet {
 public class MediaChooserWindow extends AbstractChooserWindow {
 
-	private static final String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
-	
 	private static final String HELP_TEXT_KEY = "media_chooser_help";
 
-	private IWBundle iwb;
-	//  public static String prmReloadParent = "simple_upl_wind_rp";
-	private String fileInSessionParameter = "ic_file_id";
 	private FrameSet frame = null;
 
 	public MediaChooserWindow() {

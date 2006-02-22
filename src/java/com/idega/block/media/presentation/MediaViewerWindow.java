@@ -2,8 +2,6 @@ package com.idega.block.media.presentation;
 
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
-import com.idega.idegaweb.IWBundle;
-import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.Window;
 
@@ -18,10 +16,7 @@ import com.idega.presentation.ui.Window;
 
 public class MediaViewerWindow extends Window{
 
-private IWBundle iwb;
-private IWResourceBundle iwrb;
-
-  public MediaViewerWindow(){
+public MediaViewerWindow(){
     setBackgroundColor( MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR );
     setAllMargins( 0 );
   }

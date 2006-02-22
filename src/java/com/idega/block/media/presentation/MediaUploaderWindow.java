@@ -4,7 +4,6 @@ import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.block.media.business.MissingMimeTypeException;
 import com.idega.block.media.data.MediaProperties;
-import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Table;
@@ -26,7 +25,6 @@ import com.idega.presentation.ui.Window;
 
 public class MediaUploaderWindow extends Window{
 
-private IWBundle iwb;
 private IWResourceBundle iwrb;
 
 /* this parameter is changed right away */
@@ -41,7 +39,6 @@ private IWResourceBundle iwrb;
     public void main(IWContext iwc) throws Exception{
       super.main(iwc);
       iwrb = getResourceBundle(iwc);
-      iwb = getBundle(iwc);
       fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
       handleEvents(iwc);
     }

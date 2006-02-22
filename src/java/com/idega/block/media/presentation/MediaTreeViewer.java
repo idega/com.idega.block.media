@@ -14,7 +14,6 @@ import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
 import com.idega.core.file.data.ICMimeTypeBMPBean;
 import com.idega.idegaweb.IWCacheManager;
-import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.Block;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Table;
@@ -35,10 +34,8 @@ public class MediaTreeViewer extends Block {
 
   private String fileInSessionParameter = "";
   private IWCacheManager cm;
-  private IWResourceBundle iwrb;
 
   public void  main(IWContext iwc) throws Exception{
-    iwrb = getResourceBundle(iwc);
     cm = iwc.getIWMainApplication().getIWCacheManager();
     fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
 

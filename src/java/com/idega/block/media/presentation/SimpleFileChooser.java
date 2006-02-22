@@ -6,7 +6,6 @@ import java.util.List;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.core.file.data.ICFile;
 import com.idega.idegaweb.IWBundle;
-import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.presentation.BusyBar;
 import com.idega.io.UploadFile;
 import com.idega.presentation.IWContext;
@@ -31,23 +30,15 @@ public class SimpleFileChooser extends InterfaceObject {
   private boolean showChangeUploadedFileOption = true;
 	//private Stringstyle;
   private String name;
-  private Form form;
   private int selectedFileId = -1;
   private boolean deleteOnChange = true;
   
   private BusyBar busy = null;
   private List disabledObjects;
 
-  private final static int ACTION_DELETE = 0;
-  private final static int ACTION_NEWFILE = 1;
-  private final static int ACTION_OLDFILE = 2;
-  private final static int ACTION_MAINTAINFILE = 3;
-  private int action = -1;
-  
   private boolean showPreviewLink = true;
 
   private IWBundle coreBundle;
-	private IWResourceBundle iwrb;
 	/**
 	 * @return
 	 */
@@ -63,7 +54,6 @@ public class SimpleFileChooser extends InterfaceObject {
 	}
 
 	public SimpleFileChooser(Form form, String chooserName) {
-    this.form = form;
     name = chooserName;
     form.setMultiPart();
     busy = new BusyBar("busy_uploading");
@@ -84,8 +74,7 @@ public class SimpleFileChooser extends InterfaceObject {
 
   public void main(IWContext iwc) throws Exception{
 		coreBundle = iwc.getIWMainApplication().getCoreBundle();
-		iwrb = coreBundle.getResourceBundle(iwc);
-
+		
     if(deleteOnChange && "true".equals(iwc.getParameter("change_file"))&&iwc.getParameter(name) != null){
       System.out.println("deleteFile: "+ iwc.getParameter(name));
       boolean del = false;

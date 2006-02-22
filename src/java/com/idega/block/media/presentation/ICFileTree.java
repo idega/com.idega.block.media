@@ -1,6 +1,5 @@
 package com.idega.block.media.presentation;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -39,18 +38,12 @@ public class ICFileTree extends AbstractTreeViewer {
 
 
   private static final String _DEFAULT_ICON_SUFFIX = ".gif";
-  private String iconFolder = _DEFAULT_ICON_PREFIX;
-  private String icon_suffix = _DEFAULT_ICON_SUFFIX;
-  //private static Hashtable _icFileIcons = null;
-
   private Link _fileLink = new Link();
   private Link _folderLink = new Link();
 
   private String nodeNameTarget = null;
   private String nodeActionPrm = null;
 
-  private ArrayList icFileTypeArrayList = null;
-  
   private boolean _isICFileTreeNode = false;
 	private boolean _usesOnClick = false;
 
