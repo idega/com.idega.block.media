@@ -238,7 +238,7 @@ public class MediaFolderEditorWindow extends Window {
 		table.add(type,1,row);
 		table.add(fileType.getDisplayName(),2,row);
 		row++;
-		Text size = getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.size","Size")+":");;
+		Text size = getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.size","Size")+":");
 		table.add(size,1,row);
 		table.add((file.getFileSize() != null ) ? file.getFileSize().toString() : "",2,row);
 		row++;
