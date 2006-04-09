@@ -45,8 +45,9 @@ public class MediaServlet extends IWCoreServlet{
   }
 
   public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException{
-    if( iwma == null )
-      iwma = IWMainApplication.getIWMainApplication(getServletContext());
+    if( iwma == null ) {
+			iwma = IWMainApplication.getIWMainApplication(getServletContext());
+		}
 
     if(request.getParameter(PARAMETER_NAME)!=null || request.getParameter("image_id")!=null){
       new MediaOutputWriter().doPost(request,response,iwma);

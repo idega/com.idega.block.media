@@ -58,8 +58,9 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 			
 			ICFile file = (ICFile) cache.getEntity();
 			 ICTreeNode parent = file.getParentNode();
-			 if(parent!=null)
-			 id = parent.getNodeID();
+			 if(parent!=null) {
+				id = parent.getNodeID();
+			}
 			
 			return getZipFileContent(filePath,new Integer(id));
 		}
@@ -111,10 +112,12 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 			table.add(name,1,row);
 			table.add(String.valueOf(entry.getSize()),2,row);
 			contentType  = fileNameMap.getContentTypeFor(name);				
-			if(contentType!=null)
+			if(contentType!=null) {
 				table.add(contentType,3,row);
-			else
+			}
+			else {
 				table.add("unknown , please update you resources",3,row);
+			}
 						
 			row++;
 		}
@@ -154,8 +157,9 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 		
 			try {
 //				if no error occur we want to view the parent directory content
-				if( iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME )!=null)
-				(( MediaProperties ) iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME )).setId(id);
+				if( iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME )!=null) {
+					(( MediaProperties ) iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME )).setId(id);
+				}
 				MediaBusiness.saveMediaIdToSession(iwc,id);
 				uncompressZipToDB(zipFilePath,createDirectoryStructure,parentID);
 				
@@ -225,8 +229,9 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 				zfile.setFileSize((int)entry.getSize());
 				zfile.setFileValue(zipFile.getInputStream(entry));
 				String mimeType = fileNameMap.getContentTypeFor(file);
-				if(mimeType == null)
+				if(mimeType == null) {
 					mimeType = "application/octet";
+				}
 				//System.out.println("Save file "+file+ " of type "+mimeType+" under folder "+parentFolderID);
 				zfile.setMimeType(mimeType);
 				zfile = MediaBusiness.saveMediaToDB(zfile, parentFolderID);

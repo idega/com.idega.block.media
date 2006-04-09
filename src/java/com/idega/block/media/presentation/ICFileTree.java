@@ -62,7 +62,7 @@ public class ICFileTree extends AbstractTreeViewer {
 		super.setFirstLevelNodes(nodes);
 		
 		if(nodes.length > 0 && nodes[0] instanceof ICFileTreeNode){
-			_isICFileTreeNode = true;
+			this._isICFileTreeNode = true;
 		}
 	}
 
@@ -80,7 +80,7 @@ public class ICFileTree extends AbstractTreeViewer {
 	public void addFirstLevelNode(ICTreeNode node) {
 		super.addFirstLevelNode(node);
 		if(node instanceof ICFileTreeNode){
-			_isICFileTreeNode = true;
+			this._isICFileTreeNode = true;
 		}
 	}
   
@@ -88,7 +88,7 @@ public class ICFileTree extends AbstractTreeViewer {
 
   public Image getIcon(Map _icFileIcons,ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode){
     String mimeType = null;
-    if(_isICFileTreeNode){
+    if(this._isICFileTreeNode){
 			mimeType = ((ICFileTreeNode)node).getICFile().getMimeType();
     } else {
 		mimeType = ((ICFile)node).getMimeType();
@@ -136,13 +136,13 @@ public class ICFileTree extends AbstractTreeViewer {
             Link l = this.getFolderLinkClone(node.getNodeName(iwc.getCurrentLocale(),iwc));
 
             this.setLinkToOpenOrCloseNode(l,node,nodeIsOpen);
-            if( nodeNameTarget != null ){
-             l.setTarget(nodeNameTarget);
+            if( this.nodeNameTarget != null ){
+             l.setTarget(this.nodeNameTarget);
             }
-            if( nodeActionPrm!=null ){
-              l.addParameter(nodeActionPrm,node.getNodeID());
+            if( this.nodeActionPrm!=null ){
+              l.addParameter(this.nodeActionPrm,node.getNodeID());
             }
-            if (_usesOnClick) {
+            if (this._usesOnClick) {
     					String nodeName = node.getNodeName();
     					l.setURL("#");
     					l.setOnClick(ONCLICK_FUNCTION_NAME + "('" + nodeName + "','" +  node.getNodeID() + "')");
@@ -154,13 +154,13 @@ public class ICFileTree extends AbstractTreeViewer {
             Link l = this.getFileLinkClone(node.getNodeName(iwc.getCurrentLocale()));
             this.setLinkToMaintainOpenAndClosedNodes(l);
 
-            if( nodeNameTarget != null ){
-             l.setTarget(nodeNameTarget);
+            if( this.nodeNameTarget != null ){
+             l.setTarget(this.nodeNameTarget);
             }
-            if( nodeActionPrm!=null ){
-              l.addParameter(nodeActionPrm,node.getNodeID());
+            if( this.nodeActionPrm!=null ){
+              l.addParameter(this.nodeActionPrm,node.getNodeID());
             }
-            if (_usesOnClick) {
+            if (this._usesOnClick) {
     					String nodeName = node.getNodeName();
     					l.setURL("#");
     					l.setOnClick(ONCLICK_FUNCTION_NAME + "('" + nodeName + "','" + node.getNodeID() + "')");
@@ -175,10 +175,10 @@ public class ICFileTree extends AbstractTreeViewer {
 
 
   private Link getFileLinkClone(){
-    return (Link)_fileLink.clone();
+    return (Link)this._fileLink.clone();
   }
   private Link getFolderLinkClone(){
-    return (Link)_folderLink.clone();
+    return (Link)this._folderLink.clone();
   }
 
   private Link getFileLinkClone(String text){
@@ -194,19 +194,19 @@ public class ICFileTree extends AbstractTreeViewer {
   }
 
   public void setNodeActionParameter(String prm){
-    nodeActionPrm = prm;
+    this.nodeActionPrm = prm;
   }
 
   public void setTarget(String target){
-    nodeNameTarget = target;
+    this.nodeNameTarget = target;
   }
 
   public void setFileLinkPrototype(Link link){
-    _fileLink = link;
+    this._fileLink = link;
   }
 
   public void setFolderLinkPrototype(Link link){
-    _folderLink = link;
+    this._folderLink = link;
   }
 
   
@@ -218,7 +218,7 @@ public class ICFileTree extends AbstractTreeViewer {
       while (iter.hasNext()) {
         Image item = (Image)iter.next();
         if(item != null){
-          item.setHeight(iconHeight);
+          item.setHeight(this.iconHeight);
         }
       }
     }
@@ -244,7 +244,7 @@ public class ICFileTree extends AbstractTreeViewer {
         }
       }
 
-      iwc.setApplicationAttribute(_APP_FILE_ICONS + getUI(),tmp);
+      iwc.setApplicationAttribute(this._APP_FILE_ICONS + getUI(),tmp);
       //this._icFileIcons = tmp;
     //} else {
     //  this._icFileIcons = (Hashtable)obj;
@@ -268,7 +268,7 @@ public class ICFileTree extends AbstractTreeViewer {
 		setToUseOnClick(ONCLICK_DEFAULT_NODE_NAME_PARAMETER_NAME, ONCLICK_DEFAULT_NODE_ID_PARAMETER_NAME);
 	}
   public void setToUseOnClick(String NodeNameParameterName, String NodeIDParameterName) {
-		_usesOnClick = true;
+		this._usesOnClick = true;
 		Script associatedScript = getParentPage().getAssociatedScript();
 		if(associatedScript != null) {
 			getAssociatedScript().addFunction(ONCLICK_FUNCTION_NAME, "function " + ONCLICK_FUNCTION_NAME + "(" + NodeNameParameterName + "," + NodeIDParameterName + "){ }");

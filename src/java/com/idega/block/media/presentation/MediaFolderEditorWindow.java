@@ -41,7 +41,7 @@ public class MediaFolderEditorWindow extends Window {
 
   public void main(IWContext iwc) throws Exception {
     super.main(iwc);
-    iwrb = getResourceBundle(iwc);
+    this.iwrb = getResourceBundle(iwc);
     handleEvents(iwc);
   }
 
@@ -68,7 +68,7 @@ public class MediaFolderEditorWindow extends Window {
         //Link save = new Link("Save");
         //save.setAsImageButton(true);
         //save.setToFormSubmit(form);
-        Text add = new Text(iwrb.getLocalizedString("mediafoldereditwindow.name.the.folder","Name the folder"));
+        Text add = new Text(this.iwrb.getLocalizedString("mediafoldereditwindow.name.the.folder","Name the folder"));
         add.setStyle(Text.FONT_FACE_ARIAL);
         add.setFontSize(Text.FONT_SIZE_10_HTML_2);
         add.setBold();
@@ -76,7 +76,7 @@ public class MediaFolderEditorWindow extends Window {
         table.add(add,1,1);
         table.add(new HiddenInput(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_FOLDER_SAVE),1,2);
         table.add(folderName,1,3);
-        table.add(new SubmitButton(iwrb.getLocalizedString("mv.save","save")),1,3);
+        table.add(new SubmitButton(this.iwrb.getLocalizedString("mv.save","save")),1,3);
 
 
         form.add(table);
@@ -212,7 +212,7 @@ public class MediaFolderEditorWindow extends Window {
 				inputDescription.setContent(file.getDescription());
 			}
 		int row = 1;
-		Text props = new Text(iwrb.getLocalizedString("mediafoldereditwindow.properties","Properties"));
+		Text props = new Text(this.iwrb.getLocalizedString("mediafoldereditwindow.properties","Properties"));
 		props.setStyle(Text.FONT_FACE_ARIAL);
 		props.setFontSize(Text.FONT_SIZE_10_HTML_2);
 		props.setBold();
@@ -221,41 +221,41 @@ public class MediaFolderEditorWindow extends Window {
 		table.add(props,1,row++);
 		table.add(new HiddenInput(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_RENAME),1,2);
 		table.add(Text.getBreak(),1,row++);
-		Text name = getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.filename","Name"));
+		Text name = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.filename","Name"));
 		table.add(name,1,row);
 		table.add(inputName,2,row++);
 		
-		Text description = getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.description","Description"));
+		Text description = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.description","Description"));
 		table.add(description,1,row);
 		table.add(inputDescription,2,row++);
 		
-		SubmitButton save = new SubmitButton(iwrb.getLocalizedString("mv.save","save"));
+		SubmitButton save = new SubmitButton(this.iwrb.getLocalizedString("mv.save","save"));
 		table.add(save,2,row++);
 	
 		String mimeType = (file.getMimeType() != null ) ? file.getMimeType() : "";
 		ICFileType fileType = MediaBusiness.getFileType(iwc,mimeType);
-		Text type = getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.type","Type")+":");
+		Text type = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.type","Type")+":");
 		table.add(type,1,row);
 		table.add(fileType.getDisplayName(),2,row);
 		row++;
-		Text size = getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.size","Size")+":");
+		Text size = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.size","Size")+":");
 		table.add(size,1,row);
 		table.add((file.getFileSize() != null ) ? file.getFileSize().toString() : "",2,row);
 		row++;
-		Text location = getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.location","Location")+":");
+		Text location = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.location","Location")+":");
 		table.add(location,1,row);
 		table.add(getFileLocation(file,"/"),2,row);
 		row++;
-		Text mimetype = getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.mimetype","Mimetype")+":");
+		Text mimetype = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.mimetype","Mimetype")+":");
 		table.add(mimetype,1,row);
 		table.add(mimeType,2,row);
 		row++;
 		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,iwc.getCurrentLocale());
-		Text created = getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.created","Created")+":");
+		Text created = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.created","Created")+":");
 		table.add(created,1,row);
 		table.add(file.getCreationDate()!=null?df.format(file.getCreationDate()):"",2,row);
 		row++;
-		Text modified = getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.modified","Modified")+":");
+		Text modified = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.modified","Modified")+":");
 		table.add(modified,1,row);
 		table.add(file.getModificationDate()!=null?df.format(file.getModificationDate()):"",2,row);
 		row++;
@@ -273,13 +273,13 @@ public class MediaFolderEditorWindow extends Window {
 		Table metaTable = new Table();
 		int mrow = 1;
 		metaTable.add(Text.getBreak(),1,mrow);
-		metaTable.add(getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.metadata","Metadata")),1,mrow);
+		metaTable.add(getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.metadata","Metadata")),1,mrow);
 		metaTable.mergeCells(1,mrow,3,mrow);
 		mrow++;
 		metaTable.add(Text.getBreak(),1,mrow++);
-		metaTable.add(getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.metadata.key","Key")),1,mrow);
-		metaTable.add(getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.metadata.value","Value")),2,mrow);
-		metaTable.add(getHeaderText(iwrb.getLocalizedString("mediafoldereditwindow.properties.metadata.remove","Remove")),3,mrow);
+		metaTable.add(getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.metadata.key","Key")),1,mrow);
+		metaTable.add(getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.metadata.value","Value")),2,mrow);
+		metaTable.add(getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.metadata.remove","Remove")),3,mrow);
 		mrow++;
 		file.getMetaData("test");	// to fetch the metadata !! //TODO do it in a better way	
 		if(file.getMetaDataAttributes()!=null){			
@@ -321,7 +321,7 @@ public class MediaFolderEditorWindow extends Window {
   		table.add(Text.BREAK,1,1);
   		table.add(new HiddenInput(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE_MOVE),1,2);
   		
-  		Text move = new Text(iwrb.getLocalizedString("mediafoldereditwindow.choose_folder_to_move_to","Choose a folder to move current file/folder to"));
+  		Text move = new Text(this.iwrb.getLocalizedString("mediafoldereditwindow.choose_folder_to_move_to","Choose a folder to move current file/folder to"));
   		move.setStyle(Text.FONT_FACE_ARIAL);
   		move.setFontSize(Text.FONT_SIZE_10_HTML_2);
   		move.setBold();
@@ -333,7 +333,7 @@ public class MediaFolderEditorWindow extends Window {
   		table.add(Text.BREAK,1,2);
   		table.add(folderChooser,1,2);
   		
-  		SubmitButton submit = new SubmitButton(iwrb.getLocalizedString("mv.save","save"));
+  		SubmitButton submit = new SubmitButton(this.iwrb.getLocalizedString("mv.save","save"));
   		table.setAlignment(1,3,Table.HORIZONTAL_ALIGN_CENTER);
   		table.add(Text.BREAK,1,3); 
   		table.add(submit,1,3);
@@ -354,10 +354,12 @@ public class MediaFolderEditorWindow extends Window {
 		ICTreeNode parent = node.getParentNode();
 		if(parent!=null  ){
 			// we dont print the name of the leaf , only parents
-			if(!node.isLeaf())
+			if(!node.isLeaf()) {
 				return  getFileLocation(parent,delimiter)+delimiter+node.getNodeName();
-			else 
+			}
+			else {
 				return getFileLocation(parent,delimiter)+delimiter;
+			}
 		}
 		// dont print the root ( ICROOT ) 
 		return "";  	

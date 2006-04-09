@@ -51,7 +51,7 @@ public class MediaViewer extends Block {
 	public MediaViewer(MediaProperties props) {
 		this();
 		this.props = props;
-		mediaId = props.getId();
+		this.mediaId = props.getId();
 	}
 	/**
 	
@@ -65,16 +65,16 @@ public class MediaViewer extends Block {
 	
 	 */
 	public void main(IWContext iwc) throws Exception {
-		if ((mediaId == -1) && (props == null)) {
-			mediaId = MediaBusiness.getMediaId(iwc);
+		if ((this.mediaId == -1) && (this.props == null)) {
+			this.mediaId = MediaBusiness.getMediaId(iwc);
 		}
 		
-		if (mediaId != -1) {
-			displayCurrentMediaName(iwc, mediaId);
-			viewFileFromDB(iwc, mediaId);
+		if (this.mediaId != -1) {
+			displayCurrentMediaName(iwc, this.mediaId);
+			viewFileFromDB(iwc, this.mediaId);
 		}
-		else if (props != null) {
-			viewFileFromDisk(iwc, props);
+		else if (this.props != null) {
+			viewFileFromDisk(iwc, this.props);
 		}
 	}
 	/**
@@ -114,7 +114,7 @@ public class MediaViewer extends Block {
 	
 	 */
 	protected void viewFileFromDB(IWContext iwc, int id) {
-		Cache cache = FileTypeHandler.getCachedFileInfo(mediaId, iwc);
+		Cache cache = FileTypeHandler.getCachedFileInfo(this.mediaId, iwc);
 		ICFile file = (ICFile) cache.getEntity();
 		FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc, file.getMimeType());
 		add(Text.BREAK);

@@ -53,18 +53,18 @@ public class ICFileTreeNode implements ICTreeNode {
 	 * 
 	 */
 	public ICFileTreeNode(ICFile file, ICFileTreeNode parent) {
-		_file = file;
+		this._file = file;
 		if(parent != null){
-			_parent = parent;
-			this._orderBy = _parent._orderBy;
-			this._hiddenMimeTypes = _parent._hiddenMimeTypes;
-			this._visibleMimeTypes = _parent._visibleMimeTypes;
-			this._sortLeafs = _parent._sortLeafs;
-			this._leafsFirst = _parent._leafsFirst;
+			this._parent = parent;
+			this._orderBy = this._parent._orderBy;
+			this._hiddenMimeTypes = this._parent._hiddenMimeTypes;
+			this._visibleMimeTypes = this._parent._visibleMimeTypes;
+			this._sortLeafs = this._parent._sortLeafs;
+			this._leafsFirst = this._parent._leafsFirst;
 		} else {
-			_orderBy = file.getEntityDefinition().findFieldByUniqueName(ICFile.UFN_NAME).getSQLFieldName();
-			_sortLeafs = file.sortLeafs();
-			_leafsFirst = file.leafsFirst();
+			this._orderBy = file.getEntityDefinition().findFieldByUniqueName(ICFile.UFN_NAME).getSQLFieldName();
+			this._sortLeafs = file.sortLeafs();
+			this._leafsFirst = file.leafsFirst();
 		}
 	}
 	
@@ -74,13 +74,13 @@ public class ICFileTreeNode implements ICTreeNode {
 
 
 	public List getListOfChildren(){
-		if(_children != null){
-			return _children;
+		if(this._children != null){
+			return this._children;
 		} else {
 			List l = new Vector();
 			Collection coll = null;
 			try {
-				coll = getICFileHome().findChildren(_file, _visibleMimeTypes, _hiddenMimeTypes, _orderBy);
+				coll = getICFileHome().findChildren(this._file, this._visibleMimeTypes, this._hiddenMimeTypes, this._orderBy);
 				
 			} catch (RemoteException e) {
 				System.err.println("There was an error in "+this.getClass().getName()+".getChildren() " + e.getMessage());
@@ -99,17 +99,17 @@ public class ICFileTreeNode implements ICTreeNode {
 			}
 			
 			if (l != null) {
-				if (_sortLeafs) {
-					ICTreeNodeLeafComparator c = new ICTreeNodeLeafComparator(_leafsFirst);
+				if (this._sortLeafs) {
+					ICTreeNodeLeafComparator c = new ICTreeNodeLeafComparator(this._leafsFirst);
 					Collections.sort(l, c);
 				}
-				_children = l;
+				this._children = l;
 			} else {
-				_children = ListUtil.getEmptyList();
+				this._children = ListUtil.getEmptyList();
 			}
 			
 			
-			return _children;
+			return this._children;
 		}
 	}
 	
@@ -138,14 +138,14 @@ public class ICFileTreeNode implements ICTreeNode {
 	 * @see com.idega.core.data.ICTreeNode#getAllowsChildren()
 	 */
 	public boolean getAllowsChildren() {
-		return _file.getAllowsChildren();
+		return this._file.getAllowsChildren();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.idega.core.data.ICTreeNode#getChildAtIndex(int)
 	 */
 	public ICTreeNode getChildAtIndex(int childIndex) {
-		return _file.getChildAtIndex(childIndex);
+		return this._file.getChildAtIndex(childIndex);
 	}
 
 	/* (non-Javadoc)
@@ -163,45 +163,45 @@ public class ICFileTreeNode implements ICTreeNode {
 	 * @see com.idega.core.data.ICTreeNode#getIndex(com.idega.core.data.ICTreeNode)
 	 */
 	public int getIndex(ICTreeNode node) {
-		return _file.getIndex(node);
+		return this._file.getIndex(node);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.idega.core.data.ICTreeNode#getParentNode()
 	 */
 	public ICTreeNode getParentNode() {
-		return _parent;
+		return this._parent;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.idega.core.data.ICTreeNode#isLeaf()
 	 */
 	public boolean isLeaf() {
-		return _file.isLeaf();
+		return this._file.isLeaf();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.idega.core.data.ICTreeNode#getNodeName()
 	 */
 	public String getNodeName() {
-		return _file.getNodeName();
+		return this._file.getNodeName();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.idega.core.data.ICTreeNode#getNodeName(java.util.Locale)
 	 */
 	public String getNodeName(Locale locale) {
-		return _file.getNodeName(locale);
+		return this._file.getNodeName(locale);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.idega.core.data.ICTreeNode#getNodeName(java.util.Locale, com.idega.idegaweb.IWApplicationContext)
 	 */
 	public String getNodeName(Locale locale, IWApplicationContext iwac) {
-		if(_checkForLocalizationKey){
-			return _file.getNodeName(locale,iwac);
+		if(this._checkForLocalizationKey){
+			return this._file.getNodeName(locale,iwac);
 		} else {
-			return _file.getNodeName(locale);
+			return this._file.getNodeName(locale);
 		}
 		
 	}
@@ -210,7 +210,7 @@ public class ICFileTreeNode implements ICTreeNode {
 	 * @see com.idega.core.data.ICTreeNode#getNodeID()
 	 */
 	public int getNodeID() {
-		return _file.getNodeID();
+		return this._file.getNodeID();
 	}
 
 	/* (non-Javadoc)
@@ -218,55 +218,56 @@ public class ICFileTreeNode implements ICTreeNode {
 	 */
 	public int getSiblingCount() {
 		ICTreeNode parent = getParentNode();
-		if (parent == null)
+		if (parent == null) {
 			return (0);
+		}
 
 		return (parent.getChildCount() - 1);
 	}
 	
 	public ICFile getICFile(){
-		return _file;
+		return this._file;
 	}
 	
 	public void addVisibleMimeType(String mimetype){
-		_visibleMimeTypes.add(mimetype);
+		this._visibleMimeTypes.add(mimetype);
 	}
 	
 	public void addHiddenMimeType(String mimetype){
-		_hiddenMimeTypes.add(mimetype);
+		this._hiddenMimeTypes.add(mimetype);
 	}
 	
 	public void addVisibleMimeTypes(Collection mimetypes){
-		_visibleMimeTypes.addAll(mimetypes);
+		this._visibleMimeTypes.addAll(mimetypes);
 	}
 	
 	public void addHiddenMimeTypes(Collection mimetypes){
-		_hiddenMimeTypes.addAll(mimetypes);
+		this._hiddenMimeTypes.addAll(mimetypes);
 	}
 
 	public void removeVisibleMimeType(String mimetype){
-		_visibleMimeTypes.remove(mimetype);
+		this._visibleMimeTypes.remove(mimetype);
 	}
 	
 	public void removeHiddenMimeType(String mimetype){
-		_hiddenMimeTypes.remove(mimetype);
+		this._hiddenMimeTypes.remove(mimetype);
 	}
 	
 	public void removeVisibleMimeTypes(Collection mimetypes){
-		_visibleMimeTypes.removeAll(mimetypes);
+		this._visibleMimeTypes.removeAll(mimetypes);
 	}
 	
 	public void removeHiddenMimeTypes(Collection mimetypes){
-		_hiddenMimeTypes.removeAll(mimetypes);
+		this._hiddenMimeTypes.removeAll(mimetypes);
 	}
 
 
 	public boolean checkForLocalizationKey() {
-		return _checkForLocalizationKey;
+		return this._checkForLocalizationKey;
 	}
 
 	public void setToCheckForLocalizationKey(boolean value) {
-		_checkForLocalizationKey = value;
+		this._checkForLocalizationKey = value;
 	}
 
 }

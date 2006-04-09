@@ -42,7 +42,7 @@ public class FolderChooser extends AbstractChooser{
 	
 	public void main(IWContext iwc){
 	 	empty();
-	 	if(chooserButtonImage == null) {
+	 	if(this.chooserButtonImage == null) {
 	 		IWBundle iwb = iwc.getIWMainApplication().getBundle(MediaConstants.IW_BUNDLE_IDENTIFIER);
 	 		setChooseButtonImage(iwb.getImage("magnifyingglass.gif", "Choose"));
 	 	}

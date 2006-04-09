@@ -38,16 +38,16 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 		setHeight(480);
 		setResizable(true);
 
-		frame = new FrameSet();
+		this.frame = new FrameSet();
 
-		frame.add(Top.class);
-		frame.add(BottomFrameSet.class);
-		frame.setSpanPixels(1, 50);
-		frame.setScrollbar(false);
-		frame.setScrolling(1, false);
-		frame.setScrolling(2, false);
-		frame.setSpanAdaptive(2);
-		frame.setResizable(true);
+		this.frame.add(Top.class);
+		this.frame.add(BottomFrameSet.class);
+		this.frame.setSpanPixels(1, 50);
+		this.frame.setScrollbar(false);
+		this.frame.setScrolling(1, false);
+		this.frame.setScrolling(2, false);
+		this.frame.setSpanAdaptive(2);
+		this.frame.setResizable(true);
 	}
 
 	public void displaySelection(IWContext iwc) {
@@ -65,10 +65,10 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 		}
 
 		if (MediaBusiness.reloadOnClose(iwc)) {
-			frame.setParentToReload();
+			this.frame.setParentToReload();
 		}
 
-		add(frame);
+		add(this.frame);
 	}
 
 	public String getBundleIdentifier() {
@@ -145,22 +145,22 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 			//   headerTable.add(getBundle(iwc).getImage(this.getBundle(iwc).getProperty("logo_image_name","top.gif")));
 
 			parentPage = this.getParentPage();
-			userBusiness = getUserBusiness(iwc);
-			styleSrc = userBusiness.getUserApplicationStyleSheetURL();
-			parentPage.addStyleSheetURL(styleSrc);
+			this.userBusiness = getUserBusiness(iwc);
+			this.styleSrc = this.userBusiness.getUserApplicationStyleSheetURL();
+			parentPage.addStyleSheetURL(this.styleSrc);
 
 			//   headerTable.add(iwc.getApplication().getCoreBundle().getImage("/editorwindow/idegaweb.gif","idegaWeb"),1,1);
 			add(headerTable);
 		}
 		protected UserBusiness getUserBusiness(IWApplicationContext iwc) {
-			if (userBusiness == null) {
+			if (this.userBusiness == null) {
 				try {
-					userBusiness = (UserBusiness)com.idega.business.IBOLookup.getServiceInstance(iwc, UserBusiness.class);
+					this.userBusiness = (UserBusiness)com.idega.business.IBOLookup.getServiceInstance(iwc, UserBusiness.class);
 				} catch (java.rmi.RemoteException rme) {
 					throw new RuntimeException(rme.getMessage());
 				}
 			}
-			return userBusiness;
+			return this.userBusiness;
 		}
 
 	}

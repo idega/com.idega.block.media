@@ -49,21 +49,21 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 
 
 	public void displaySelection(IWContext iwc) {
-    iwrb = getResourceBundle(iwc);
-    cm = iwc.getIWMainApplication().getIWCacheManager();
-    fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
+    this.iwrb = getResourceBundle(iwc);
+    this.cm = iwc.getIWMainApplication().getIWCacheManager();
+    this.fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
     
-    addTitle(iwrb.getLocalizedString("select_folder", "Select folder"), TITLE_STYLECLASS);
-		setTitle(iwrb.getLocalizedString("select_group","Select group"));
-		setName(iwrb.getLocalizedString("select_group","Select group"));
+    addTitle(this.iwrb.getLocalizedString("select_folder", "Select folder"), TITLE_STYLECLASS);
+		setTitle(this.iwrb.getLocalizedString("select_group","Select group"));
+		setName(this.iwrb.getLocalizedString("select_group","Select group"));
 
     Table T = new Table();
     T.setWidth(Table.HUNDRED_PERCENT);
     T.setCellpadding(2);
     T.setCellspacing(0);
-    T.setStyleClass(mainStyleClass);
+    T.setStyleClass(this.mainStyleClass);
 
-    ICFile publicRootNodeOld = (ICFile)cm.getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+    ICFile publicRootNodeOld = (ICFile)this.cm.getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
     ICFileTree tree = new ICFileTree();
     tree.setLocation((IWLocation) this.getLocation().clone()); 
@@ -73,7 +73,7 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
     T.add(tree,1,2);
     add(T,iwc);
     
-	  tree.setNodeActionParameter(fileInSessionParameter);
+	  tree.setNodeActionParameter(this.fileInSessionParameter);
 	  tree.setToMaintainParameter(SCRIPT_PREFIX_PARAMETER, iwc);
 	  tree.setToMaintainParameter(SCRIPT_SUFFIX_PARAMETER,iwc);
 		tree.setToMaintainParameter(DISPLAYSTRING_PARAMETER_NAME,iwc);
@@ -137,7 +137,9 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 		}
 	
 		Iterator it = firstLevelNodes.iterator();
-		if(it!=null) tree.setFirstLevelNodes(it);
+		if(it!=null) {
+			tree.setFirstLevelNodes(it);
+		}
   }
 
   public String getBundleIdentifier(){

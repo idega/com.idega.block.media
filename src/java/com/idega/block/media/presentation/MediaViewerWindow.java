@@ -29,7 +29,9 @@ public MediaViewerWindow(){
     //System.out.println("MEDIA ID = "+mediaId);
     
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
-    if(action==null) action = "";
+    if(action==null) {
+			action = "";
+		}
 
     add(new MediaToolbar(mediaId));
     if( !action.equals(MediaConstants.MEDIA_ACTION_USE) && !action.equals(MediaConstants.MEDIA_ACTION_DELETE) && !action.equals(MediaConstants.MEDIA_ACTION_DELETE_CONFIRM) ){

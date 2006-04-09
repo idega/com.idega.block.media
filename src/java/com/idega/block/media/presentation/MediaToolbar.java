@@ -130,7 +130,7 @@ public class MediaToolbar extends Block {
 
     this.props = props;
 
-    mediaId = props.getId();
+    this.mediaId = props.getId();
 
   }
 
@@ -152,11 +152,11 @@ public class MediaToolbar extends Block {
 
   public void main( IWContext iwc ) throws Exception {
 
-    iwrb = getResourceBundle(iwc);
+    this.iwrb = getResourceBundle(iwc);
 
     //get the mediaId parameter name
 
-    fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession( iwc );
+    this.fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession( iwc );
 
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
 
@@ -172,11 +172,13 @@ public class MediaToolbar extends Block {
 
     String chooserType = (String)iwc.getSessionAttribute(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME);
 
-    choosingImage = ( (chooserType!=null) && (chooserType.equals(MediaConstants.MEDIA_CHOOSER_IMAGE)) );
+    this.choosingImage = ( (chooserType!=null) && (chooserType.equals(MediaConstants.MEDIA_CHOOSER_IMAGE)) );
 
 
 
-    if(action==null) action = "";
+    if(action==null) {
+			action = "";
+		}
 
 
 
@@ -206,15 +208,15 @@ public class MediaToolbar extends Block {
 
 //
 
-    if( (mediaId==-1) && (props==null) ) {
+    if( (this.mediaId==-1) && (this.props==null) ) {
 
-      mediaId = MediaBusiness.getMediaId(iwc);
+      this.mediaId = MediaBusiness.getMediaId(iwc);
 
     }
 
 
 
-    if( mediaId!=-1 ) {
+    if( this.mediaId!=-1 ) {
 
 
 
@@ -222,7 +224,7 @@ public class MediaToolbar extends Block {
 
         /*selecting and closing the window only reaches this state in the builder selecting images*/
 
-        MediaBusiness.saveMediaIdToSession( iwc, mediaId );
+        MediaBusiness.saveMediaIdToSession( iwc, this.mediaId );
 
         getParentPage().setOnLoad( "top.window.close()" );
 
@@ -232,7 +234,7 @@ public class MediaToolbar extends Block {
 
         /*displaying confirm delete*/
 
-        confirmDeleteMedia( mediaId, iwc );
+        confirmDeleteMedia( this.mediaId, iwc );
 
         getParentPage().setOnUnLoad( "parent.frames['" + MediaConstants.TARGET_MEDIA_TREE + "'].location.reload()" );
 
@@ -242,20 +244,20 @@ public class MediaToolbar extends Block {
 
         /*deleting*/
 
-        MediaBusiness.deleteMedia( mediaId );
+        MediaBusiness.deleteMedia( this.mediaId );
 
         MediaBusiness.removeMediaIdFromSession( iwc );//not really necessary
 
         addBreak();
 
-        add( new Text(iwrb.getLocalizedString("mv.file.deleted","The file was deleted")) );
+        add( new Text(this.iwrb.getLocalizedString("mv.file.deleted","The file was deleted")) );
 
       }
       else{
 
         /*viewing from db*/
 
-        viewFileFromDB( iwc, mediaId );
+        viewFileFromDB( iwc, this.mediaId );
 
       }
 
@@ -263,9 +265,9 @@ public class MediaToolbar extends Block {
 
     }
 
-    else if( props != null ) {
+    else if( this.props != null ) {
 
-      viewFileFromDisk( iwc, props );
+      viewFileFromDisk( iwc, this.props );
 
     }
 
@@ -303,13 +305,13 @@ public class MediaToolbar extends Block {
 
 
 
-    Link confirm = new Link( iwrb.getLocalizedString("mv.delete","delete")  );
+    Link confirm = new Link( this.iwrb.getLocalizedString("mv.delete","delete")  );
 
     confirm.setAsImageButton( true );
 
     confirm.addParameter( MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_DELETE_CONFIRM );
 
-    confirm.addParameter( fileInSessionParameter, mediaId );
+    confirm.addParameter( this.fileInSessionParameter, this.mediaId );
 
     T.add( confirm, 1, 1 );
 
@@ -317,17 +319,17 @@ public class MediaToolbar extends Block {
 
     Link cancel = MediaBusiness.getMediaViewerLink();
 
-    cancel.setText(iwrb.getLocalizedString("mv.cancel","cancel") );
+    cancel.setText(this.iwrb.getLocalizedString("mv.cancel","cancel") );
 
     cancel.setAsImageButton( true );
 
-    cancel.addParameter( fileInSessionParameter, mediaId );
+    cancel.addParameter( this.fileInSessionParameter, this.mediaId );
 
     T.add( cancel, 1, 1 );
 
 
 
-    Text warning = new Text(iwrb.getLocalizedString("mv.file.are.you.sure","Are you sure you want to delete this file"));
+    Text warning = new Text(this.iwrb.getLocalizedString("mv.file.are.you.sure","Are you sure you want to delete this file"));
 
     warning.setFontSize( 4 );
 
@@ -371,7 +373,7 @@ public class MediaToolbar extends Block {
 
 
 
-    Link submitSave = new Link(iwrb.getLocalizedString("mv.save","save"));
+    Link submitSave = new Link(this.iwrb.getLocalizedString("mv.save","save"));
 
     submitSave.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE);
 
@@ -381,13 +383,13 @@ public class MediaToolbar extends Block {
 
     /**@todo fix to use iwc**/
 
-    submitSave.addParameter(fileInSessionParameter,iwc.getParameter(fileInSessionParameter));
+    submitSave.addParameter(this.fileInSessionParameter,iwc.getParameter(this.fileInSessionParameter));
 
-    Link submitNew = new Link(iwrb.getLocalizedString("mv.cancel","cancel"));
+    Link submitNew = new Link(this.iwrb.getLocalizedString("mv.cancel","cancel"));
 
     submitNew.addParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_NEW);
 
-    submitNew.addParameter(fileInSessionParameter,(String)props.getParameterMap().get(fileInSessionParameter));
+    submitNew.addParameter(this.fileInSessionParameter,(String)props.getParameterMap().get(this.fileInSessionParameter));
 
     submitNew.setAsImageButton(true);
 
@@ -446,17 +448,17 @@ public class MediaToolbar extends Block {
 
     Link use = MediaBusiness.getUseImageLink();
 
-    use.setTextOnLink( iwrb.getLocalizedString("mv.use","use") );
+    use.setTextOnLink( this.iwrb.getLocalizedString("mv.use","use") );
 
     use.setAsImageButton( true );
 
-    use.addParameter( fileInSessionParameter, mediaId );
+    use.addParameter( this.fileInSessionParameter, mediaId );
 
 
 
-    if(choosingImage){
+    if(this.choosingImage){
 
-      use.setOnClick( "top.window.opener.setImageId('" + file.getPrimaryKey() + "','" + fileInSessionParameter + "');");
+      use.setOnClick( "top.window.opener.setImageId('" + file.getPrimaryKey() + "','" + this.fileInSessionParameter + "');");
 
     }
 
@@ -480,13 +482,13 @@ public class MediaToolbar extends Block {
 
      */
 
-    Link newLink = new Link(iwrb.getLocalizedString("mv.upload","upload"), MediaUploaderWindow.class );
+    Link newLink = new Link(this.iwrb.getLocalizedString("mv.upload","upload"), MediaUploaderWindow.class );
 
     newLink.setTarget( MediaConstants.TARGET_MEDIA_VIEWER );
 
     newLink.setAsImageButton( true );
 
-    newLink.addParameter( fileInSessionParameter, mediaId );
+    newLink.addParameter( this.fileInSessionParameter, mediaId );
 
     newLink.addParameter( MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_NEW );
 
@@ -494,13 +496,13 @@ public class MediaToolbar extends Block {
 
 
 
-    Link delete = new Link(iwrb.getLocalizedString("mv.delete","delete"), MediaViewerWindow.class );
+    Link delete = new Link(this.iwrb.getLocalizedString("mv.delete","delete"), MediaViewerWindow.class );
 
     delete.setTarget( MediaConstants.TARGET_MEDIA_VIEWER );
 
     delete.setAsImageButton( true );
 
-    delete.addParameter( fileInSessionParameter, mediaId );
+    delete.addParameter( this.fileInSessionParameter, mediaId );
 
     delete.addParameter( MediaConstants.MEDIA_ACTION_PARAMETER_NAME, MediaConstants.MEDIA_ACTION_DELETE );
 
@@ -512,26 +514,26 @@ public class MediaToolbar extends Block {
 
       Link folder = MediaBusiness.getNewFolderLink();
 
-      folder.setText(iwrb.getLocalizedString("mv.folder","folder"));
+      folder.setText(this.iwrb.getLocalizedString("mv.folder","folder"));
 
       folder.setAsImageButton( true );
 
-      folder.addParameter( fileInSessionParameter, mediaId );
+      folder.addParameter( this.fileInSessionParameter, mediaId );
 
       T.add( folder, 1, 1 );
 
     }
     
     Link rename = MediaBusiness.getRenameFileLink();
-	rename.setText(iwrb.getLocalizedString("mv.properties","properties"));
+	rename.setText(this.iwrb.getLocalizedString("mv.properties","properties"));
 	rename.setAsImageButton(true);
-	rename.addParameter(fileInSessionParameter,mediaId);
+	rename.addParameter(this.fileInSessionParameter,mediaId);
 	T.add(rename,1,1);
 	
 	Link move = MediaBusiness.getMoveLink();
-	move.setText(iwrb.getLocalizedString("mv.move","move"));
+	move.setText(this.iwrb.getLocalizedString("mv.move","move"));
 	move.setAsImageButton(true);
-	move.addParameter(fileInSessionParameter,mediaId);
+	move.addParameter(this.fileInSessionParameter,mediaId);
 	T.add(move, 1, 1); 
 	
     add( T );

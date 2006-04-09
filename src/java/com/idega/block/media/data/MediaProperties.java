@@ -54,9 +54,9 @@ public class MediaProperties {
 
   public MediaProperties(UploadFile uploadFile, Map parameterMap){
 
-    _uploadFile = uploadFile;
+    this._uploadFile = uploadFile;
 
-    _parameterMap = parameterMap;
+    this._parameterMap = parameterMap;
 
   }
 
@@ -114,7 +114,7 @@ public class MediaProperties {
 
   public UploadFile getUploadFile(){
 
-    return _uploadFile;
+    return this._uploadFile;
 
   }
 
@@ -122,73 +122,73 @@ public class MediaProperties {
 
   public String getName(){
 
-    return _uploadFile.getName();
+    return this._uploadFile.getName();
 
   }
 
   public void setName(String name){
 
-    _uploadFile.setName(name);
+    this._uploadFile.setName(name);
 
   }
 
   public String getMimeType(){
 
-    return _uploadFile.getMimeType();
+    return this._uploadFile.getMimeType();
 
   }
 
   public void setMimeType(String type){
 
-    _uploadFile.setMimeType(type);
+    this._uploadFile.setMimeType(type);
 
   }
 
   public String getRealPath(){
 
-    return _uploadFile.getRealPath();
+    return this._uploadFile.getRealPath();
 
   }
 
   public void setRealPath(String realpath){
 
-    _uploadFile.setRealPath(realpath);
+    this._uploadFile.setRealPath(realpath);
 
   }
 
   public String getWebPath(){
 
-    return _uploadFile.getWebPath();
+    return this._uploadFile.getWebPath();
 
   }
 
   public void setWebPath(String webpath){
 
-    _uploadFile.setWebPath(webpath);
+    this._uploadFile.setWebPath(webpath);
 
   }
 
   public long getSize(){
 
-    return _uploadFile.getSize();
+    return this._uploadFile.getSize();
 
   }
 
   public void setSize(long size){
 
-    _uploadFile.setSize(size);
+    this._uploadFile.setSize(size);
 
   }
 
   public int getId(){
 
-    return _uploadFile.getId();
+    return this._uploadFile.getId();
 
   }
 
   public void setId(int id){
 
-    _uploadFile.setId(id);
+    this._uploadFile.setId(id);
 
   }
 

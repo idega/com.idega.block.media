@@ -37,11 +37,11 @@ public class MissingMimeTypeException extends RuntimeException {
   }
 
   public ICFileType getSuggestedFileType(){
-    return type;
+    return this.type;
   }
 
   public String getMimeType(){
-    return mime;
+    return this.mime;
   }
 
 }

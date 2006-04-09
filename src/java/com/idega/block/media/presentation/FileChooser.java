@@ -23,7 +23,7 @@ public class FileChooser extends AbstractChooser implements IBFileChooser {
 
   public FileChooser() {
 	addForm(false);
-	setChooserParameter(defaultChooserName);
+	setChooserParameter(this.defaultChooserName);
   }
 
   public FileChooser(String chooserName) {

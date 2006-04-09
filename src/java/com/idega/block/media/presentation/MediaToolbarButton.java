@@ -54,15 +54,15 @@ public class MediaToolbarButton implements IBToolbarButton {
 
       image.setHorizontalSpacing(2);
 
-      _link = new Link(image);
+      this._link = new Link(image);
 
-      _link.setWindowToOpen(MediaChooserWindow.class);
+      this._link.setWindowToOpen(MediaChooserWindow.class);
 
     }
 
 
 
-    _isSeparator = isSeparator;
+    this._isSeparator = isSeparator;
 
   }
 
@@ -80,7 +80,7 @@ public class MediaToolbarButton implements IBToolbarButton {
 
   public Link getLink() {
 
-    return (_link);
+    return (this._link);
 
   }
 
@@ -98,7 +98,7 @@ public class MediaToolbarButton implements IBToolbarButton {
 
   public boolean getIsSeparator() {
 
-    return (_isSeparator);
+    return (this._isSeparator);
 
   }
 
