@@ -128,7 +128,7 @@ public class ImageInserter extends Block  {
 			}
 			if (this.limitWidth) {
 				image.setMaxImageWidth(this.maxImageWidth);
-				image.setHeight(90);
+				//image.setHeight(90);
 			}
 			if (this.imageWidth > 0) {
 				image.setWidth(this.imageWidth);
