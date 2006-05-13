@@ -46,7 +46,7 @@ private IWResourceBundle iwrb;
     private void handleEvents(IWContext iwc){
 
       /* Uploading and checking for a valid mimetype */
-      if( iwc.isMultipartFormData() ){
+      if( iwc.getUploadedFile() != null ){
       	System.out.println("handling multipart form");
         MediaProperties mediaProps = MediaBusiness.uploadToDiskAndGetMediaProperties(iwc);
 
