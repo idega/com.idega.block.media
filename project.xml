@@ -5,9 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>idegaWeb Media Block</name>
   <artifactId>com.idega.block.media</artifactId>
-  <currentVersion>1.1.3</currentVersion>
-  <!--currentVersion>1.1.4-SNAPSHOT</currentVersion-->
-
+  <currentVersion>3.1.0</currentVersion>
   <versions>
     <version>
       <id>1.0</id>
@@ -43,6 +41,11 @@
       <id>1.1.3</id>
       <name>1.1.3</name>
       <tag>MEDIA_1_1_3</tag>
+    </version>
+    <version>
+      <id>3.1.0</id>
+      <name>3.1.0</name>
+      <tag>MEDIA_3_1_0</tag>
     </version>
   </versions>
   <branches/>
@@ -87,12 +90,7 @@
     <dependency>
       <groupId>bundles</groupId>
       <artifactId>com.idega.core</artifactId>
-      <!--HELPER-->
-
-      <version>3.0.6</version>
-      <!--HELPER-->
-      <!--HELPERversion>SNAPSHOT</versionHELPER-->
-
+      <version>3.1.0</version>
       <type>jar</type>
       <url>http://www.idega.com/</url>
       <properties>
@@ -102,12 +100,7 @@
     <dependency>
       <groupId>bundles</groupId>
       <artifactId>com.idega.builder</artifactId>
-      <!--HELPER-->
-
-      <version>1.4.3</version>
-      <!--HELPER-->
-      <!--HELPERversion>SNAPSHOT</versionHELPER-->
-
+      <version>3.1.0</version>
       <type>jar</type>
       <url>http://www.idega.com/</url>
       <properties>
