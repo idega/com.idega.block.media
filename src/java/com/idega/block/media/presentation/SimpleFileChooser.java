@@ -6,6 +6,7 @@ import java.util.List;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.core.file.data.ICFile;
 import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.presentation.BusyBar;
 import com.idega.io.UploadFile;
 import com.idega.presentation.IWContext;
@@ -22,7 +23,7 @@ import com.idega.presentation.ui.TextInput;
  * <p>Description: A simple to use persentation object to upload a file into the database</p>
  * <p>Copyright: Idega SoftwareCopyright (c) 2001</p>
  * <p>Company: Idega Software</p>
- * @author <a href="gummi@idega.is">Guðmundur Ágúst Sæmundsson</a>
+ * @author <a href="gummi@idega.is">Guï¿½mundur ï¿½gï¿½st Sï¿½mundsson</a>
  * @version 1.1
  */
 
@@ -30,15 +31,23 @@ public class SimpleFileChooser extends InterfaceObject {
   private boolean showChangeUploadedFileOption = true;
 	//private Stringstyle;
   private String name;
+  private Form form;
   private int selectedFileId = -1;
   private boolean deleteOnChange = true;
   
   private BusyBar busy = null;
   private List disabledObjects;
 
+  private final static int ACTION_DELETE = 0;
+  private final static int ACTION_NEWFILE = 1;
+  private final static int ACTION_OLDFILE = 2;
+  private final static int ACTION_MAINTAINFILE = 3;
+  private int action = -1;
+  
   private boolean showPreviewLink = true;
 
   private IWBundle coreBundle;
+	private IWResourceBundle iwrb;
 	/**
 	 * @return
 	 */
@@ -54,6 +63,7 @@ public class SimpleFileChooser extends InterfaceObject {
 	}
 
 	public SimpleFileChooser(Form form, String chooserName) {
+    this.form = form;
     this.name = chooserName;
     form.setMultiPart();
     this.busy = new BusyBar("busy_uploading");
@@ -67,15 +77,16 @@ public class SimpleFileChooser extends InterfaceObject {
 
   public void addDisabledObjectWhileLoading(InterfaceObject obj){
     if(this.disabledObjects==null) {
-			this.disabledObjects = new java.util.Vector();
-		}
+		this.disabledObjects = new java.util.Vector();
+	}
     this.disabledObjects.add(obj);
   }
 
 
   public void main(IWContext iwc) throws Exception{
 		this.coreBundle = iwc.getIWMainApplication().getCoreBundle();
-		
+		this.iwrb = this.coreBundle.getResourceBundle(iwc);
+
     if(this.deleteOnChange && "true".equals(iwc.getParameter("change_file"))&&iwc.getParameter(this.name) != null){
       System.out.println("deleteFile: "+ iwc.getParameter(this.name));
       boolean del = false;

@@ -30,6 +30,7 @@ public class MediaServlet extends IWCoreServlet{
 
   public static final String PARAMETER_NAME = FileSystemConstants.PARAM_FILE_ID;
   public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
+  private boolean usesOldTables = false;
   private static IWMainApplication iwma;
   public static boolean debug = false;
 
@@ -46,8 +47,8 @@ public class MediaServlet extends IWCoreServlet{
 
   public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException{
     if( iwma == null ) {
-			iwma = IWMainApplication.getIWMainApplication(getServletContext());
-		}
+		iwma = IWMainApplication.getIWMainApplication(getServletContext());
+	}
 
     if(request.getParameter(PARAMETER_NAME)!=null || request.getParameter("image_id")!=null){
       new MediaOutputWriter().doPost(request,response,iwma);

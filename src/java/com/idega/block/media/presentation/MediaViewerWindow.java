@@ -2,6 +2,8 @@ package com.idega.block.media.presentation;
 
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
+import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.Window;
 
@@ -16,7 +18,10 @@ import com.idega.presentation.ui.Window;
 
 public class MediaViewerWindow extends Window{
 
-public MediaViewerWindow(){
+private IWBundle iwb;
+private IWResourceBundle iwrb;
+
+  public MediaViewerWindow(){
     setBackgroundColor( MediaConstants.MEDIA_VIEWER_BACKGROUND_COLOR );
     setAllMargins( 0 );
   }
@@ -30,8 +35,8 @@ public MediaViewerWindow(){
     
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
     if(action==null) {
-			action = "";
-		}
+		action = "";
+	}
 
     add(new MediaToolbar(mediaId));
     if( !action.equals(MediaConstants.MEDIA_ACTION_USE) && !action.equals(MediaConstants.MEDIA_ACTION_DELETE) && !action.equals(MediaConstants.MEDIA_ACTION_DELETE_CONFIRM) ){

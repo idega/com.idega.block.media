@@ -20,6 +20,8 @@ import com.idega.presentation.ui.AbstractChooser;
 public class FolderChooser extends AbstractChooser{
 	
 	private Image chooserButtonImage = null;
+	private boolean submitForm = false;
+	
 	public FolderChooser() {
 		addForm(false);
 	}

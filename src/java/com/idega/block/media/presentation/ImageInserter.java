@@ -89,107 +89,111 @@ public class ImageInserter extends Block  {
 	}
 
 	public ImageInserter(Class WindowToOpen) {
-		this.sHiddenInputName = imSessionImageName;
-		windowClass = WindowToOpen;
-		openInWindow = true;
+		this.sHiddenInputName = this.imSessionImageName;
+		this.windowClass = WindowToOpen;
+		this.openInWindow = true;
 	}
 
 	public void main(IWContext iwc) throws Exception {
 		this.empty();
-		iwb = getBundle(iwc);
-		iwrb = getResourceBundle(iwc);
+		this.iwb = getBundle(iwc);
+		this.iwrb = getResourceBundle(iwc);
 
-		contextPath = iwb.getApplication().getApplicationContextURI();
+		this.contextPath = this.iwb.getApplication().getApplicationContextURI();
 
-		if (contextPath == null)
-			contextPath = "";
-		else if (!contextPath.endsWith("/"))
-			contextPath += "/";
+		if (this.contextPath == null) {
+			this.contextPath = "";
+		}
+		else if (!this.contextPath.endsWith("/")) {
+			this.contextPath += "/";
+		}
 
-		nameOfWindow = iwrb.getLocalizedString("new_image", "New image");
-		sUseBoxString = iwrb.getLocalizedString("use_image", "Use image");
+		this.nameOfWindow = this.iwrb.getLocalizedString("new_image", "New image");
+		this.sUseBoxString = this.iwrb.getLocalizedString("use_image", "Use image");
 
-		String imageSessionId = (String) iwc.getSessionAttribute(imSessionImageName);
+		String imageSessionId = (String) iwc.getSessionAttribute(this.imSessionImageName);
 
 		if (imageSessionId != null) {
-			imageId = Integer.parseInt(imageSessionId);
-			if (!maintainSessionParameter) {
-				iwc.removeSessionAttribute(imSessionImageName);
+			this.imageId = Integer.parseInt(imageSessionId);
+			if (!this.maintainSessionParameter) {
+				iwc.removeSessionAttribute(this.imSessionImageName);
 			}
 		}
 
-		Image image = setImage;
+		Image image = this.setImage;
 		if (image == null) {
-			if (imageId == -1) {
-				image = iwrb.getImage("picture.gif", iwrb.getLocalizedString("new_image", "Newimage"), 138, 90);
+			if (this.imageId == -1) {
+				image = this.iwrb.getImage("picture.gif", this.iwrb.getLocalizedString("new_image", "Newimage"), 138, 90);
 			}
 			else {
-				image = new Image(imageId);
+				image = new Image(this.imageId);
 			}
-			if (limitWidth) {
+			if (this.limitWidth) {
 				image.setMaxImageWidth(this.maxImageWidth);
 				//image.setHeight(90);
 			}
-			if (imageWidth > 0) {
-				image.setWidth(imageWidth);
+			if (this.imageWidth > 0) {
+				image.setWidth(this.imageWidth);
 			}
-			if (imageHeight > 0) {
-				image.setHeight(imageHeight);
+			if (this.imageHeight > 0) {
+				image.setHeight(this.imageHeight);
 			}
 			image.setNoImageLink();
 		}
-		image.setName("im" + imSessionImageName);
+		image.setName("im" + this.imSessionImageName);
 		image.setBorder(1);
 
 		Link imageAdmin = null;
-		if (adminURL == null) {
+		if (this.adminURL == null) {
 			imageAdmin = new Link(image);
-			imageAdmin.setWindowToOpen(windowClass);
+			imageAdmin.setWindowToOpen(this.windowClass);
 		}
 		else {
-			Window insertNewsImageWindow = new Window(nameOfWindow, IM_BROWSER_WIDTH, IM_BROWSER_HEIGHT, adminURL);
+			Window insertNewsImageWindow = new Window(this.nameOfWindow, IM_BROWSER_WIDTH, IM_BROWSER_HEIGHT, this.adminURL);
 			imageAdmin = new Link(image, insertNewsImageWindow);
 		}
 
-		if (setWindowToReloadParent) {
+		if (this.setWindowToReloadParent) {
 			imageAdmin.addParameter(MediaConstants.MEDIA_ACTION_RELOAD, "true");
 		}
 
 		imageAdmin.addParameter("submit", "new");
-		imageAdmin.addParameter(sessionImageParameterName, imSessionImageName);
+		imageAdmin.addParameter(this.sessionImageParameterName, this.imSessionImageName);
 		//filter only images
 		imageAdmin.addParameter(MediaConstants.MEDIA_CHOOSER_PARAMETER_NAME, MediaConstants.MEDIA_CHOOSER_IMAGE);
 
-		if (imageId != -1)
-			imageAdmin.addParameter(imSessionImageName, imageId);
+		if (this.imageId != -1) {
+			imageAdmin.addParameter(this.imSessionImageName, this.imageId);
+		}
 
 		String stringImageID = null;
-		if (nullImageIDDefault && imageId==-1) {
+		if (this.nullImageIDDefault && this.imageId==-1) {
 			stringImageID = "";
 		}
 		else {
-			stringImageID = Integer.toString(imageId);
+			stringImageID = Integer.toString(this.imageId);
 		}
-		HiddenInput hidden = new HiddenInput(sHiddenInputName, stringImageID);
+		HiddenInput hidden = new HiddenInput(this.sHiddenInputName, stringImageID);
 		hidden.keepStatusOnAction();
 
 		Page P = getParentPage();
 		if (P != null) {
 			Script S = P.getAssociatedScript();
-			if (S != null)
+			if (S != null) {
 				S.addFunction("imchange", getImageChangeJSFunction(hidden.getID()));
+			}
 		}
 
-		CheckBox insertImage = new CheckBox(prmUseBox, "Y");
-		insertImage.setChecked(selected);
+		CheckBox insertImage = new CheckBox(this.prmUseBox, "Y");
+		insertImage.setChecked(this.selected);
 
-		Text imageText = new Text(sUseBoxString + ":&nbsp;");
+		Text imageText = new Text(this.sUseBoxString + ":&nbsp;");
 		imageText.setFontSize(1);
 
 		Table imageTable = new Table(1, 2);
 		imageTable.setAlignment(1, 2, "right");
 		imageTable.add(imageAdmin, 1, 1);
-		if (hasUseBox) {
+		if (this.hasUseBox) {
 			imageTable.add(imageText, 1, 2);
 			imageTable.add(insertImage, 1, 2);
 		}
@@ -208,7 +212,7 @@ public class ImageInserter extends Block  {
 		function.append("function setImageId(imageId,imagename) { \n \t");
 //		function.append("document.getElementById('im'+imagename).src = \"");
 		function.append("findObj('im'+imagename).src = \"");
-		function.append(contextPath + "servlet/MediaServlet");
+		function.append(this.contextPath + "servlet/MediaServlet");
 		function.append("?media_id=\"+imageId; \n\t");
 //		function.append("document.getElementById('").append(hiddenInputID).append("').value = imageId; \n}\n");
 		function.append("findObj('").append(hiddenInputID).append("').value = imageId; \n}\n");
@@ -243,11 +247,11 @@ public class ImageInserter extends Block  {
 	}
 
 	public void setHiddenInputName(String name) {
-		sHiddenInputName = name;
+		this.sHiddenInputName = name;
 	}
 
 	public String getHiddenInputName() {
-		return sHiddenInputName;
+		return this.sHiddenInputName;
 	}
 
 	public void setMaxImageWidth(int maxWidth) {
@@ -298,16 +302,16 @@ public class ImageInserter extends Block  {
 	}
 
 	public void maintainSessionParameter() {
-		maintainSessionParameter = true;
+		this.maintainSessionParameter = true;
 	}
 
 	public void setWindowToReload(boolean reload) {
-		setWindowToReloadParent = reload;
+		this.setWindowToReloadParent = reload;
 	}
 
 	public void setWindowClassToOpen(Class WindowClass) {
-		windowClass = WindowClass;
-		openInWindow = true;
+		this.windowClass = WindowClass;
+		this.openInWindow = true;
 	}
 
 	public String getBundleIdentifier() {
@@ -323,7 +327,7 @@ public class ImageInserter extends Block  {
 	 * the ImageID when nothing is selected
 	 */
 	public void setNullImageIDDefault() {
-		nullImageIDDefault = true;
+		this.nullImageIDDefault = true;
 	}
 
   public String getBuilderName(IWUserContext iwc) {

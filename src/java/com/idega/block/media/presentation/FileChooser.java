@@ -19,6 +19,7 @@ import com.idega.presentation.ui.AbstractChooser;
  */
 
 public class FileChooser extends AbstractChooser implements IBFileChooser {
+  private String style;
   private final String defaultChooserName = "f_c_n";
 
   public FileChooser() {

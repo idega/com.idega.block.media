@@ -122,7 +122,7 @@ public class MediaBusiness {
 		try {
 			file.store();
 			if (parentId == -1) { //add to root
-				ICFile rootNode = (ICFile)iwc.getIWMainApplication().getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+				ICFile rootNode = (ICFile)IWMainApplication.getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 				rootNode.addChild(file);
 			} else if (parentId == 0) { // no parent
 			} else { //register this parent
@@ -278,7 +278,7 @@ public class MediaBusiness {
 	 */
 	public static FileTypeHandler getFileTypeHandler(IWContext iwc, String mimeType) throws MissingMimeTypeException {
 		try {
-			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
+			IWCacheManager cm = IWMainApplication.getIWCacheManager();
 			ICFileTypeHandler typeHandler = (ICFileTypeHandler)cm.getFromCachedTable(ICFileTypeHandler.class, String.valueOf(getFileType(iwc, mimeType).getFileTypeHandlerID()));
 			if (typeHandler == null) {   
 	    		//TODO Sigtryggur refactor the "update-cache" part out of the bundle starter
@@ -302,7 +302,7 @@ public class MediaBusiness {
 	}
 	public static ICFileType getFileType(IWContext iwc, String mimeType) throws MissingMimeTypeException {
 		try {
-			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
+			IWCacheManager cm = IWMainApplication.getIWCacheManager();
 			ICFileType type = (ICFileType)cm.getFromCachedTable(ICFileType.class, String.valueOf(getFileTypeId(iwc, mimeType)));
 			if (type == null) { 
 	    		//TODO Sigtryggur refactor the "update-cache" part out of the bundle starter
@@ -317,7 +317,7 @@ public class MediaBusiness {
 	}
 	public static int getFileTypeId(IWContext iwc, String mimeType) throws MissingMimeTypeException {
 		try {
-			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
+			IWCacheManager cm = IWMainApplication.getIWCacheManager();
 			ICMimeType mime = (ICMimeType)cm.getFromCachedTable(ICMimeType.class, mimeType);
 			if (mime == null) { 
 	    		//TODO Sigtryggur refactor the "update-cache" part out of the bundle starter
@@ -352,7 +352,7 @@ public class MediaBusiness {
 	
 	*/
 	public static Map getICMimeTypeMap(IWContext iwc) {
-		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
+		IWCacheManager cm = IWMainApplication.getIWCacheManager();
 		return cm.getCachedTableMap(ICMimeType.class);
 	}
 	/**
@@ -367,7 +367,7 @@ public class MediaBusiness {
 	
 	 */
 	public static Map getICFileTypeMap(IWContext iwc) {
-		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
+		IWCacheManager cm = IWMainApplication.getIWCacheManager();
 		return cm.getCachedTableMap(ICFileType.class);
 	}
 	/**
@@ -382,7 +382,7 @@ public class MediaBusiness {
 	
 	*/
 	public static Map getICFileTypeHandlerMap(IWContext iwc) {
-		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
+		IWCacheManager cm = IWMainApplication.getIWCacheManager();
 		return cm.getCachedTableMap(ICFileTypeHandler.class);
 	}
 	/**
@@ -659,7 +659,7 @@ public class MediaBusiness {
 		return getCachedFileInfo(icFileId, ICFile.class, iwma, datasource);
 	}
 	public static Cache getCachedFileInfo(int id, Class entityClass, IWMainApplication iwma, String datasource) {
-		return iwma.getIWCacheManager().getCachedBlobObject(entityClass.getName(), id, iwma, datasource);
+		return IWMainApplication.getIWCacheManager().getCachedBlobObject(entityClass.getName(), id, iwma, datasource);
 	}
 	public static String getMediaURL(ICFile file, IWMainApplication iwma) {
 		Cache cache = getCachedFileInfo(((Integer)file.getPrimaryKey()).intValue(), iwma, file.getDatasource());

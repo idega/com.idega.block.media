@@ -16,6 +16,7 @@ import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICMimeTypeBMPBean;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.idegaweb.IWLocation;
+import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Table;
@@ -50,7 +51,7 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 
 	public void displaySelection(IWContext iwc) {
     this.iwrb = getResourceBundle(iwc);
-    this.cm = iwc.getIWMainApplication().getIWCacheManager();
+    this.cm = IWMainApplication.getIWCacheManager();
     this.fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
     
     addTitle(this.iwrb.getLocalizedString("select_folder", "Select folder"), TITLE_STYLECLASS);

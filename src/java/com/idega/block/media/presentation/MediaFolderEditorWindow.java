@@ -10,6 +10,7 @@ import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
 import com.idega.core.file.data.ICFileType;
 import com.idega.data.IDOLookup;
+import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Table;
@@ -34,6 +35,7 @@ import com.idega.presentation.ui.Window;
 
 public class MediaFolderEditorWindow extends Window {
   private IWResourceBundle iwrb;
+  private String fileInSessionParameter = "";
 
   public MediaFolderEditorWindow() {
   }
@@ -50,6 +52,7 @@ public class MediaFolderEditorWindow extends Window {
     setAllMargins(0);
 
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
+    this.fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession( iwc );
 
     int mediaId = MediaBusiness.getMediaId(iwc);
 
@@ -85,7 +88,7 @@ public class MediaFolderEditorWindow extends Window {
           form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),String.valueOf(mediaId)));
         }
         else{
-          ICFile rootNode = (ICFile)iwc.getIWMainApplication().getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+          ICFile rootNode = (ICFile)IWMainApplication.getIWCacheManager().getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
           form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),rootNode.getPrimaryKey().toString()));
         }
 
@@ -238,7 +241,7 @@ public class MediaFolderEditorWindow extends Window {
 		table.add(type,1,row);
 		table.add(fileType.getDisplayName(),2,row);
 		row++;
-		Text size = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.size","Size")+":");
+		Text size = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.size","Size")+":");;
 		table.add(size,1,row);
 		table.add((file.getFileSize() != null ) ? file.getFileSize().toString() : "",2,row);
 		row++;

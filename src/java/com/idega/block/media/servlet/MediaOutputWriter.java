@@ -7,9 +7,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.util.database.ConnectionBroker;
 
@@ -24,10 +25,6 @@ import com.idega.util.database.ConnectionBroker;
  */
 
 public class MediaOutputWriter {
-	
-	public static Logger getLogger() {
-		return Logger.getLogger(MediaOutputWriter.class.getName());
-	}
 
 
   public void doPost(HttpServletRequest request, HttpServletResponse response,IWMainApplication iwma) throws IOException{
@@ -36,9 +33,11 @@ public class MediaOutputWriter {
     Statement Stmt = null;
     ResultSet RS = null;
 
-	String mmProp = iwma.getSettings().getProperty(MediaServlet.USES_OLD_TABLES);
-	// original condition, everything that is not null is true
-	boolean usesOldTables = (mmProp != null);
+    String mmProp = iwma.getSettings().getProperty(MediaServlet.USES_OLD_TABLES);
+    boolean usesOldTables = false;
+    if(mmProp!=null) {
+      usesOldTables = true;
+    }
 
     String contentType=null;
     String sql = "select file_value,mime_type from ic_file where ic_file_id=";
@@ -56,8 +55,8 @@ public class MediaOutputWriter {
        else{
         mediaId = request.getParameter("file_id");
         if(mediaId!=null) {
-					sql = "select file_value,content_type from file_ where file_id=";
-				}
+			sql = "select file_value,content_type from file_ where file_id=";
+		}
        }
     }
     else if( usesOldTables ){//special case for the Image object
@@ -81,8 +80,8 @@ public class MediaOutputWriter {
 
           if (!RS.wasNull()){
             if(contentType!=null) {
-							response.setContentType(contentType);
-						}
+				response.setContentType(contentType);
+			}
             DataOutputStream output = new DataOutputStream(response.getOutputStream() );
             byte buffer[]= new byte[1024];
             int	noRead	= 0;
@@ -96,13 +95,13 @@ public class MediaOutputWriter {
             output.close();
             myInputStream.close();
           }
-					else {
-						System.err.println("MediaServlet: Was null");
-					}
+		else {
+			System.err.println("MediaServlet: Was null");
+		}
         }
-				else {
-					System.err.println("InputStream is null");
-				}
+		else {
+			System.err.println("InputStream is null");
+		}
       }
     }
   }

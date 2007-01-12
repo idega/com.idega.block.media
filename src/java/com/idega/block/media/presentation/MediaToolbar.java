@@ -177,8 +177,8 @@ public class MediaToolbar extends Block {
 
 
     if(action==null) {
-			action = "";
-		}
+		action = "";
+	}
 
 
 

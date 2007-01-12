@@ -164,7 +164,7 @@ public class MediaBundleStarter implements IWBundleStartable {
 		//handle mimetypes
 
 		//cache file types ICFileType extends CacheableEntity
-		cm = iwma.getIWCacheManager();
+		this.cm = iwma.getIWCacheManager();
 		ICFileTypeHandler handlers = ((com.idega.core.file.data.ICFileTypeHandler)com.idega.data.IDOLookup.instanciateEntity(ICFileTypeHandler.class));
 		handlers.cacheEntity();
 		//cache file types ICFileType extends CacheableEntity
@@ -172,14 +172,14 @@ public class MediaBundleStarter implements IWBundleStartable {
 		types.cacheEntity();
 
 		//get the default file types
-		ICFileType applications = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_APPLICATION);
-		ICFileType audios = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_AUDIO);
-		ICFileType documents = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_DOCUMENT);
-		ICFileType images = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_IMAGE);
-		ICFileType vectors = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_VECTOR_GRAPHICS);
-		ICFileType videos = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_VIDEO);
-		ICFileType systems = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_SYSTEM);
-		ICFileType zips = (ICFileType)cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_ZIP);
+		ICFileType applications = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_APPLICATION);
+		ICFileType audios = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_AUDIO);
+		ICFileType documents = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_DOCUMENT);
+		ICFileType images = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_IMAGE);
+		ICFileType vectors = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_VECTOR_GRAPHICS);
+		ICFileType videos = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_VIDEO);
+		ICFileType systems = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_SYSTEM);
+		ICFileType zips = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_ZIP);
 
 		//cache
 		ICMimeType mimes = ((com.idega.core.file.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
@@ -187,23 +187,23 @@ public class MediaBundleStarter implements IWBundleStartable {
 
 		try {
 			//insert the mimetypes
-			registerMimeType(system, systems);
-			registerMimeType(application, applications);
-			registerMimeType(audio, audios);
-			registerMimeType(document, documents);
-			registerMimeType(image, images);
-			registerMimeType(vector, vectors);
-			registerMimeType(video, videos);
-			registerMimeType(zip, zips);
+			registerMimeType(this.system, systems);
+			registerMimeType(this.application, applications);
+			registerMimeType(this.audio, audios);
+			registerMimeType(this.document, documents);
+			registerMimeType(this.image, images);
+			registerMimeType(this.vector, vectors);
+			registerMimeType(this.video, videos);
+			registerMimeType(this.zip, zips);
 		} catch (Exception ex) {
 			ex.printStackTrace(System.err);
 		}
 
-		cm.removeTableFromCache(ICFileTypeHandler.class);
+		this.cm.removeTableFromCache(ICFileTypeHandler.class);
 
 		handlers.cacheEntityByID();
 
-		cm.removeTableFromCache(ICFileType.class);
+		this.cm.removeTableFromCache(ICFileType.class);
 		types.cacheEntityByID();
 
 		try {
@@ -237,7 +237,7 @@ public class MediaBundleStarter implements IWBundleStartable {
 			}
 
 			//cache it!
-			cm.cacheEntity(root, com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
+			this.cm.cacheEntity(root, com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
 		} catch (RemoteException rex) {
 			throw new EJBException(rex.getMessage());
@@ -253,7 +253,7 @@ public class MediaBundleStarter implements IWBundleStartable {
 
 		for (int i = 0; i < (array.length); i++) {
 			//check if these common mimetypes exist and insert if not.
-			mimetype = (ICMimeType)cm.getFromCachedTable(ICMimeType.class, array[i + 1]);
+			mimetype = (ICMimeType)this.cm.getFromCachedTable(ICMimeType.class, array[i + 1]);
 			if (mimetype == null) {
 				String mimeType = array[i + 1];
 				ICMimeTypeHome mimeHome = (ICMimeTypeHome)com.idega.data.IDOLookup.getHome(ICMimeType.class);

@@ -8,6 +8,7 @@ import com.idega.core.file.data.ICFileType;
 import com.idega.core.file.data.ICMimeType;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWCacheManager;
+import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.presentation.IWAdminWindow;
 import com.idega.presentation.IWContext;
@@ -90,13 +91,13 @@ private String mimeType = null;
 
   private void addMimeTypeForm(IWContext iwc){
     if(this.mimeType==null) {
-			this.mimeType = iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME);
-		}
+		this.mimeType = iwc.getParameter(MediaConstants.MEDIA_MIME_TYPE_PARAMETER_NAME);
+	}
      //insert dropdowns and form
     Form form = new Form();
     Table table = new Table(3,4);
     DropdownMenu typemenu = new DropdownMenu(MediaConstants.MEDIA_FILE_TYPE_PARAMETER_NAME);
-    IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
+    IWCacheManager cm = IWMainApplication.getIWCacheManager();
     HashMap types =  (HashMap) cm.getCachedTableMap(ICFileType.class);
     Iterator iter = types.keySet().iterator();
     while (iter.hasNext()) {

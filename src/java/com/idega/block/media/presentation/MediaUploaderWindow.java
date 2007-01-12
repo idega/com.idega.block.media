@@ -4,6 +4,7 @@ import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.block.media.business.MissingMimeTypeException;
 import com.idega.block.media.data.MediaProperties;
+import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Table;
@@ -25,6 +26,7 @@ import com.idega.presentation.ui.Window;
 
 public class MediaUploaderWindow extends Window{
 
+private IWBundle iwb;
 private IWResourceBundle iwrb;
 
 /* this parameter is changed right away */
@@ -39,6 +41,7 @@ private IWResourceBundle iwrb;
     public void main(IWContext iwc) throws Exception{
       super.main(iwc);
       this.iwrb = getResourceBundle(iwc);
+      this.iwb = getBundle(iwc);
       this.fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
       handleEvents(iwc);
     }
@@ -64,8 +67,8 @@ private IWResourceBundle iwrb;
 			   java.net.FileNameMap fileNameMap = java.net.URLConnection.getFileNameMap();
 			   String mime = fileNameMap.getContentTypeFor(name);
 			   if(mime!=null) {
-					mediaProps.setMimeType(mime);
-				}
+				mediaProps.setMimeType(mime);
+			}
 			}
             // added by aron, or else the missingmimeTypeException is never thrown otherwise than runtime exception
            
@@ -174,8 +177,8 @@ private IWResourceBundle iwrb;
     table.add(new SubmitButton(this.iwrb.getLocalizedString("me.submit","Submit")),1,3);
     String parentId = iwc.getParameter(this.fileInSessionParameter);
     if( parentId!=null ) {
-			table.add(new HiddenInput(this.fileInSessionParameter,parentId),1,3);
-		}
+		table.add(new HiddenInput(this.fileInSessionParameter,parentId),1,3);
+	}
  
     f.add(table);
 

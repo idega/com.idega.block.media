@@ -22,7 +22,9 @@ import com.idega.util.caching.Cache;
 
  */
 public class MediaViewer extends Block {
+	private String fileInSessionParameter = "ic_file_id";
 	private MediaProperties props = null;
+	private IWResourceBundle iwrb;
 	private int mediaId = -1;
 	/**
 	
