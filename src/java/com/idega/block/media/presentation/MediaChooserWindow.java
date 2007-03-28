@@ -24,6 +24,8 @@ import com.idega.user.business.UserBusiness;
 //public class MediaChooserWindow extends FrameSet {
 public class MediaChooserWindow extends AbstractChooserWindow {
 
+	private static final String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
+	
 	private static final String HELP_TEXT_KEY = "media_chooser_help";
 
 	private FrameSet frame = null;

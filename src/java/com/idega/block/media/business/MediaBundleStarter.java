@@ -11,7 +11,6 @@ package com.idega.block.media.business;
  */
 
 import java.rmi.RemoteException;
-import java.util.logging.Logger;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
@@ -31,8 +30,6 @@ import com.idega.idegaweb.IWCacheManager;
 import com.idega.idegaweb.IWMainApplication;
 
 public class MediaBundleStarter implements IWBundleStartable {
-	
-	private final Logger log = Logger.getLogger(MediaBundleStarter.class.getName());
 
 	private IWCacheManager cm;
 
@@ -141,6 +138,8 @@ public class MediaBundleStarter implements IWBundleStartable {
 
 	private String[] video = { "MPEG video mpeg mpg mpe", "video/mpeg", "MPEG-2 video mpv2 mp2v", "video/mpeg-2", "Macintosh Quicktime qt mov", "video/quicktime", "Microsoft video  avi", "video/x-msvideo", "SGI Movie format movie", "video/x-sgi-movie", "QuickDraw3D scene data (Apple) 3dmf", "x-world/x-3dmf" };
 
+	private String[] zip = { "Compressed Zip files", "application/x-zip-compressed" };
+
 	public MediaBundleStarter() {
 	}
 
@@ -180,7 +179,8 @@ public class MediaBundleStarter implements IWBundleStartable {
 		ICFileType vectors = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_VECTOR_GRAPHICS);
 		ICFileType videos = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_VIDEO);
 		ICFileType systems = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_SYSTEM);
-
+		ICFileType zips = (ICFileType)this.cm.getFromCachedTable(ICFileType.class, com.idega.core.file.data.ICFileTypeBMPBean.IC_FILE_TYPE_ZIP);
+		
 		//cache
 		ICMimeType mimes = ((com.idega.core.file.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
 		mimes.cacheEntity();
@@ -194,6 +194,7 @@ public class MediaBundleStarter implements IWBundleStartable {
 			registerMimeType(this.image, images);
 			registerMimeType(this.vector, vectors);
 			registerMimeType(this.video, videos);
+			registerMimeType(this.zip, zips);
 		} catch (Exception ex) {
 			ex.printStackTrace(System.err);
 		}
@@ -247,12 +248,6 @@ public class MediaBundleStarter implements IWBundleStartable {
 	}
 
 	public void registerMimeType(String[] array, ICFileType type) throws RemoteException {
-		if (type == null) {
-			if (array != null && array.length >= 2) {
-				log.severe("ICFileType not found in database for file type '" + array[1] + "'" + (array.length > 2 ? " and " + array.length / 2 + " more" : ""));
-			}
-			return;
-		}
 		int typeId = type.getID();
 		ICMimeType mimetype;
 
@@ -268,9 +263,11 @@ public class MediaBundleStarter implements IWBundleStartable {
 					mimetype.setFileTypeId(typeId);
 					mimetype.store();
 				} catch (CreateException cex) {
-					log.warning("Error inserting MIME-TYPE for: " + mimeType);
+					//ex.printStackTrace(System.err);
+					System.err.println("[MediBundleStarter] : Error inserting MIME-TYPE for: " + mimeType);
 				} catch (com.idega.data.IDOStoreException ex) {
-					log.warning("Error inserting MIME-TYPE for: " + mimeType);
+					//ex.printStackTrace(System.err);
+					System.err.println("[MediBundleStarter] : Error inserting MIME-TYPE for: " + mimeType);
 				}
 			}
 			i++;
