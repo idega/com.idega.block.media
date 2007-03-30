@@ -12,29 +12,29 @@ import com.idega.presentation.Table;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.AbstractChooserWindow;
 import com.idega.user.business.UserBusiness;
+
 /**
- * Title: com.idega.block.media.presentation.MediaChooserWindow
- * Description: The frame window that displays the filesystem
- * Copyright:    Copyright (c) 2001
- * Company:      idega software
+ * Title: com.idega.block.media.presentation.MediaChooserWindow Description: The frame window that displays the filesystem Copyright: Copyright (c)
+ * 2001 Company: idega software
+ * 
  * @author Eirikur S. Hrafnsson eiki@idega.is
  * @version 1.0
  */
 
-//public class MediaChooserWindow extends FrameSet {
+// public class MediaChooserWindow extends FrameSet {
 public class MediaChooserWindow extends AbstractChooserWindow {
 
-	private static final String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
-	
+	// private static final String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
+
 	private static final String HELP_TEXT_KEY = "media_chooser_help";
 
 	private FrameSet frame = null;
 
 	public MediaChooserWindow() {
 		super();
-		//frameset fixes
-		setEmpty(); //for IWAdminWindow
-		setOnlyScript(true); //for AbstractChooserWindow
+		// frameset fixes
+		setEmpty(); // for IWAdminWindow
+		setOnlyScript(true); // for AbstractChooserWindow
 		//
 		setWidth(640);
 		setHeight(480);
@@ -53,11 +53,11 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 	}
 
 	public void displaySelection(IWContext iwc) {
-		//store the parameter in session
-		//MediaBusiness.getMediaParameterNameInSession(iwc);
-//		IWContext iwc = IWContext.getInstance();
+		// store the parameter in session
+		// MediaBusiness.getMediaParameterNameInSession(iwc);
+		// IWContext iwc = IWContext.getInstance();
 		IWResourceBundle iwrb = getResourceBundle(iwc);
-		setTitle(iwrb.getLocalizedString("media_chooser_window.media_chooser","Media chooser"));
+		setTitle(iwrb.getLocalizedString("media_chooser_window.media_chooser", "Media chooser"));
 
 		MediaBusiness.saveMediaIdToSession(iwc, MediaBusiness.getMediaId(iwc));
 
@@ -78,23 +78,25 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 	}
 
 	public static class FileTree extends Page {
+
 		public FileTree() {
 			setAllMargins(0);
 			setStyleClass("main");
 			Table table = new Table();
 			table.setHeight(Table.HUNDRED_PERCENT);
 			table.setWidth(Table.HUNDRED_PERCENT);
-			table.setVerticalAlignment(1,1,Table.VERTICAL_ALIGN_TOP);
-			table.setVerticalAlignment(1,2,Table.VERTICAL_ALIGN_TOP);
-			table.setCellpadding(1,2,7);
-			table.add(new MediaTreeViewer(),1,1);
-			table.add(getHelp(HELP_TEXT_KEY),1,2);
-			//    setBackgroundColor(MediaConstants.MEDIA_TREE_VIEWER_BACKGROUND_COLOR);
+			table.setVerticalAlignment(1, 1, Table.VERTICAL_ALIGN_TOP);
+			table.setVerticalAlignment(1, 2, Table.VERTICAL_ALIGN_TOP);
+			table.setCellpadding(1, 2, 7);
+			table.add(new MediaTreeViewer(), 1, 1);
+			table.add(getHelp(HELP_TEXT_KEY), 1, 2);
+			// setBackgroundColor(MediaConstants.MEDIA_TREE_VIEWER_BACKGROUND_COLOR);
 			add(table);
 		}
 	}
 
 	public static class FileViewer extends MediaViewerWindow {
+
 		public FileViewer() {
 			setAllMargins(0);
 			setStyleClass("main");
@@ -102,6 +104,7 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 	}
 
 	public static class BottomFrameSet extends FrameSet {
+
 		public BottomFrameSet() {
 			add(FileTree.class);
 			add(FileViewer.class);
@@ -118,6 +121,7 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 	}
 
 	public static class Top extends Page {
+
 		private UserBusiness userBusiness = null;
 		private String styleSrc = "";
 
@@ -138,27 +142,29 @@ public class MediaChooserWindow extends AbstractChooserWindow {
 			Table t = new Table();
 			t.setCellpadding(10);
 			t.setCellspacing(0);
-			Text text = new Text(iwrb.getLocalizedString("media_chooser_window.media_chooser","Media chooser"));
+			Text text = new Text(iwrb.getLocalizedString("media_chooser_window.media_chooser", "Media chooser"));
 			text.setStyleAttribute(IWConstants.BUILDER_FONT_STYLE_TITLE);
-			t.add(text,1,1);
-			headerTable.setAlignment(2,1,Table.HORIZONTAL_ALIGN_RIGHT);
-			headerTable.add(t,2,1);
-			//			headerTable.addText(iwrb.getLocalizedString("media_chooser_window.media_chooser", "Media chooser"), IWConstants.BUILDER_FONT_STYLE_TITLE);
-			//   headerTable.add(getBundle(iwc).getImage(this.getBundle(iwc).getProperty("logo_image_name","top.gif")));
+			t.add(text, 1, 1);
+			headerTable.setAlignment(2, 1, Table.HORIZONTAL_ALIGN_RIGHT);
+			headerTable.add(t, 2, 1);
+			// headerTable.addText(iwrb.getLocalizedString("media_chooser_window.media_chooser", "Media chooser"), IWConstants.BUILDER_FONT_STYLE_TITLE);
+			// headerTable.add(getBundle(iwc).getImage(this.getBundle(iwc).getProperty("logo_image_name","top.gif")));
 
 			parentPage = this.getParentPage();
 			this.userBusiness = getUserBusiness(iwc);
 			this.styleSrc = this.userBusiness.getUserApplicationStyleSheetURL();
 			parentPage.addStyleSheetURL(this.styleSrc);
 
-			//   headerTable.add(iwc.getApplication().getCoreBundle().getImage("/editorwindow/idegaweb.gif","idegaWeb"),1,1);
+			// headerTable.add(iwc.getApplication().getCoreBundle().getImage("/editorwindow/idegaweb.gif","idegaWeb"),1,1);
 			add(headerTable);
 		}
+
 		protected UserBusiness getUserBusiness(IWApplicationContext iwc) {
 			if (this.userBusiness == null) {
 				try {
-					this.userBusiness = (UserBusiness)com.idega.business.IBOLookup.getServiceInstance(iwc, UserBusiness.class);
-				} catch (java.rmi.RemoteException rme) {
+					this.userBusiness = (UserBusiness) com.idega.business.IBOLookup.getServiceInstance(iwc, UserBusiness.class);
+				}
+				catch (java.rmi.RemoteException rme) {
 					throw new RuntimeException(rme.getMessage());
 				}
 			}
