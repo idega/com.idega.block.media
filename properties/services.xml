@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<services>
+	<service>
+		<id>youtube</id>
+		<index>0</index>
+		<name>YouTube</name>
+		<object>
+			<attributes>
+				<attribute name="width" embed="true">425</attribute>
+				<attribute name="height" embed="true">350</attribute>
+			</attributes>
+			<parameters>
+				<parameter name="movie" id="true">http://www.youtube.com/v/</parameter>
+				<parameter name="wmode" embed="true">transparent</parameter>
+			</parameters>
+		</object>
+		<embed>
+			<attributes>
+				<attribute name="src" id="true">http://www.youtube.com/v/</attribute>
+				<attribute name="type">application/x-shockwave-flash</attribute>
+			</attributes>
+		</embed>
+	</service>
+	<service>
+		<id>google</id>
+		<index>1</index>
+		<name>Google Video</name>
+		<object>
+			<attributes>
+				<attribute name="width" embed="true">425</attribute>
+				<attribute name="height" embed="true">350</attribute>
+			</attributes>
+			<parameters>
+				<parameter name="movie" id="true">http://www.youtube.com/v/</parameter>
+				<parameter name="wmode" embed="true">transparent</parameter>
+			</parameters>
+		</object>
+		<embed>
+			<attributes>
+				<attribute name="src" id="true">http://www.youtube.com/v/</attribute>
+				<attribute name="type">application/x-shockwave-flash</attribute>
+			</attributes>
+		</embed>
+	</service>
+	<service>
+		<id>yahoo</id>
+		<index>2</index>
+		<name>Yahoo Video</name>
+		<object>
+			<attributes>
+				<attribute name="width" embed="true">425</attribute>
+				<attribute name="height" embed="true">350</attribute>
+			</attributes>
+			<parameters>
+				<parameter name="movie" id="true">http://www.youtube.com/v/</parameter>
+				<parameter name="wmode" embed="true">transparent</parameter>
+			</parameters>
+		</object>
+		<embed>
+			<attributes>
+				<attribute name="src" id="true">http://www.youtube.com/v/</attribute>
+				<attribute name="type">application/x-shockwave-flash</attribute>
+			</attributes>
+		</embed>
+	</service>
+</services>
