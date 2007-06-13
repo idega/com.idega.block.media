@@ -111,7 +111,7 @@ public class VideoViewer extends Block {
 				//TODO
 			}
 		} else {
-			section.add(new Text(getResourceBundle().getLocalizedString("iwblock.video.noid", "ID of YouTube video not set")));
+			section.add(new Text(getResourceBundle().getLocalizedString("iwblock.video.noid", "Video parameters are not set")));
 		}
 		
 		add(section);

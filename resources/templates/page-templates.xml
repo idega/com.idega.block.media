@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page-templates>
+	<page name="Video" type="media" iconfile="idegaweb/bundles/com.idega.block.media.bundle/resources/images/pageIcons/video.png" templatefile="idegaweb/bundles/com.idega.block.media.bundle/resources/pages/idega_video_page.xml"></page>
+</page-templates>
