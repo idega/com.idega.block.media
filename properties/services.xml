@@ -27,6 +27,7 @@
 		<index>1</index>
 		<name>Google Video</name>
 		<object>
+			<!--
 			<attributes>
 				<attribute name="width" embed="true">425</attribute>
 				<attribute name="height" embed="true">350</attribute>
@@ -35,19 +36,24 @@
 				<parameter name="movie" id="true">http://www.youtube.com/v/</parameter>
 				<parameter name="wmode" embed="true">transparent</parameter>
 			</parameters>
+			-->
 		</object>
 		<embed>
 			<attributes>
-				<attribute name="src" id="true">http://www.youtube.com/v/</attribute>
+				<attribute name="style">width:400px; height:326px;</attribute>
+				<attribute name="id">VideoPlayback</attribute>
+				<attribute name="src" id="true">http://video.google.com/googleplayer.swf?docId=</attribute>
+				<attribute name="flashvars"></attribute>
 				<attribute name="type">application/x-shockwave-flash</attribute>
 			</attributes>
 		</embed>
 	</service>
 	<service>
-		<id>yahoo</id>
+		<id>metacafe</id>
 		<index>2</index>
-		<name>Yahoo Video</name>
+		<name>Metacafe</name>
 		<object>
+			<!--
 			<attributes>
 				<attribute name="width" embed="true">425</attribute>
 				<attribute name="height" embed="true">350</attribute>
@@ -56,10 +62,15 @@
 				<parameter name="movie" id="true">http://www.youtube.com/v/</parameter>
 				<parameter name="wmode" embed="true">transparent</parameter>
 			</parameters>
+			-->
 		</object>
 		<embed>
 			<attributes>
-				<attribute name="src" id="true">http://www.youtube.com/v/</attribute>
+				<attribute name="src" id="true">http://www.metacafe.com/fplayer/</attribute>
+				<attribute name="width">400</attribute>
+				<attribute name="height">345</attribute>
+				<attribute name="wmode">transparent</attribute>
+				<attribute name="pluginspage">http://www.macromedia.com/go/getflashplayer</attribute>
 				<attribute name="type">application/x-shockwave-flash</attribute>
 			</attributes>
 		</embed>

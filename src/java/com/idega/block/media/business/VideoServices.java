@@ -9,12 +9,12 @@ import com.idega.business.IBOService;
 
 public interface VideoServices extends IBOService {
 	/**
-	 * @see com.idega.block.media.business.VideoServicesBean#addVideoService
+	 * @see com.idega.block.video.business.VideoServicesBean#addVideoService
 	 */
 	public void addVideoService(VideoService service) throws RemoteException;
 
 	/**
-	 * @see com.idega.block.media.business.VideoServicesBean#getVideoService
+	 * @see com.idega.block.video.business.VideoServicesBean#getVideoService
 	 */
 	public VideoService getVideoService(String id) throws RemoteException;
 

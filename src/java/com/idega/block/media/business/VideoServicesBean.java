@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +17,6 @@ import org.jdom.input.SAXBuilder;
 import com.idega.block.media.data.VideoService;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
-import com.idega.business.IBORuntimeException;
 import com.idega.business.IBOServiceBean;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.slide.business.IWSlideService;
@@ -38,10 +38,16 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 	}
 
 	public VideoService getVideoService(String id) {
+		if(services.keySet().size() == 0) {
+			initialize();
+		}
 		return (VideoService) services.get(id);
 	}
 	
 	public Map getVideoServices() {
+		if(services.keySet().size() == 0) {
+			initialize();
+		}
 		return services;
 	}
 	
@@ -64,7 +70,8 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 			
 			initialize();
 		} catch (IBOLookupException ile) {
-			throw new IBORuntimeException(ile);
+			//TODO
+//			throw new IBORuntimeException(ile);
 		} catch(RemoteException re) {
 			//TODO handling
 		} catch(IOException ioe) {
@@ -82,10 +89,11 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 			Element root = doc.getRootElement();
 		
 			List serviceElements = root.getChildren("service");
-			
-			for (int i = 0; i < serviceElements.size(); i++) {
-			   Element serviceElement = (Element)serviceElements.get(i);
-			   System.out.println("Service: " + serviceElement.toString());
+			Iterator serviceIterator = serviceElements.iterator();
+			while(serviceIterator.hasNext()) {
+			//for (int i = 0; i < serviceElements.size(); i++) {
+			   Element serviceElement = (Element)serviceIterator.next();
+			   //System.out.println("Service: " + serviceElement.toString());
 			   VideoService source = new VideoService();
 			   String id = serviceElement.getChild("id").getTextTrim();
 			   String index = serviceElement.getChild("index").getTextTrim();
@@ -95,47 +103,69 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 			   source.setName(name);
 			   
 			   Element objectElement = (Element) serviceElement.getChild("object");
-			   List objectAttributes = objectElement.getChild("attributes").getChildren("attribute");
-			   System.out.println("Object attributes: " + objectAttributes.size());
-			   for (int k = 0; k < objectAttributes.size(); k++) {
-				   Element objectAttribute = (Element)objectAttributes.get(k);
-				   source.addObjectAttribute(objectAttribute.getAttributeValue("name"), objectAttribute.getTextTrim());
-				   if(objectAttribute.getAttributeValue("embed") != null) {
-					   if(objectAttribute.getAttributeValue("embed").equalsIgnoreCase("true")) {
-						   source.addEmbedAttribute(objectAttribute.getAttributeValue("name"), objectAttribute.getTextTrim());
+			   if(objectElement != null) {
+				   Element objAttr = objectElement.getChild("attributes");
+				   if(objAttr != null) {
+					   List objectAttributes = objAttr.getChildren("attribute");
+					   //System.out.println("Object attributes: " + objectAttributes.size());
+					   Iterator objAttrIterator = objectAttributes.iterator();
+					   while(objAttrIterator.hasNext()) {
+						   Element objectAttribute = (Element)objAttrIterator.next();
+//						   System.out.println(objectAttribute.getAttributeValue("name"));
+//						   System.out.println(objectAttribute.getTextTrim());
+						   source.addObjectAttribute(objectAttribute.getAttributeValue("name"), objectAttribute.getTextTrim());
+						   if(objectAttribute.getAttributeValue("embed") != null) {
+							   if(objectAttribute.getAttributeValue("embed").equalsIgnoreCase("true")) {
+								   source.addEmbedAttribute(objectAttribute.getAttributeValue("name"), objectAttribute.getTextTrim());
+							   }
+						   }
 					   }
 				   }
-			   }
-			   List objectParameters = objectElement.getChild("parameters").getChildren("parameter");
-			   System.out.println("Object parameters: " + objectParameters.size());
-			   for (int l = 0; l < objectParameters.size(); l++) {
-				   Element objectParameter = (Element)objectParameters.get(l);
-				   source.addParameter(objectParameter.getAttributeValue("name"), objectParameter.getTextTrim());
-				   if(objectParameter.getAttributeValue("embed") != null) {
-					   if(objectParameter.getAttributeValue("embed").equalsIgnoreCase("true")) {
-						   source.addEmbedAttribute(objectParameter.getAttributeValue("name"), objectParameter.getTextTrim());
-					   }
-				   }
-				   if(objectParameter.getAttributeValue("id") != null) {
-					   if(objectParameter.getAttributeValue("id").equalsIgnoreCase("true")) {
-						   source.setObjectId(objectParameter.getAttributeValue("name"));
+				   Element objPar = objectElement.getChild("parameters");
+				   if(objPar != null) {
+					   List objectParameters = objPar.getChildren("parameter");
+//					   System.out.println("Object parameters: " + objectParameters.size());
+					   Iterator objParIterator = objectParameters.iterator();
+					   while(objParIterator.hasNext()) {
+						   Element objectParameter = (Element)objParIterator.next();
+//						   System.out.println(objectParameter.getAttributeValue("name"));
+//						   System.out.println(objectParameter.getTextTrim());
+						   source.addParameter(objectParameter.getAttributeValue("name"), objectParameter.getTextTrim());
+						   if(objectParameter.getAttributeValue("embed") != null) {
+							   if(objectParameter.getAttributeValue("embed").equalsIgnoreCase("true")) {
+								   source.addEmbedAttribute(objectParameter.getAttributeValue("name"), objectParameter.getTextTrim());
+							   }
+						   }
+						   if(objectParameter.getAttributeValue("id") != null) {
+							   if(objectParameter.getAttributeValue("id").equalsIgnoreCase("true")) {
+								   source.setObjectId(objectParameter.getAttributeValue("name"));
+							   }
+						   }
 					   }
 				   }
 			   }
 			   
 			   Element embedElement = (Element) serviceElement.getChild("embed");
-			   
-			   List embedAttributes = embedElement.getChild("attributes").getChildren("attribute");
-			   System.out.println("Embed parameters: " + embedAttributes.size());
-			   for (int m = 0; m < embedAttributes.size(); m++) {
-				   Element embedAttribute = (Element)embedAttributes.get(m);
-				   source.addEmbedAttribute(embedAttribute.getAttributeValue("name"), embedAttribute.getTextTrim());
-				   if(embedAttribute.getAttributeValue("id") != null) {
-					   if(embedAttribute.getAttributeValue("id").equalsIgnoreCase("true")) {
-						   source.setEmbedId(embedAttribute.getAttributeValue("name"));
+			   if(embedElement != null) {
+				   Element embedAttr = embedElement.getChild("attributes");
+				   if(embedAttr != null) {
+					   List embedAttributes = embedAttr.getChildren("attribute");
+//					   System.out.println("Embed parameters: " + embedAttributes.size());
+					   Iterator embAttrIterator = embedAttributes.iterator();
+					   while(embAttrIterator.hasNext()) {
+						   Element embedAttribute = (Element)embAttrIterator.next();
+//						   System.out.println(embedAttribute.getAttributeValue("name"));
+//						   System.out.println(embedAttribute.getTextTrim());
+						   source.addEmbedAttribute(embedAttribute.getAttributeValue("name"), embedAttribute.getTextTrim());
+						   if(embedAttribute.getAttributeValue("id") != null) {
+							   if(embedAttribute.getAttributeValue("id").equalsIgnoreCase("true")) {
+								   source.setEmbedId(embedAttribute.getAttributeValue("name"));
+							   }
+						   }
 					   }
 				   }
 			   }
+			   
 			   services.put(source.getId(), source);
 			}
 		} catch(JDOMException jde) {
