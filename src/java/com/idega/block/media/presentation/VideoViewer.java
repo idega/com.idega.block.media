@@ -58,11 +58,9 @@ public class VideoViewer extends Block {
 	
 	public void present(IWContext iwc) throws Exception {
 		Layer section = new Layer(Layer.DIV);
-		String temp = videoId;
-		String temp2 = serviceId;
 		if(videoId != null && !videoId.equals("") && serviceId != null) {
 			try {
-				VideoServices videoServices = (VideoServices) IBOLookup.getServiceInstance(iwc.getIWMainApplication().getIWApplicationContext(), VideoServices.class);
+				VideoServices videoServices = (VideoServices) IBOLookup.getServiceInstance(iwc, VideoServices.class);
 				VideoService service = videoServices.getVideoService(serviceId);
 				if(service != null) {
 					Shockwave player = new Shockwave();
@@ -71,7 +69,9 @@ public class VideoViewer extends Block {
 					player.setPluginSpace(null);
 					player.clearParams();
 					
+					//not used yet?
 					Map objAttr = service.getObjectAttributes();
+					
 					Map objPar = service.getParameters();
 					Map embAttr = service.getEmbedAttributes();
 					Iterator it1 = objPar.keySet().iterator();
