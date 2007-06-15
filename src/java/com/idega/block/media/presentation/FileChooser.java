@@ -59,4 +59,8 @@ public class FileChooser extends AbstractChooser implements IBFileChooser {
     setSelectedFile((ICFile)file);
   }
 
+  @Override
+  protected String getChooserHelperVarName() {
+	return "file_chooser_helper";
+  }
 }

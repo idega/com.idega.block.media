@@ -60,6 +60,11 @@ public class FolderChooser extends AbstractChooser{
 		return MediaConstants.IW_BUNDLE_IDENTIFIER;
 	}
 	
+	@Override
+	protected String getChooserHelperVarName() {
+		return "folder_chooser_helper";
+	}
+	
 /*	protected void addParametersToForm(Form form) {
 		if(submitForm) {
 			form.addParameter(FolderChooserWindow.SUBMIT_PARENT_FORM_AFTER_CHANGE,"true");
