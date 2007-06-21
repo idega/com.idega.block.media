@@ -68,6 +68,7 @@
               </map>
             </value>
             <type>map</type>
+            <simple>true</simple>
           </key>
           <key>
             <name>:method:1:implied:void:setVideoId:java.lang.String:</name>
@@ -122,6 +123,7 @@
               </map>
             </value>
             <type>map</type>
+            <simple>true</simple>
           </key>
         </map>
       </value>
