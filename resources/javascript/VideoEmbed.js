@@ -1,6 +1,7 @@
 function setVideoService(value, instanceId, id) {
 	if(value != null) {
 		if(instanceId != null) {
+			showElementLoading(id);
 			VideoServices.setVideoProperties(value, '', instanceId, {
 				callback: function(component) {
 					reRenderVideoViewer(component, id);
@@ -11,11 +12,11 @@ function setVideoService(value, instanceId, id) {
 }
 function reRenderVideoViewer(component, id) {
 	if(component != null) {
-		console.log(component);
 		var container = document.getElementById(id);
 		if(container != null) {
-			removeChildren(container);
-			insertNodesToContainer(component, container);
+			var containerParent = container.parentNode;
+			removeChildren(containerParent);
+			insertNodesToContainer(component.childNodes[0], containerParent);
 		}
 	}
 }
@@ -23,6 +24,7 @@ function setVideoId(event, value, instanceId, id) {
 	if(isEnterEvent(event)) {
 		if(value != null) {
 			if(instanceId != null) {
+				showElementLoading(id);
 				VideoServices.setVideoProperties('', value, instanceId, {
 					callback: function(component) {
 						reRenderVideoViewer(component, id);
@@ -33,6 +35,7 @@ function setVideoId(event, value, instanceId, id) {
 	}
 }
 function clearVideoViewer(instanceId, id) {
+	showElementLoading(id);
 	VideoServices.setVideoProperties('', '', instanceId, {
 		callback: function(component) {
 			reRenderVideoViewer(component, id);

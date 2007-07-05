@@ -16,10 +16,10 @@ import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.Block;
 import com.idega.presentation.IWContext;
+import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.Shockwave;
-import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.RadioButton;
 import com.idega.presentation.ui.RadioGroup;
@@ -94,13 +94,8 @@ public class VideoViewer extends Block {
 						player.setMarkupAttribute(parName, parValue);
 					}
 				}
-				
 				return player;
 			}
-//			player.setTransparent();
-//			player.setURL(YOUTUBE_WWW_PREFIX + videoId);
-//			player.setMarkupAttribute(YOUTUBE_PARAMETER_TYPE, YOUTUBE_VALUE_TYPE);
-//			player.setMarkupAttribute(YOUTUBE_PARAMETER_PLAY, "");
 		} catch(RemoteException re) {
 			//TODO
 		}
@@ -108,14 +103,16 @@ public class VideoViewer extends Block {
 	}
 	
 	private void addDwrScript(IWContext iwc, Layer obj) {
+		obj.add("<script type=\"text/javascript\" src=\"/dwr/engine.js\" ><!--//--></script>");
 		obj.add("<script type=\"text/javascript\" src=\"/dwr/interface/VideoServices.js\" ><!--//--></script>");
 		obj.add("<script type=\"text/javascript\" src=\"" + getBundle().getVirtualPathWithFileNameString("javascript/VideoEmbed.js") + "\"><!--//--></script>");
 	}
 	
 	public void present(IWContext iwc) throws Exception {
 		hasUserValidRights = ContentUtil.hasContentEditorRoles(iwc);
+		Layer rootSection = new Layer(Layer.DIV);
+		rootSection.setStyleClass("embeddedVideoBlock");
 		Layer section = new Layer(Layer.DIV);
-		section.setStyleClass("iwVideoViewer");
 		VideoServices videoServices = null;
 		try {
 			videoServices = (VideoServices) IBOLookup.getServiceInstance(iwc.getIWMainApplication().getIWApplicationContext(), VideoServices.class);
@@ -123,6 +120,7 @@ public class VideoViewer extends Block {
 			throw new IBORuntimeException(ile);
 		}
 		if(hasUserValidRights) {
+			section.setStyleClass("iwVideoViewerEditable");
 			String instanceId = BuilderLogic.getInstance().getInstanceId(this);
 			if(serviceId == null || "".equals(serviceId)) {
 				Map services = videoServices.getVideoServices();
@@ -138,21 +136,30 @@ public class VideoViewer extends Block {
 					}
 				}
 				section.add(radioButtons);
+				section.setStyleClass("videoServiceSection");
 			} else if(videoId == null || "".equals(videoId)) {
-				section.add(new Text(getResourceBundle().getLocalizedString("iwblock.media.video.nosetup", "Enter ID of a video clip")));
-				TextInput idInput = new TextInput("videooId");
+				Text header = new Text(getResourceBundle().getLocalizedString("iwblock.media.video.nosetup", "Enter ID of a video clip"));
+				header.setStyleClass("videoIdHeader");
+				section.add(header);
+				TextInput idInput = new TextInput("videoId");
 				idInput.setOnKeyUp("setVideoId(event, this.value, '" + instanceId + "', '" + section.getId() + "');");
 				idInput.setOnFocus("");
 				idInput.setOnBlur("");
+				idInput.setId("videoId");
 				section.add(idInput);
+				section.setStyleClass("videoIdInputSection");
 			} else {
 				section.add(getEmbeddedVideoBlock(videoServices));
-				Link clearLink = new Link();
-				clearLink.setText(getResourceBundle().getLocalizedString("iwblock.media.video.setup", "Setup"));
-				clearLink.setOnClick("clearVideoViewer('" + instanceId + "', '" + section.getId() + "');return false;");
-				section.add(clearLink);
+				section.setStyleClass("videoBlockSection");
 			}
+			Image setupButton = new Image();
+			setupButton.setSrc("/idegaweb/bundles/com.idega.block.media.bundle/resources/images/pageIcons/preferences-system.png");
+			setupButton.setStyleClass("videoSetupButton");
+			setupButton.setOnClick("clearVideoViewer('" + instanceId + "', '" + section.getId() + "');return false;");
+			setupButton.setToolTip(getResourceBundle().getLocalizedString("iwblock.media.video.setup", "Click to setup"));
+			section.add(setupButton);
 		} else {
+			section.setStyleClass("iwVideoViewer");
 			if(videoId == null || "".equals(videoId) || serviceId != null) {
 				section.add(new Text(getResourceBundle().getLocalizedString("iwblock.media.video.nosetup", "Video parameters are not set")));
 			} else {
@@ -162,7 +169,8 @@ public class VideoViewer extends Block {
 		if(hasUserValidRights) {
 			addDwrScript(iwc, section);
 		}
-		add(section);
+		rootSection.add(section);
+		add(rootSection);
 	}
 	
 	public String getBundleIdentifier() {

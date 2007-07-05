@@ -5,7 +5,7 @@
       <name>iw_components</name>
       <value>
         <map>
-        	<key>
+          <key>
             <name>com.idega.block.media.presentation.VideoViewer</name>
             <value>
               <map>
@@ -26,6 +26,8 @@
       <name>iw_bundle_identifier</name>
       <type>java.lang.String</type>
       <value>com.idega.block.media</value>
+      <simple>false</simple>
+      <reload>false</reload>
     </key>
     <key>
       <name>iw_bundle_starter_class</name>

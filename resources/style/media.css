@@ -1,0 +1,41 @@
+div.iwVideoViewer {
+	min-width: 415px;
+	min-height: 345px;
+	width: 415px;
+	height: 345px;
+}
+html>body .iwVideoViewerEditable .videoSetupButton {
+	visibility: hidden;
+}
+html>body .iwVideoViewerEditable:hover .videoSetupButton {
+	float: right;
+	margin-bottom: 0px;
+	bottom: 0px;
+	visibility: visible;
+	cursor: pointer;
+}
+.iwVideoViewerEditable {
+	min-width: 440px;
+	min-height: 370px;
+	width: 440px;
+	height: 370px;
+}
+.iwVideoViewerEditable:hover {
+	background-color: #F9F9F9;
+}
+.videoServiceSection {
+	padding-top: 20px;
+	/*padding-left: 30px;*/
+}
+.videoIdInputSection {
+	padding-top: 20px;
+	/*padding-left: 30px;*/
+}
+.videoIdInputSection #videoIdHeader {
+	display: block;
+}
+.videoIdInputSection #videoId {
+	display: block;
+}
+.videoBlockSection {
+}

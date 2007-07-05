@@ -1,4 +1,7 @@
 close=
+iw.component.com.idega.block.media.presentation.VideoViewer.name=VideoViewer
+iwblock.media.video.nosetup=Enter ID of a video clip
+iwblock.media.video.setup=Setup
 login_text=
 me.submit=Submit
 me.uploadtext=Select a file to upload.

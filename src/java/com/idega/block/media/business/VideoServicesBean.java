@@ -87,12 +87,15 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 //	}
 	
 	public Document setVideoProperties(String serviceId, String videoId, String instanceId) throws RemoteException {
-		if(builderService == null || builderEngine == null || serviceId == null || videoId == null || instanceId == null) {
+		if(builderService == null || builderEngine == null) {
+			initialize();
+		}
+		if(serviceId == null || videoId == null || instanceId == null) {
 			return null;
 		}
 		String pageKey = builderService.getCurrentPageKey(IWContext.getInstance());
 		boolean updateResult = false;
-		if(serviceId.equals("") && videoId.equals("")) {
+		if(videoId.equals("") && serviceId.equals("")) {
 			updateResult = builderService.removeProperty(IWMainApplication.getDefaultIWMainApplication(), pageKey, instanceId, VIDEO_SERVICE_PROPERTY, new String[] {serviceId});
 			updateResult = builderService.removeProperty(IWMainApplication.getDefaultIWMainApplication(), pageKey, instanceId, VIDEO_ID_PROPERTY, new String[] {videoId});
 		} else if(!serviceId.equals("")) {
@@ -100,10 +103,7 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 		} else {
 			updateResult = builderService.setModuleProperty(pageKey, instanceId, VIDEO_ID_PROPERTY, new String[] {videoId});
 		}
-		if(updateResult) {
-			return builderEngine.reRenderObject(pageKey, instanceId);
-		}
-		return null;
+		return builderEngine.reRenderObject(pageKey, instanceId);
 	}
 
 	public VideoService getVideoService(String id) {
