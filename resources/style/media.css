@@ -24,12 +24,12 @@ html>body .iwVideoViewerEditable:hover .videoSetupButton {
 	background-color: #F9F9F9;
 }
 .videoServiceSection {
-	padding-top: 20px;
-	/*padding-left: 30px;*/
+	/*padding-top: 20px;
+	padding-left: 30px;*/
 }
 .videoIdInputSection {
-	padding-top: 20px;
-	/*padding-left: 30px;*/
+	/*padding-top: 20px;
+	padding-left: 30px;*/
 }
 .videoIdInputSection #videoIdHeader {
 	display: block;
