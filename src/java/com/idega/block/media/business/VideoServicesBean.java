@@ -13,7 +13,6 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 import com.idega.block.media.data.VideoService;
-import com.idega.block.media.presentation.VideoViewer;
 import com.idega.builder.bean.BuilderEngine;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
@@ -43,48 +42,6 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 			throw new IllegalArgumentException("Parameter cannot be null");
 		}
 	}
-	
-	public void clearVideoViewer(String instanceId) {
-		
-	}
-	
-//	public Document setServiceIdProperty(String serviceId, String instanceId) throws RemoteException {
-//		if(builderService == null) {
-//			return null;
-//		}
-//		if(builderEngine == null) {
-//			return null;
-//		}
-//		String pageKey = builderService.getCurrentPageKey(IWContext.getInstance());
-//		builderService.setModuleProperty(pageKey, instanceId, VIDEO_SERVICE_PROPERTY, new String[] {serviceId});
-//		return builderEngine.reRenderObject(pageKey, instanceId);
-//	}
-//	
-//	public Document setVideoIdProperty(String videoId, String instanceId) throws RemoteException {
-//		if(builderService == null) {
-//			return null;
-//		}
-//		if(builderEngine == null) {
-//			return null;
-//		}
-//		String pageKey = builderService.getCurrentPageKey(IWContext.getInstance());
-//		builderService.setModuleProperty(pageKey, instanceId, VIDEO_ID_PROPERTY, new String[] {videoId});
-//		return builderEngine.reRenderObject(pageKey, instanceId);
-//	}
-//	
-//	public Document clearVideoProperties(String instanceId) throws RemoteException {
-//		if(builderService == null) {
-//			return null;
-//		}
-//		if(builderEngine == null) {
-//			return null;
-//		}
-//		String pageKey = builderService.getCurrentPageKey(IWContext.getInstance());
-//		List<String> moduleIds = builderService.getModuleId(pageKey, VideoViewer.class.getName());
-//		builderService.setModuleProperty(pageKey, (String) moduleIds.get(0), VIDEO_SERVICE_PROPERTY, new String[] {""});
-//		builderService.setModuleProperty(pageKey, (String) moduleIds.get(0), VIDEO_ID_PROPERTY, new String[] {""});
-//		return builderEngine.reRenderObject(pageKey, instanceId);
-//	}
 	
 	public Document setVideoProperties(String serviceId, String videoId, String instanceId) throws RemoteException {
 		if(builderService == null || builderEngine == null) {
@@ -138,9 +95,11 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 			   String id = serviceElement.getChild("id").getTextTrim();
 			   String index = serviceElement.getChild("index").getTextTrim();
 			   String name = serviceElement.getChild("name").getTextTrim();
+			   String icon = serviceElement.getChild("icon").getTextTrim();
 			   source.setId(id);
 			   source.setIndex(Integer.parseInt(index));
 			   source.setName(name);
+			   source.setIconURL(icon);
 			   
 			   Element objectElement = (Element) serviceElement.getChild("object");
 			   if(objectElement != null) {
@@ -173,6 +132,7 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 						   if(objectParameter.getAttributeValue("id") != null) {
 							   if(objectParameter.getAttributeValue("id").equalsIgnoreCase("true")) {
 								   source.setObjectId(objectParameter.getAttributeValue("name"));
+								   source.setIdPattern(objectParameter.getTextTrim());
 							   }
 						   }
 					   }
@@ -191,6 +151,7 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 						   if(embedAttribute.getAttributeValue("id") != null) {
 							   if(embedAttribute.getAttributeValue("id").equalsIgnoreCase("true")) {
 								   source.setEmbedId(embedAttribute.getAttributeValue("name"));
+								   source.setIdPattern(embedAttribute.getTextTrim());
 							   }
 						   }
 					   }

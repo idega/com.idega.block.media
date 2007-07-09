@@ -1,41 +1,64 @@
 div.iwVideoViewer {
-	min-width: 415px;
-	min-height: 345px;
-	width: 415px;
-	height: 345px;
+	min-width: 425px;
+	min-height: 350px;
+	width: 425px;
+	height: 350px;
 }
 html>body .iwVideoViewerEditable .videoSetupButton {
 	visibility: hidden;
 }
 html>body .iwVideoViewerEditable:hover .videoSetupButton {
-	float: right;
-	margin-bottom: 0px;
+	position: absolute;
 	bottom: 0px;
+	right: 0px;
 	visibility: visible;
 	cursor: pointer;
 }
 .iwVideoViewerEditable {
-	min-width: 440px;
-	min-height: 370px;
-	width: 440px;
-	height: 370px;
+	min-width: 447px;
+	min-height: 372px;
+	width: 447px;
+	height: 372px;
+	position: relative;
 }
 .iwVideoViewerEditable:hover {
 	background-color: #F9F9F9;
 }
-.videoServiceSection {
-	/*padding-top: 20px;
-	padding-left: 30px;*/
+.videoServiceSection table {
+	position: absolute;
+	left: 50%;
+	top: 50px;
+}
+.videoServiceSection table tr {
+	height: 30px;
+}
+.videoServiceSection #videoLabelDiv {
+	position: absolute;
+	right: 50%;
+	top: 50px;
+}
+.videoServiceSection img.icon {
+	width: 70px;
+	height: 30px;
+	display: block;
 }
 .videoIdInputSection {
-	/*padding-top: 20px;
-	padding-left: 30px;*/
+	
 }
-.videoIdInputSection #videoIdHeader {
+.videoIdInputSection .videoIdHeader {
 	display: block;
+	position: absolute;
+	top: 80px;
+	left: 100px;
+	font-size: 15px;
 }
 .videoIdInputSection #videoId {
 	display: block;
+	position: absolute;
+	top: 100px;
+	left: 100px;
+	width: 250px;
+	height: 20px;
 }
 .videoBlockSection {
 }

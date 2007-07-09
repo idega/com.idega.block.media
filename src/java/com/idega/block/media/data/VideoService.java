@@ -13,7 +13,21 @@ public class VideoService {
 	private Map parameters = new HashMap();
 	private String embedId;
 	private String objectId;
+	private String iconURL;
+	private String idPattern;
 	
+	public String getIdPattern() {
+		return idPattern;
+	}
+	public void setIdPattern(String idPattern) {
+		this.idPattern = idPattern;
+	}
+	public String getIconURL() {
+		return iconURL;
+	}
+	public void setIconURL(String iconURL) {
+		this.iconURL = iconURL;
+	}
 	public String getEmbedId() {
 		return embedId;
 	}

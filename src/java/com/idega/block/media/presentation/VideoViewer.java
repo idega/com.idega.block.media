@@ -54,6 +54,7 @@ public class VideoViewer extends Block {
 		return null;
 	}
 	
+	
 	public void main(IWContext iwc) throws Exception {
 		initialize(iwc);
 		present(iwc);
@@ -126,15 +127,22 @@ public class VideoViewer extends Block {
 				Map services = videoServices.getVideoServices();
 				Set ids = services.keySet();
 				RadioGroup radioButtons = new RadioGroup("Select a Video Service");
+				Layer labelSection = new Layer(Layer.DIV);
+				labelSection.setId("videoLabelDiv");
 				for(Iterator it = ids.iterator(); it.hasNext(); ) {
 					VideoService service = videoServices.getVideoService((String) it.next());
 					if(service != null) {
+						Image icon = new Image();
+						icon.setSrc(service.getIconURL());
+						icon.setStyleClass("icon");
+						labelSection.add(icon);
 						RadioButton button = new RadioButton(service.getName(), service.getId());
 						
 						button.setOnClick("setVideoService(this.value, '" + instanceId + "', '" + section.getId() + "');");
 						radioButtons.addRadioButton(button, new Text(service.getName()), false);
 					}
 				}
+				section.add(labelSection);
 				section.add(radioButtons);
 				section.setStyleClass("videoServiceSection");
 			} else if(videoId == null || "".equals(videoId)) {

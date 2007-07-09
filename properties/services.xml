@@ -5,6 +5,7 @@
 		<id>youtube</id>
 		<index>0</index>
 		<name>YouTube</name>
+		<icon>http://www.youtube.com/img/pic_youtubelogo_123x63.gif</icon>
 		<object>
 			<attributes>
 				<attribute name="width" embed="true">425</attribute>
@@ -26,21 +27,11 @@
 		<id>google</id>
 		<index>1</index>
 		<name>Google Video</name>
-		<object>
-			<!--
-			<attributes>
-				<attribute name="width" embed="true">425</attribute>
-				<attribute name="height" embed="true">350</attribute>
-			</attributes>
-			<parameters>
-				<parameter name="movie" id="true">http://www.youtube.com/v/</parameter>
-				<parameter name="wmode" embed="true">transparent</parameter>
-			</parameters>
-			-->
-		</object>
+		<icon>http://video.google.com/common/logo_video.jpg</icon>
+		<object></object>
 		<embed>
 			<attributes>
-				<attribute name="style">width:400px; height:326px;</attribute>
+				<attribute name="style">width:425px; height:350px;</attribute>
 				<attribute name="id">VideoPlayback</attribute>
 				<attribute name="src" id="true">http://video.google.com/googleplayer.swf?docId=</attribute>
 				<attribute name="flashvars"></attribute>
@@ -52,26 +43,61 @@
 		<id>metacafe</id>
 		<index>2</index>
 		<name>Metacafe</name>
-		<object>
-			<!--
-			<attributes>
-				<attribute name="width" embed="true">425</attribute>
-				<attribute name="height" embed="true">350</attribute>
-			</attributes>
-			<parameters>
-				<parameter name="movie" id="true">http://www.youtube.com/v/</parameter>
-				<parameter name="wmode" embed="true">transparent</parameter>
-			</parameters>
-			-->
-		</object>
+		<icon>http://www.masternewmedia.org/images/metacafe_logo.jpg</icon>
+		<object></object>
 		<embed>
 			<attributes>
 				<attribute name="src" id="true">http://www.metacafe.com/fplayer/</attribute>
-				<attribute name="width">400</attribute>
-				<attribute name="height">345</attribute>
+				<attribute name="width">425</attribute>
+				<attribute name="height">350</attribute>
 				<attribute name="wmode">transparent</attribute>
 				<attribute name="pluginspage">http://www.macromedia.com/go/getflashplayer</attribute>
 				<attribute name="type">application/x-shockwave-flash</attribute>
+			</attributes>
+		</embed>
+	</service>
+	<service>
+		<id>revver</id>
+		<index>3</index>
+		<name>Revver</name>
+		<icon>http://one.revver.com/images/revver-logo.gif</icon>
+		<object>
+		</object>
+		<embed>
+			<attributes>
+				<attribute name="src" id="true">http://media.revver.com/qt;sharer=0/</attribute>
+				<attribute name="width">425</attribute>
+				<attribute name="height">350</attribute>
+				<attribute name="scale">aspect</attribute>
+				<attribute name="cache">False</attribute>
+				<attribute name="autoplay">False</attribute>
+				<attribute name="pluginspage">http://www.apple.com/quicktime/download/</attribute>
+				<attribute name="type">video/quicktime</attribute>
+			</attributes>
+		</embed>
+	</service>
+	<service>
+		<id>viddler</id>
+		<index>4</index>
+		<name>Viddler</name>
+		<icon>http://www.brainfuel.tv/wp-content/uploads/2006/08/viddler.gif</icon>
+		<object>
+			<attributes>
+				<attribute name="width" embed="true">425</attribute>
+				<attribute name="height" embed="true">350</attribute>
+				<attribute name="id" embed="false">viddler</attribute>
+				<attribute name="classid" embed="false">clsid:D27CDB6E-AE6D-11cf-96B8-444553540000</attribute>
+			</attributes>
+			<parameters>
+				<parameter name="movie" id="true">http://www.viddler.com/player/</parameter>
+				<parameter name="allowScriptAccess" embed="true">always</parameter>
+			</parameters>
+		</object>
+		<embed>
+			<attributes>
+				<attribute name="src" id="true">http://www.viddler.com/player/</attribute>
+				<attribute name="type">application/x-shockwave-flash</attribute>
+				<attribute name="name">viddler</attribute>
 			</attributes>
 		</embed>
 	</service>
