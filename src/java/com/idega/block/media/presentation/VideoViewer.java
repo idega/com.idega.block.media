@@ -168,7 +168,7 @@ public class VideoViewer extends Block {
 			section.add(setupButton);
 		} else {
 			section.setStyleClass("iwVideoViewer");
-			if(videoId == null || "".equals(videoId) || serviceId != null) {
+			if(videoId == null || "".equals(videoId) || serviceId == null) {
 				section.add(new Text(getResourceBundle().getLocalizedString("iwblock.media.video.nosetup", "Video parameters are not set")));
 			} else {
 				section.add(getEmbeddedVideoBlock(videoServices));
