@@ -43,7 +43,7 @@
 		<id>metacafe</id>
 		<index>2</index>
 		<name>Metacafe</name>
-		<icon>http://www.masternewmedia.org/images/metacafe_logo.jpg</icon>
+		<icon>/idegaweb/bundles/com.idega.block.media.bundle/resources/images/metacafe.jpg</icon>
 		<object></object>
 		<embed>
 			<attributes>
@@ -98,6 +98,26 @@
 				<attribute name="src" id="true">http://www.viddler.com/player/</attribute>
 				<attribute name="type">application/x-shockwave-flash</attribute>
 				<attribute name="name">viddler</attribute>
+			</attributes>
+		</embed>
+	</service>
+	<service>
+		<id>veoh</id>
+		<index>5</index>
+		<name>Veoh</name>
+		<icon>/idegaweb/bundles/com.idega.block.media.bundle/resources/images/veoh.jpg</icon>
+		<object>
+		</object>
+		<embed>
+			<attributes>
+				<attribute name="src" id="true">http://www.veoh.com/videodetails2.swf?permalinkId=</attribute>
+				<attribute name="width">425</attribute>
+				<attribute name="height">350</attribute>
+				<attribute name="allowFullScreen">true</attribute>
+				<attribute name="bgcolor">#000000</attribute>
+				<attribute name="autoplay">False</attribute>
+				<attribute name="pluginspage">http://www.macromedia.com/go/getflashplayer</attribute>
+				<attribute name="type">application/x-shockwave-flash</attribute>
 			</attributes>
 		</embed>
 	</service>

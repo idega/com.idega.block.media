@@ -41,6 +41,7 @@ html>body .iwVideoViewerEditable:hover .videoSetupButton {
 	width: 70px;
 	height: 30px;
 	display: block;
+	margin-bottom: 2px;
 }
 .videoIdInputSection {
 	
