@@ -58,31 +58,22 @@
     <dependency>
       <groupId>com.idega.block.platform</groupId>
       <artifactId>com.idega.core</artifactId>
-      <version>4.0-SNAPSHOT</version>
-      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>com.idega.block.platform</groupId>
       <artifactId>com.idega.builder</artifactId>
-      <version>4.0-SNAPSHOT</version>
-      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>com.idega.block.platform</groupId>
       <artifactId>com.idega.webface</artifactId>
-      <version>4.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.idega.block.platform</groupId>
       <artifactId>com.idega.slide</artifactId>
-      <version>4.0-SNAPSHOT</version>
-      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>com.idega.block.platform</groupId>
       <artifactId>com.idega.content</artifactId>
-      <version>4.0-SNAPSHOT</version>
-      <type>jar</type>
     </dependency>
   </dependencies>
   
