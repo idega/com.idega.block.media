@@ -4,6 +4,7 @@
 package com.idega.block.media.business;
 
 import java.rmi.RemoteException;
+
 import com.idega.business.IBOServiceBean;
 import com.idega.core.file.business.FileIconSupplier;
 import com.idega.core.file.business.ICFileSystem;
@@ -40,8 +41,9 @@ public class MediaFileSystemBean extends IBOServiceBean implements MediaFileSyst
 	 */
 	public void initialize()
 	{
-		MediaBundleStarter starter = new MediaBundleStarter();  		
-		starter.start(getIWApplicationContext().getIWMainApplication());
+		//mediabundlestarter is always started!
+//		MediaBundleStarter starter = new MediaBundleStarter();  		
+//		starter.start(getIWApplicationContext().getIWMainApplication());
 	}
 
 	/* (non-Javadoc)

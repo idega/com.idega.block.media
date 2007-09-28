@@ -12,9 +12,11 @@ package com.idega.block.media.business;
 
 import java.rmi.RemoteException;
 import java.util.logging.Logger;
+
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
+
 import com.idega.core.data.ICApplicationBinding;
 import com.idega.core.data.ICApplicationBindingHome;
 import com.idega.core.file.data.ICFile;
@@ -145,23 +147,7 @@ public class MediaBundleStarter implements IWBundleStartable {
 	}
 
 	public void start(IWBundle bundle) {
-		//add toolbar buttons
-		//    MediaToolbarButton separator = new MediaToolbarButton(bundle,true);
-//		MediaToolbarButton button = new MediaToolbarButton(bundle, false);
-//
-//		List l = (List)bundle.getApplication().getAttribute(IBApplication.TOOLBAR_ITEMS);
-//		if (l == null) {
-//			l = new Vector();
-//			bundle.getApplication().setAttribute(IBApplication.TOOLBAR_ITEMS, l);
-//		}
-//
-//		l.add(button);
-		//    l.add(separator);
-
-	}
-
-	public void start(IWMainApplication iwma) {
-
+		IWMainApplication iwma = bundle.getApplication();
 		//handle mimetypes
 
 		//cache file types ICFileType extends CacheableEntity

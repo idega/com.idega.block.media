@@ -9,8 +9,10 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
+
 import com.idega.block.media.data.MediaProperties;
 import com.idega.business.IBOLookup;
 import com.idega.core.file.data.ICFile;
@@ -280,22 +282,12 @@ public class MediaBusiness {
 		try {
 			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 			ICFileTypeHandler typeHandler = (ICFileTypeHandler)cm.getFromCachedTable(ICFileTypeHandler.class, String.valueOf(getFileType(iwc, mimeType).getFileTypeHandlerID()));
-			if (typeHandler == null) {   
-	    		//TODO Sigtryggur refactor the "update-cache" part out of the bundle starter
-	    		MediaBundleStarter starter = new MediaBundleStarter();  		
-				starter.start(iwc.getIWMainApplication());
-				typeHandler = (ICFileTypeHandler)cm.getFromCachedTable(ICFileTypeHandler.class, String.valueOf(getFileType(iwc, mimeType).getFileTypeHandlerID()));
-			}
 			FileTypeHandler handler = FileTypeHandler.getInstance(iwc.getIWMainApplication(), typeHandler.getHandlerClass());
 			//System.out.println("SELECTED HANDLER IS : "+typeHandler.getHandlerName());
 			return handler;
 		} catch (NullPointerException x) {
 			/**
-			
-			 * @todo    find a suggested icfiletype and construct the exception with
-			
-			 *      it
-			
+			 * @todo    find a suggested icfiletype and construct the exception with it
 			 */
 			throw new MissingMimeTypeException("The mimetype is missing", mimeType);
 		}
@@ -304,12 +296,6 @@ public class MediaBusiness {
 		try {
 			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 			ICFileType type = (ICFileType)cm.getFromCachedTable(ICFileType.class, String.valueOf(getFileTypeId(iwc, mimeType)));
-			if (type == null) { 
-	    		//TODO Sigtryggur refactor the "update-cache" part out of the bundle starter
-	    		MediaBundleStarter starter = new MediaBundleStarter();  		
-				starter.start(iwc.getIWMainApplication());
-				type = (ICFileType)cm.getFromCachedTable(ICFileType.class, String.valueOf(getFileTypeId(iwc, mimeType)));
-			}
 			return type;
 		} catch (NullPointerException x) {
 			throw new MissingMimeTypeException("The mimetype is missing", mimeType);
@@ -319,12 +305,6 @@ public class MediaBusiness {
 		try {
 			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 			ICMimeType mime = (ICMimeType)cm.getFromCachedTable(ICMimeType.class, mimeType);
-			if (mime == null) { 
-	    		//TODO Sigtryggur refactor the "update-cache" part out of the bundle starter
-	    		MediaBundleStarter starter = new MediaBundleStarter();  		
-				starter.start(iwc.getIWMainApplication());
-				mime = (ICMimeType)cm.getFromCachedTable(ICMimeType.class, mimeType);
-			}
 			return mime.getFileTypeID();
 		} catch (NullPointerException x) {
 			throw new MissingMimeTypeException("The mimetype is missing", mimeType);

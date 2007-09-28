@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.ejb.FinderException;
 
-import com.idega.block.media.business.MediaBundleStarter;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.core.file.data.ICFile;
@@ -48,12 +47,6 @@ public class MediaTreeViewer extends Block {
     proto.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
     ICFile publicRootNodeOld = (ICFile)this.cm.getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
-	if (publicRootNodeOld == null) {   
-	    //TODO Sigtryggur refactor the "update-cache" part out of the bundle starter
-	    MediaBundleStarter starter = new MediaBundleStarter();  		
-		starter.start(iwc.getIWMainApplication());
-		publicRootNodeOld = (ICFile)this.cm.getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
-	}
     ICFileTree tree = new ICFileTree();
     tree.getLocation().setApplicationClass(MediaTreeViewer.class);
     tree.getLocation().setTarget("legacy_mediaviewer");
