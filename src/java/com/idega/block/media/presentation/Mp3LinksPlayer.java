@@ -1,17 +1,41 @@
 package com.idega.block.media.presentation;
 
+import org.apache.myfaces.renderkit.html.util.AddResource;
+import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
+
+import com.idega.block.media.business.MediaConstants;
+import com.idega.block.web2.business.Web2Business;
 import com.idega.block.web2.presentation.Sound;
+import com.idega.business.SpringBeanLookup;
+import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.Block;
 import com.idega.presentation.IWContext;
 
 /**
- * A Javascript MP3 player that picks up all links to mp3 files in the page and puts them in a playlist
- * @author eiki
+ * A Javascript MP3 player that picks up all links to mp3 files in the page and puts them in a playlist that you can...well...play!
+ * Based on jsAMP javascript mp3 player and SoundManager2,   <a href="http://www.schillmania.com/projects/soundmanager2/">See here.</a>
+ * @author <a href="mailto:eiki@idega.is">Eirikur Hrafnsson</a> 
  *
  */
 public class Mp3LinksPlayer extends Block {
 
+	private boolean useDarkSkin = false;
+	private String startingText = "jsAMP Technology Preview v0.99a.20071010";
+
 	public void main(IWContext iwc) throws Exception {
+		
+		Web2Business web2 = (Web2Business) SpringBeanLookup.getInstance().getSpringBean(iwc, Web2Business.class);
+		IWBundle iwb =  this.getBundle(iwc);
+		AddResource resourceAdder = AddResourceFactory.getInstance(iwc);
+		resourceAdder.addJavaScriptAtPosition(iwc, AddResource.HEADER_BEGIN,web2.getBundleURIToSoundManager2Lib());
+		resourceAdder.addJavaScriptAtPosition(iwc, AddResource.HEADER_BEGIN,iwb.getVirtualPathWithFileNameString("javascript/jsAMP.js"));
+		if(useDarkSkin){
+			resourceAdder.addStyleSheet(iwc, AddResource.HEADER_BEGIN,  this.getBundle(iwc).getVirtualPathWithFileNameString("style/jsAMP-dark.css"));
+		}
+		else{
+			resourceAdder.addStyleSheet(iwc, AddResource.HEADER_BEGIN,  this.getBundle(iwc).getVirtualPathWithFileNameString("style/jsAMP-light.css"));
+		}
+	
 
 		StringBuffer playerHTML = new StringBuffer();
 		playerHTML.append("<div id='player-template' class='sm2player'> \n");
@@ -28,7 +52,7 @@ public class Mp3LinksPlayer extends Block {
 
 		playerHTML.append("\t<div class='progress'></div> \n");
 		playerHTML.append("\t<div class='info'><span class='caption text'>%{artist} - %{title} [%{album}], (%{year}) (%{time})</span></div> \n");
-		playerHTML.append("\t<div class='default'>jsAMP Technology Preview v0.99a.20071010 (Seriously alpha - use at own risk! :))</div> \n");
+		playerHTML.append("\t<div class='default'>").append(startingText).append("</div> \n");
 
 		playerHTML.append("\t<div class='seek'>Seek to %{time1} of %{time2} (%{percent}%)</div> \n");
 		playerHTML.append("\t<div class='divider'>&nbsp;&nbsp;---&nbsp;&nbsp;</div> \n");
@@ -78,5 +102,12 @@ public class Mp3LinksPlayer extends Block {
 
 
 	}
+	
+	public String getBundleIdentifier() {
+		return MediaConstants.IW_BUNDLE_IDENTIFIER;
+	}
 
+	public void setUseDarkSkin(boolean useDarkSkin){
+		this.useDarkSkin = useDarkSkin;
+	}
 }
