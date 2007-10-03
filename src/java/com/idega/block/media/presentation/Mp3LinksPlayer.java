@@ -1,15 +1,20 @@
 package com.idega.block.media.presentation;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.apache.myfaces.renderkit.html.util.AddResource;
 import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
 
 import com.idega.block.media.business.MediaConstants;
 import com.idega.block.web2.business.Web2Business;
 import com.idega.block.web2.presentation.Sound;
+import com.idega.business.IBOLookup;
 import com.idega.business.SpringBeanLookup;
 import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.Block;
 import com.idega.presentation.IWContext;
+import com.idega.slide.business.IWSlideService;
 
 /**
  * A Javascript MP3 player that picks up all links to mp3 files in the page and puts them in a playlist that you can...well...play!
@@ -21,6 +26,7 @@ public class Mp3LinksPlayer extends Block {
 
 	private boolean useDarkSkin = false;
 	private String startingText = "jsAMP Technology Preview v0.99a.20071010";
+	private String mp3FolderPath = null;
 
 	public void main(IWContext iwc) throws Exception {
 		
@@ -94,6 +100,22 @@ public class Mp3LinksPlayer extends Block {
 		playerHTML.append("</div> \n");
 
 		playerHTML.append("</div> \n");
+		
+		if(mp3FolderPath!=null){
+			IWSlideService slide = (IWSlideService) IBOLookup.getServiceInstance(iwc, IWSlideService.class);
+			Collection uris = slide.getChildPathsExcludingFoldersAndHiddenFiles(mp3FolderPath);
+			if(!uris.isEmpty()){
+				playerHTML.append("<div style='display:none'> \n");
+				for (Iterator iterator = uris.iterator(); iterator.hasNext();) {
+					String uri = (String) iterator.next();
+					playerHTML.append("<a href='").append(uri).append("'>").append(uri.substring(uri.lastIndexOf("/")+1)).append("</a> \n");
+				}
+				playerHTML.append("</div> \n");
+			}
+			
+			
+		}
+		
 
 		add(playerHTML.toString());
 
@@ -107,7 +129,28 @@ public class Mp3LinksPlayer extends Block {
 		return MediaConstants.IW_BUNDLE_IDENTIFIER;
 	}
 
-	public void setUseDarkSkin(boolean useDarkSkin){
+	public String getStartingText() {
+		return startingText;
+	}
+
+	public void setStartingText(String startingText) {
+		this.startingText = startingText;
+	}
+
+	public String getMp3FolderPath() {
+		return mp3FolderPath;
+	}
+
+	public void setMp3FolderPath(String mp3FolderPath) {
+		this.mp3FolderPath = mp3FolderPath;
+	}
+
+	public boolean isSetUseDarkSkin() {
+		return useDarkSkin;
+	}
+
+	public void setToUseDarkSkin(boolean useDarkSkin){
 		this.useDarkSkin = useDarkSkin;
 	}
+	
 }
