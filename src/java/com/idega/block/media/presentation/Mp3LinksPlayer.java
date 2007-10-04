@@ -119,7 +119,7 @@ public class Mp3LinksPlayer extends Block {
 
 		add(playerHTML.toString());
 
-		add(new Sound());
+		//add(new Sound());
 
 
 
