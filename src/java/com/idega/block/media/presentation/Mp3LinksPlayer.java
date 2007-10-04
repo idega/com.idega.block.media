@@ -30,6 +30,8 @@ public class Mp3LinksPlayer extends Block {
 
 	public void main(IWContext iwc) throws Exception {
 		
+		//TODO ADD explorer PNG hack
+		
 		Web2Business web2 = (Web2Business) SpringBeanLookup.getInstance().getSpringBean(iwc, Web2Business.class);
 		IWBundle iwb =  this.getBundle(iwc);
 		AddResource resourceAdder = AddResourceFactory.getInstance(iwc);
