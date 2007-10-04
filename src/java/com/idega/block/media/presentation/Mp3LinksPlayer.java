@@ -8,7 +8,6 @@ import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
 
 import com.idega.block.media.business.MediaConstants;
 import com.idega.block.web2.business.Web2Business;
-import com.idega.block.web2.presentation.Sound;
 import com.idega.business.IBOLookup;
 import com.idega.business.SpringBeanLookup;
 import com.idega.idegaweb.IWBundle;
