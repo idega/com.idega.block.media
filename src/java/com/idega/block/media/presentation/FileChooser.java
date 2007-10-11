@@ -60,7 +60,7 @@ public class FileChooser extends AbstractChooser implements IBFileChooser {
   }
 
   @Override
-  protected String getChooserHelperVarName() {
+  public String getChooserHelperVarName() {
 	return "file_chooser_helper";
   }
 }

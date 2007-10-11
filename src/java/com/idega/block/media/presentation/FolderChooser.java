@@ -61,7 +61,7 @@ public class FolderChooser extends AbstractChooser{
 	}
 	
 	@Override
-	protected String getChooserHelperVarName() {
+	public String getChooserHelperVarName() {
 		return "folder_chooser_helper";
 	}
 	
