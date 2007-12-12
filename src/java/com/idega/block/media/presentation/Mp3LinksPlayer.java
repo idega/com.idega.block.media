@@ -32,7 +32,7 @@ public class Mp3LinksPlayer extends Block {
 		
 		//TODO ADD explorer PNG hack
 		
-		Web2Business web2 = (Web2Business) SpringBeanLookup.getInstance().getSpringBean(iwc, Web2Business.class);
+		Web2Business web2 = SpringBeanLookup.getInstance().getSpringBean(iwc, Web2Business.class);
 		IWBundle iwb =  this.getBundle(iwc);
 		AddResource resourceAdder = AddResourceFactory.getInstance(iwc);
 		resourceAdder.addJavaScriptAtPosition(iwc, AddResource.HEADER_BEGIN,web2.getBundleURIToSoundManager2Lib());
