@@ -34,6 +34,18 @@ function setVideoId(event, value, instanceId, id) {
 		}
 	}
 }
+function setVideoIdOnClick(event, value, instanceId, id) {
+		if(value != null) {
+			if(instanceId != null) {
+				showElementLoading(id);
+				VideoServices.setVideoProperties('', value, instanceId, {
+					callback: function(component) {
+						reRenderVideoViewer(component, id);
+					}
+				});
+			}
+		}
+}
 function clearVideoViewer(instanceId, id) {
 	showElementLoading(id);
 	VideoServices.setVideoProperties('', '', instanceId, {

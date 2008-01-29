@@ -60,7 +60,10 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 		} else {
 			updateResult = builderService.setModuleProperty(pageKey, instanceId, VIDEO_ID_PROPERTY, new String[] {videoId});
 		}
-		return builderEngine.reRenderObject(pageKey, instanceId);
+		System.out.println("Setting VideoViewer properties 1: " + serviceId + " : " + videoId);
+		Document document = builderEngine.reRenderObject(pageKey, instanceId);
+		System.out.println("Setting VideoViewer properties 2: " + document);
+		return document;
 	}
 
 	public VideoService getVideoService(String id) {
