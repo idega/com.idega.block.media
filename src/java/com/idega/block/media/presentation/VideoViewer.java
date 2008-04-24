@@ -56,6 +56,7 @@ public class VideoViewer extends Block {
 	}
 	
 	
+	@Override
 	public void main(IWContext iwc) throws Exception {
 		initialize(iwc);
 		present(iwc);
@@ -72,7 +73,7 @@ public class VideoViewer extends Block {
 				player.setPluginSpace(null);
 				player.clearParams();
 				
-				Map objAttr = service.getObjectAttributes();
+				//Map objAttr = service.getObjectAttributes();
 				Map objPar = service.getParameters();
 				Map embAttr = service.getEmbedAttributes();
 				Iterator it1 = objPar.keySet().iterator();
@@ -192,6 +193,7 @@ public class VideoViewer extends Block {
 		System.out.println("Done Rendering VideoViewer");
 	}
 	
+	@Override
 	public String getBundleIdentifier() {
 		return IW_BUNDLE_IDENTIFIER;
 	}

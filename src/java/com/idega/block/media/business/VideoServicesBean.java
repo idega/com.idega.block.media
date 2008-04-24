@@ -51,14 +51,14 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 			return null;
 		}
 		String pageKey = builderService.getCurrentPageKey(IWContext.getInstance());
-		boolean updateResult = false;
+		//boolean updateResult = false;
 		if(videoId.equals("") && serviceId.equals("")) {
-			updateResult = builderService.removeProperty(IWMainApplication.getDefaultIWMainApplication(), pageKey, instanceId, VIDEO_SERVICE_PROPERTY, new String[] {serviceId});
-			updateResult = builderService.removeProperty(IWMainApplication.getDefaultIWMainApplication(), pageKey, instanceId, VIDEO_ID_PROPERTY, new String[] {videoId});
+			/*updateResult =*/ builderService.removeProperty(IWMainApplication.getDefaultIWMainApplication(), pageKey, instanceId, VIDEO_SERVICE_PROPERTY, new String[] {serviceId});
+			/*updateResult =*/ builderService.removeProperty(IWMainApplication.getDefaultIWMainApplication(), pageKey, instanceId, VIDEO_ID_PROPERTY, new String[] {videoId});
 		} else if(!serviceId.equals("")) {
-			updateResult = builderService.setModuleProperty(pageKey, instanceId, VIDEO_SERVICE_PROPERTY, new String[] {serviceId});
+			/*updateResult =*/ builderService.setModuleProperty(pageKey, instanceId, VIDEO_SERVICE_PROPERTY, new String[] {serviceId});
 		} else {
-			updateResult = builderService.setModuleProperty(pageKey, instanceId, VIDEO_ID_PROPERTY, new String[] {videoId});
+			/*updateResult =*/ builderService.setModuleProperty(pageKey, instanceId, VIDEO_ID_PROPERTY, new String[] {videoId});
 		}
 		System.out.println("Setting VideoViewer properties 1: " + serviceId + " : " + videoId);
 		Document document = builderEngine.reRenderObject(pageKey, instanceId);
@@ -104,7 +104,7 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 			   source.setName(name);
 			   source.setIconURL(icon);
 			   
-			   Element objectElement = (Element) serviceElement.getChild("object");
+			   Element objectElement = serviceElement.getChild("object");
 			   if(objectElement != null) {
 				   Element objAttr = objectElement.getChild("attributes");
 				   if(objAttr != null) {
@@ -142,7 +142,7 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 				   }
 			   }
 			   
-			   Element embedElement = (Element) serviceElement.getChild("embed");
+			   Element embedElement = serviceElement.getChild("embed");
 			   if(embedElement != null) {
 				   Element embedAttr = embedElement.getChild("attributes");
 				   if(embedAttr != null) {
