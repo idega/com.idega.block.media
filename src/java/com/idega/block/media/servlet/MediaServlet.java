@@ -12,6 +12,15 @@ package com.idega.block.media.servlet;
 
 import java.io.IOException;
 
+import javax.faces.FactoryFinder;
+import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextFactory;
+import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
+import javax.faces.webapp.FacesServlet;
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,52 +34,81 @@ import com.idega.presentation.ui.Parameter;
 import com.idega.repository.data.RefactorClassRegistry;
 import com.idega.servlet.IWCoreServlet;
 
+public class MediaServlet extends IWCoreServlet implements Servlet {
 
-public class MediaServlet extends IWCoreServlet{
+	private static final long serialVersionUID = 6029625854933532862L;
+	
+	public static final String PARAMETER_NAME = FileSystemConstants.PARAM_FILE_ID;
+	public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
+	public static final String PRM_WRITABLE_CLASS = "wrcls";
+	public static final String PRM_SESSION_MEMORY_BUFFER = MemoryFileBufferWriter.PRM_SESSION_BUFFER;
 
-  public static final String PARAMETER_NAME = FileSystemConstants.PARAM_FILE_ID;
-  public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
-  private static IWMainApplication iwma;
-  public static boolean debug = false;
+	public static boolean debug = false;
 
-  public final static String PRM_WRITABLE_CLASS = "wrcls";
-  public final static String PRM_SESSION_MEMORY_BUFFER = MemoryFileBufferWriter.PRM_SESSION_BUFFER;
+	private static IWMainApplication iwma;
 
-  public static Parameter getParameter(int FileId){
-    return new Parameter(PARAMETER_NAME,String.valueOf(FileId));
-  }
+	private ServletConfig servletConfig = null;
+	private FacesContextFactory facesContextFactory = null;
+	private Lifecycle lifecycle = null;
+  
+	public static Parameter getParameter(int FileId){
+		return new Parameter(PARAMETER_NAME, String.valueOf(FileId));
+	}
 
-  public void doGet( HttpServletRequest _req, HttpServletResponse _res) throws IOException{
-    doPost(_req,_res);
-  }
+	@Override
+  	public void init(ServletConfig servletConfig)	throws ServletException {
+  		this.servletConfig = servletConfig;
+  		
+  		facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+  		LifecycleFactory lifecycleFactory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+  		lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
+  	}
+  	
+  	private String getLifecycleId() {
+  		String lifecycleId = servletConfig.getServletContext().getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
+  		return lifecycleId != null ? lifecycleId : LifecycleFactory.DEFAULT_LIFECYCLE;
+    }
+  
+  	@Override
+	public void doGet( HttpServletRequest _req, HttpServletResponse _res) throws IOException{
+		doPost(_req,_res);
+	}
 
-  public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException{
-    if( iwma == null ) {
-			iwma = IWMainApplication.getIWMainApplication(getServletContext());
+	@Override
+	public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException{
+	    if (iwma == null) {
+			iwma = IWMainApplication.getIWMainApplication(servletConfig.getServletContext());
 		}
 
-    if(request.getParameter(PARAMETER_NAME)!=null || request.getParameter("image_id")!=null){
-      new MediaOutputWriter().doPost(request,response,iwma);
-    }
-    else if(request.getParameter(PRM_SESSION_MEMORY_BUFFER)!=null){
-      new MemoryFileBufferWriter().doPost(request,response);
-    }
-    else if(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS)!=null){
-      try{
-      		IWContext iwc = new IWContext(request, response, getServletContext());
-      	
-      		
-        MediaWritable mw = (MediaWritable) RefactorClassRegistry.forName(IWMainApplication.decryptClassName(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS))).newInstance();
-        mw.init(request,iwc);
-        response.setContentType(mw.getMimeType());
-        ServletOutputStream out = response.getOutputStream();
-        mw.writeTo(out);
-        out.flush();
-
-      }
-      catch(Exception ex){
-        ex.printStackTrace();
-      }
-    }
-  }
+	    if (request.getParameter(PARAMETER_NAME) != null || request.getParameter("image_id") != null) {
+	    	new MediaOutputWriter().doPost(request, response, iwma);
+	    }
+	    else if (request.getParameter(PRM_SESSION_MEMORY_BUFFER) != null) {
+	    	new MemoryFileBufferWriter().doPost(request, response);
+	    }
+	    else if (request.getParameter(MediaWritable.PRM_WRITABLE_CLASS) != null) {
+	    	IWContext iwc = null;
+	    	try {
+		    	FacesContext facesContext = facesContextFactory.getFacesContext(servletConfig.getServletContext(), request, response, lifecycle);
+	    		iwc = IWContext.getIWContext(facesContext);
+	    	} catch(Exception e) {
+	    		e.printStackTrace();
+	    	}
+	    	try {
+	    		if (iwc == null) {
+	    			iwc = new IWContext(request, response, servletConfig.getServletContext());
+	    		}
+	      		
+	    		MediaWritable mw = (MediaWritable) RefactorClassRegistry.forName(IWMainApplication.decryptClassName(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS))).newInstance();
+		        mw.init(request, iwc);
+		        response.setContentType(mw.getMimeType());
+		        ServletOutputStream out = response.getOutputStream();
+		        mw.writeTo(out);
+		        out.flush();
+		    }
+	    	catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    }
+	}
 }
