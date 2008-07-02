@@ -10,11 +10,11 @@ import com.idega.block.media.business.MediaConstants;
 import com.idega.block.web2.business.Web2Business;
 import com.idega.block.web2.presentation.Sound;
 import com.idega.business.IBOLookup;
-import com.idega.business.SpringBeanLookup;
 import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.Block;
 import com.idega.presentation.IWContext;
 import com.idega.slide.business.IWSlideService;
+import com.idega.util.expression.ELUtil;
 
 /**
  * A Javascript MP3 player that picks up all links to mp3 files in the page and puts them in a playlist that you can...well...play!
@@ -32,7 +32,8 @@ public class Mp3LinksPlayer extends Block {
 		
 		//TODO ADD explorer PNG hack
 		
-		Web2Business web2 = SpringBeanLookup.getInstance().getSpringBean(iwc, Web2Business.class);
+		
+		Web2Business web2 = ELUtil.getInstance().getBean(Web2Business.class);
 		IWBundle iwb =  this.getBundle(iwc);
 		AddResource resourceAdder = AddResourceFactory.getInstance(iwc);
 		resourceAdder.addJavaScriptAtPosition(iwc, AddResource.HEADER_BEGIN,web2.getBundleURIToSoundManager2Lib());
@@ -105,11 +106,12 @@ public class Mp3LinksPlayer extends Block {
 		
 		if(mp3FolderPath!=null){
 			IWSlideService slide = (IWSlideService) IBOLookup.getServiceInstance(iwc, IWSlideService.class);
-			Collection uris = slide.getChildPathsExcludingFoldersAndHiddenFiles(mp3FolderPath);
+			@SuppressWarnings("unchecked")
+			Collection<String> uris = slide.getChildPathsExcludingFoldersAndHiddenFiles(mp3FolderPath);
 			if(!uris.isEmpty()){
 				playerHTML.append("<div style='display:none'> \n");
-				for (Iterator iterator = uris.iterator(); iterator.hasNext();) {
-					String uri = (String) iterator.next();
+				for (Iterator<String> iterator = uris.iterator(); iterator.hasNext();) {
+					String uri = iterator.next();
 					playerHTML.append("<a href='").append(uri).append("'>").append(uri.substring(uri.lastIndexOf("/")+1)).append("</a> \n");
 				}
 				playerHTML.append("</div> \n");
