@@ -25,6 +25,7 @@ import com.idega.core.file.data.ICFileType;
 import com.idega.core.file.data.ICFileTypeHandler;
 import com.idega.core.file.data.ICMimeType;
 import com.idega.core.file.data.ICMimeTypeHome;
+import com.idega.core.file.util.MimeTypeUtil;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOStoreException;
 import com.idega.idegaweb.IWBundle;
@@ -66,7 +67,7 @@ public class MediaBundleStarter implements IWBundleStartable {
 			"Adobe Acrobat PDF  pdf",
 			"application/pdf",
 			"Adobe Acrobat PDF  pdf",
-			"application/x-pdf",
+			MimeTypeUtil.MIME_TYPE_PDF_2,
 			"MS word document",
 			"application/msword",
 			"PowerPoint presentation (Microsoft) ppz",
