@@ -25,6 +25,7 @@ import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.RadioButton;
 import com.idega.presentation.ui.RadioGroup;
 import com.idega.presentation.ui.TextInput;
+import com.idega.util.PresentationUtil;
 
 public class VideoViewer extends Block {
 	
@@ -58,6 +59,9 @@ public class VideoViewer extends Block {
 	
 	@Override
 	public void main(IWContext iwc) throws Exception {
+		IWBundle iwb = getBundle(iwc);
+		PresentationUtil.addStyleSheetToHeader(iwc, iwb.getVirtualPathWithFileNameString("style/media.css"));
+
 		initialize(iwc);
 		present(iwc);
 	}

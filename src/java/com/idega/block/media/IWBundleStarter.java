@@ -10,7 +10,6 @@ import com.idega.business.IBOLookup;
 import com.idega.core.file.business.ICFileSystem;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWBundleStartable;
-import com.idega.idegaweb.include.GlobalIncludeManager;
 import com.idega.repository.data.ImplementorRepository;
 
 /**
@@ -26,6 +25,7 @@ public class IWBundleStarter extends MediaBundleStarter implements IWBundleStart
 	
 	public static final String IW_BUNDLE_IDENTIFIER = "com.idega.block.media";
 
+	@Override
 	public void start(IWBundle starterBundle) {
 		super.start(starterBundle);
 		// implementors
@@ -35,9 +35,9 @@ public class IWBundleStarter extends MediaBundleStarter implements IWBundleStart
 		
 		// services
 		IBOLookup.registerImplementationForBean(ICFileSystem.class, MediaFileSystemBean.class);
-		GlobalIncludeManager.getInstance().addBundleStyleSheet(IW_BUNDLE_IDENTIFIER, "/style/media.css");
 	}
 	
+	@Override
 	public void stop(IWBundle starterBundle) {
 		super.stop(starterBundle);
 		// nothing to do
