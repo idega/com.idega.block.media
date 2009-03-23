@@ -2,7 +2,7 @@ function setVideoService(value, instanceId, id) {
 	if(value != null) {
 		if(instanceId != null) {
 			showElementLoading(id);
-			VideoServices.setVideoProperties(value, '', instanceId, {
+			VideoServices.setVideoProperties(value, '', instanceId, window.location.pathname, {
 				callback: function(component) {
 					reRenderVideoViewer(component, id);
 				}
@@ -25,7 +25,7 @@ function setVideoId(event, value, instanceId, id) {
 		if(value != null) {
 			if(instanceId != null) {
 				showElementLoading(id);
-				VideoServices.setVideoProperties('', value, instanceId, {
+				VideoServices.setVideoProperties('', value, instanceId, window.location.pathname, {
 					callback: function(component) {
 						reRenderVideoViewer(component, id);
 					}
@@ -38,7 +38,7 @@ function setVideoIdOnClick(event, value, instanceId, id) {
 		if(value != null) {
 			if(instanceId != null) {
 				showElementLoading(id);
-				VideoServices.setVideoProperties('', value, instanceId, {
+				VideoServices.setVideoProperties('', value, instanceId, window.location.pathname, {
 					callback: function(component) {
 						reRenderVideoViewer(component, id);
 					}
@@ -48,7 +48,7 @@ function setVideoIdOnClick(event, value, instanceId, id) {
 }
 function clearVideoViewer(instanceId, id) {
 	showElementLoading(id);
-	VideoServices.setVideoProperties('', '', instanceId, {
+	VideoServices.setVideoProperties('', '', instanceId, window.location.pathname, {
 		callback: function(component) {
 			reRenderVideoViewer(component, id);
 		}

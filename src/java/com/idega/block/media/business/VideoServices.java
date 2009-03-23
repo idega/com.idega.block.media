@@ -16,7 +16,7 @@ public interface VideoServices extends IBOService {
 	/**
 	 * @see com.idega.block.media.business.VideoServicesBean#setVideoProperties
 	 */
-	public Document setVideoProperties(String serviceId, String videoId, String instanceId) throws RemoteException, RemoteException;
+	public Document setVideoProperties(String serviceId, String videoId, String instanceId, String pageURI) throws RemoteException, RemoteException;
 
 	/**
 	 * @see com.idega.block.media.business.VideoServicesBean#getVideoService

@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.idega.block.media.business.VideoServices;
 import com.idega.block.media.data.VideoService;
@@ -68,7 +69,7 @@ public class VideoViewer extends Block {
 	
 	private PresentationObject getEmbeddedVideoBlock(VideoServices videoServices) {
 		try {
-			System.out.println("Rendering VideoViewer Stage2.1: " + serviceId + " : " + videoId);
+			log(Level.FINEST, "Rendering VideoViewer Stage2.1: " + serviceId + " : " + videoId);
 			VideoService service = videoServices.getVideoService(serviceId);
 			if(service != null) {
 				Shockwave player = new Shockwave();
@@ -131,7 +132,7 @@ public class VideoViewer extends Block {
 			section.setStyleClass("iwVideoViewerEditable");
 			String instanceId = BuilderLogic.getInstance().getInstanceId(this);
 			if(serviceId == null || "".equals(serviceId)) {
-				System.out.println("Rendering VideoViewer Stage0");
+				log(Level.FINEST, "Rendering VideoViewer Stage0");
 				Map services = videoServices.getVideoServices();
 				Set ids = services.keySet();
 				RadioGroup radioButtons = new RadioGroup("Select a Video Service");
@@ -154,7 +155,7 @@ public class VideoViewer extends Block {
 				section.add(radioButtons);
 				section.setStyleClass("videoServiceSection");
 			} else if(videoId == null || "".equals(videoId)) {
-				System.out.println("Rendering VideoViewer Stage1: " + serviceId);
+				log(Level.FINEST, "Rendering VideoViewer Stage1: " + serviceId);
 				Text header = new Text(getResourceBundle().getLocalizedString("iwblock.media.video.nosetup", "Enter ID of a video clip"));
 				header.setStyleClass("videoIdHeader");
 				section.add(header);
@@ -170,7 +171,7 @@ public class VideoViewer extends Block {
 				section.add(link);
 				section.setStyleClass("videoIdInputSection");
 			} else {
-				System.out.println("Rendering VideoViewer Stage2: " + serviceId + " : " + videoId);
+				log(Level.FINEST, "Rendering VideoViewer Stage2: " + serviceId + " : " + videoId);
 				section.add(getEmbeddedVideoBlock(videoServices));
 				section.setStyleClass("videoBlockSection");
 			}
@@ -194,7 +195,7 @@ public class VideoViewer extends Block {
 		rootSection.add(section);
 		add(rootSection);
 		
-		System.out.println("Done Rendering VideoViewer");
+		log(Level.FINEST, "Done Rendering VideoViewer");
 	}
 	
 	@Override
@@ -226,5 +227,4 @@ public class VideoViewer extends Block {
 	public void setVideoId(String videoId) {
 		this.videoId = videoId;
 	}
-
 }
