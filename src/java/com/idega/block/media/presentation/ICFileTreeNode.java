@@ -207,13 +207,6 @@ public class ICFileTreeNode implements ICTreeNode {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.idega.core.data.ICTreeNode#getNodeID()
-	 */
-	public int getNodeID() {
-		return this._file.getNodeID();
-	}
-
-	/* (non-Javadoc)
 	 * @see com.idega.core.data.ICTreeNode#getSiblingCount()
 	 */
 	public int getSiblingCount() {
@@ -271,7 +264,7 @@ public class ICFileTreeNode implements ICTreeNode {
 	}
 	
 	public String getId(){
-		return Integer.toString(getNodeID());
+		return this._file.getId().toString();
 	}
 
 }

@@ -59,7 +59,7 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 			ICFile file = (ICFile) cache.getEntity();
 			 ICTreeNode parent = file.getParentNode();
 			 if(parent!=null) {
-				id = parent.getNodeID();
+				id = Integer.parseInt(parent.getId());
 			}
 			
 			return getZipFileContent(filePath,new Integer(id));

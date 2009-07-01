@@ -53,7 +53,7 @@ public class FolderChooser extends AbstractChooser{
 	}
 	
 	public void setSelectedNode(ICFileTreeNode fileTreeNode) {
-		super.setChooserValue(fileTreeNode.getNodeName(), fileTreeNode.getNodeID());
+		super.setChooserValue(fileTreeNode.getNodeName(), fileTreeNode.getId());
 	}
 	
 	public String getBundleIdentifier() {

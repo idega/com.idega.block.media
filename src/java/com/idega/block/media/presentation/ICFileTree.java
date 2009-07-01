@@ -140,12 +140,12 @@ public class ICFileTree extends AbstractTreeViewer {
              l.setTarget(this.nodeNameTarget);
             }
             if( this.nodeActionPrm!=null ){
-              l.addParameter(this.nodeActionPrm,node.getNodeID());
+              l.addParameter(this.nodeActionPrm,node.getId());
             }
             if (this._usesOnClick) {
     					String nodeName = node.getNodeName();
     					l.setURL("#");
-    					l.setOnClick(ONCLICK_FUNCTION_NAME + "('" + nodeName + "','" +  node.getNodeID() + "')");
+    					l.setOnClick(ONCLICK_FUNCTION_NAME + "('" + nodeName + "','" +  node.getId() + "')");
     				}
 
             return l;
@@ -158,12 +158,12 @@ public class ICFileTree extends AbstractTreeViewer {
              l.setTarget(this.nodeNameTarget);
             }
             if( this.nodeActionPrm!=null ){
-              l.addParameter(this.nodeActionPrm,node.getNodeID());
+              l.addParameter(this.nodeActionPrm,node.getId());
             }
             if (this._usesOnClick) {
     					String nodeName = node.getNodeName();
     					l.setURL("#");
-    					l.setOnClick(ONCLICK_FUNCTION_NAME + "('" + nodeName + "','" + node.getNodeID() + "')");
+    					l.setOnClick(ONCLICK_FUNCTION_NAME + "('" + nodeName + "','" + node.getId() + "')");
     				}
 
             return l;
