@@ -263,6 +263,10 @@ public class ICFileTreeNode implements ICTreeNode {
 		this._checkForLocalizationKey = value;
 	}
 	
+	public int getNodeID() {
+		return new Integer(this._file.getPrimaryKey().toString()).intValue();
+	}
+	
 	public String getId(){
 		return this._file.getId().toString();
 	}
