@@ -29,7 +29,6 @@ import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWBundleStartable;
 import com.idega.idegaweb.IWCacheManager;
 import com.idega.idegaweb.IWMainApplication;
-import com.idega.util.CoreConstants;
 
 public class MediaBundleStarter implements IWBundleStartable {
 	
@@ -56,7 +55,7 @@ public class MediaBundleStarter implements IWBundleStartable {
 			"Richtext newer",
 			"text/enriched",
 			"Style sheet",
-			CoreConstants.CONTENT_TYPE_TEXT_CSS,
+			MimeTypeUtil.MIME_TYPE_CSS,
 			"PostScript  ai eps ps  ",
 			"application/postscript",
 			"Microsoft Rich Text Format rtf",
