@@ -34,6 +34,7 @@ import com.idega.presentation.ui.Parameter;
 import com.idega.repository.data.RefactorClassRegistry;
 import com.idega.servlet.IWCoreServlet;
 
+@SuppressWarnings("deprecation")
 public class MediaServlet extends IWCoreServlet implements Servlet {
 
 	private static final long serialVersionUID = 6029625854933532862L;
@@ -70,23 +71,21 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
     }
   
   	@Override
-	public void doGet( HttpServletRequest _req, HttpServletResponse _res) throws IOException{
-		doPost(_req,_res);
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		doPost(request, response);
 	}
 
 	@Override
-	public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
 	    if (iwma == null) {
 			iwma = IWMainApplication.getIWMainApplication(servletConfig.getServletContext());
 		}
 
 	    if (request.getParameter(PARAMETER_NAME) != null || request.getParameter("image_id") != null) {
 	    	new MediaOutputWriter().doPost(request, response, iwma);
-	    }
-	    else if (request.getParameter(PRM_SESSION_MEMORY_BUFFER) != null) {
+	    } else if (request.getParameter(PRM_SESSION_MEMORY_BUFFER) != null) {
 	    	new MemoryFileBufferWriter().doPost(request, response);
-	    }
-	    else if (request.getParameter(MediaWritable.PRM_WRITABLE_CLASS) != null) {
+	    } else if (request.getParameter(MediaWritable.PRM_WRITABLE_CLASS) != null) {
 	    	IWContext iwc = null;
 	    	try {
 		    	FacesContext facesContext = facesContextFactory.getFacesContext(servletConfig.getServletContext(), request, response, lifecycle);
@@ -99,14 +98,14 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 	    			iwc = new IWContext(request, response, servletConfig.getServletContext());
 	    		}
 	      		
-	    		MediaWritable mw = (MediaWritable) RefactorClassRegistry.forName(IWMainApplication.decryptClassName(request.getParameter(MediaWritable.PRM_WRITABLE_CLASS))).newInstance();
+	    		String mediaWriter = request.getParameter(MediaWritable.PRM_WRITABLE_CLASS);
+	    		MediaWritable mw = (MediaWritable) RefactorClassRegistry.forName(IWMainApplication.decryptClassName(mediaWriter)).newInstance();
+	    		response.setContentType(mw.getMimeType());
 		        mw.init(request, iwc);
-		        response.setContentType(mw.getMimeType());
 		        ServletOutputStream out = response.getOutputStream();
 		        mw.writeTo(out);
 		        out.flush();
-		    }
-	    	catch(Exception ex) {
+		    } catch(Exception ex) {
 	    		ex.printStackTrace();
 	    	}
 	    }
