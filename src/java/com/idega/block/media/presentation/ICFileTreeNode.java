@@ -22,7 +22,6 @@ import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
 import com.idega.data.IDOLookup;
 import com.idega.idegaweb.IWApplicationContext;
-import com.idega.util.ListUtil;
 
 /**
  * Title:		ICFileTreeNode
@@ -104,10 +103,7 @@ public class ICFileTreeNode implements ICTreeNode {
 					Collections.sort(l, c);
 				}
 				this._children = l;
-			} else {
-				this._children = ListUtil.getEmptyList();
 			}
-			
 			
 			return this._children;
 		}
