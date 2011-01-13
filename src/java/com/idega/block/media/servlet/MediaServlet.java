@@ -100,8 +100,8 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 	      		
 	    		String mediaWriter = request.getParameter(MediaWritable.PRM_WRITABLE_CLASS);
 	    		MediaWritable mw = (MediaWritable) RefactorClassRegistry.forName(IWMainApplication.decryptClassName(mediaWriter)).newInstance();
-	    		response.setContentType(mw.getMimeType());
 		        mw.init(request, iwc);
+	    		response.setContentType(mw.getMimeType());
 		        ServletOutputStream out = response.getOutputStream();
 		        mw.writeTo(out);
 		        out.flush();
