@@ -19,7 +19,10 @@ import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
 import com.idega.core.file.data.ICFileType;
 import com.idega.core.file.data.ICFileTypeHandler;
+import com.idega.core.file.data.ICFileTypeHandlerHome;
+import com.idega.core.file.data.ICFileTypeHome;
 import com.idega.core.file.data.ICMimeType;
+import com.idega.core.file.data.ICMimeTypeHome;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.idegaweb.IWApplicationContext;
@@ -282,6 +285,17 @@ public class MediaBusiness {
 		try {
 			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 			ICFileTypeHandler typeHandler = (ICFileTypeHandler)cm.getFromCachedTable(ICFileTypeHandler.class, String.valueOf(getFileType(iwc, mimeType).getFileTypeHandlerID()));
+			if (typeHandler == null) {
+				try {
+					typeHandler = ((ICFileTypeHandlerHome) IDOLookup.getHome(ICFileTypeHandler.class)).findByPrimaryKey(getFileType(iwc, mimeType).getFileTypeHandlerID());
+				}
+				catch (FinderException fe) {
+					throw new MissingMimeTypeException("The mimetype is missing", mimeType);
+				}
+				catch (IDOLookupException e) {
+					throw new MissingMimeTypeException("The mimetype is missing", mimeType);
+				}
+			}
 			FileTypeHandler handler = FileTypeHandler.getInstance(iwc.getIWMainApplication(), typeHandler.getHandlerClass());
 			//System.out.println("SELECTED HANDLER IS : "+typeHandler.getHandlerName());
 			return handler;
@@ -296,6 +310,17 @@ public class MediaBusiness {
 		try {
 			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 			ICFileType type = (ICFileType)cm.getFromCachedTable(ICFileType.class, String.valueOf(getFileTypeId(iwc, mimeType)));
+			if (type == null) {
+				try {
+					type = ((ICFileTypeHome) IDOLookup.getHome(ICFileType.class)).findByPrimaryKey(getFileTypeId(iwc, mimeType));
+				}
+				catch (FinderException fe) {
+					throw new MissingMimeTypeException("The mimetype is missing", mimeType);
+				}
+				catch (IDOLookupException ile) {
+					throw new MissingMimeTypeException("The mimetype is missing", mimeType);
+				}
+			}
 			return type;
 		} catch (NullPointerException x) {
 			throw new MissingMimeTypeException("The mimetype is missing", mimeType);
@@ -305,6 +330,17 @@ public class MediaBusiness {
 		try {
 			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 			ICMimeType mime = (ICMimeType)cm.getFromCachedTable(ICMimeType.class, mimeType);
+			if (mime == null) {
+				try {
+					mime = ((ICMimeTypeHome) IDOLookup.getHome(ICMimeType.class)).findByPrimaryKey(mimeType);
+				}
+				catch (FinderException fe) {
+					throw new MissingMimeTypeException("The mimetype is missing", mimeType);
+				}
+				catch (IDOLookupException ile) {
+					throw new MissingMimeTypeException("The mimetype is missing", mimeType);
+				}
+			}
 			return mime.getFileTypeID();
 		} catch (NullPointerException x) {
 			throw new MissingMimeTypeException("The mimetype is missing", mimeType);
