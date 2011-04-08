@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import javax.jcr.RepositoryException;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -25,20 +27,22 @@ import com.idega.core.builder.business.BuilderService;
 import com.idega.core.builder.business.BuilderServiceFactory;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
-import com.idega.slide.business.IWSlideService;
 import com.idega.util.FileUtil;
 
 public class VideoServicesBean extends IBOServiceBean implements VideoServices {
-	
+
+	private static final long serialVersionUID = 1660826296410278238L;
+
 	private static final String SLIDE_CONFIG_LOCATION = "/files/cms/settings/";
 	private static final String SLIDE_CONFIG_FILENAME = "video-services.xml";
 	private static final String VIDEO_SERVICE_PROPERTY = ":method:1:implied:void:setServiceId:java.lang.String:";
 	private static final String VIDEO_ID_PROPERTY = ":method:1:implied:void:setVideoId:java.lang.String:";
-	
-	private Map services = new HashMap();
+
+	private Map<String, VideoService> services = new HashMap<String, VideoService>();
 	private BuilderService builderService;
 	private BuilderEngine builderEngine;
 
+	@Override
 	public void addVideoService(VideoService service) {
 		if (service != null) {
 			services.put(service.getId(), service);
@@ -47,7 +51,8 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 			throw new IllegalArgumentException("Parameter cannot be null");
 		}
 	}
-	
+
+	@Override
 	public Document setVideoProperties(String serviceId, String videoId, String instanceId, String pageURI) throws RemoteException {
 		if (builderService == null || builderEngine == null) {
 			initialize();
@@ -55,7 +60,7 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 		if (serviceId == null || videoId == null || instanceId == null) {
 			return null;
 		}
-		
+
 		String pageKey = builderService.getPageKeyByURI(pageURI);
 		if (videoId.equals("") && serviceId.equals("")) {
 			builderService.removeProperty(IWMainApplication.getDefaultIWMainApplication(), pageKey, instanceId, VIDEO_SERVICE_PROPERTY, new String[] {serviceId});
@@ -67,48 +72,51 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 		else {
 			builderService.setModuleProperty(pageKey, instanceId, VIDEO_ID_PROPERTY, new String[] {videoId});
 		}
-		
+
 		log(Level.FINEST, "Setting VideoViewer properties 1: " + serviceId + " : " + videoId);
 		Document document = builderEngine.reRenderObject(pageKey, instanceId);
 		log(Level.FINEST, "Setting VideoViewer properties 2: " + document);
-		
+
 		return document;
 	}
 
+	@Override
 	public VideoService getVideoService(String id) {
 		if(services.keySet().size() == 0) {
 			initialize();
 		}
-		return (VideoService) services.get(id);
+		return services.get(id);
 	}
-	
-	public Map getVideoServices() {
+
+	@Override
+	public Map<String, VideoService> getVideoServices() {
 		if(services.keySet().size() == 0) {
 			initialize();
 		}
 		return services;
 	}
-	
+
 	private void initialize() {
 		try {
 			IWMainApplication iwma = IWMainApplication.getDefaultIWMainApplication();
-			IWSlideService slide = (IWSlideService) IBOLookup.getServiceInstance(iwma.getIWApplicationContext(), IWSlideService.class);
-			if (!slide.getExistence(SLIDE_CONFIG_LOCATION + SLIDE_CONFIG_FILENAME)) {
-				slide.createAllFoldersInPathAsRoot(SLIDE_CONFIG_LOCATION);
-				
-				IWBundle iwb = iwma.getBundle(MediaConstants.IW_BUNDLE_IDENTIFIER);
-				File file = FileUtil.getFileAndCreateIfNotExists(iwb.getResourcesRealPath() + "/settings/" + SLIDE_CONFIG_FILENAME);
-				FileInputStream fis = new FileInputStream(file);
-				
-				slide.uploadFile(SLIDE_CONFIG_LOCATION, SLIDE_CONFIG_FILENAME, "text/xml", fis);
+			try {
+				if (!getRepositoryService().getExistence(SLIDE_CONFIG_LOCATION + SLIDE_CONFIG_FILENAME)) {
+					IWBundle iwb = iwma.getBundle(MediaConstants.IW_BUNDLE_IDENTIFIER);
+					File file = FileUtil.getFileAndCreateIfNotExists(iwb.getResourcesRealPath() + "/settings/" + SLIDE_CONFIG_FILENAME);
+					FileInputStream fis = new FileInputStream(file);
+
+					getRepositoryService().uploadFile(SLIDE_CONFIG_LOCATION, SLIDE_CONFIG_FILENAME, "text/xml", fis);
+				}
+			} catch (RepositoryException e) {
+				e.printStackTrace();
 			}
-			
+
 			builderService = BuilderServiceFactory.getBuilderService(iwma.getIWApplicationContext());
 			builderEngine = (BuilderEngine) IBOLookup.getServiceInstance(iwma.getIWApplicationContext(), BuilderEngine.class);
 			SAXBuilder builder = new SAXBuilder(false);
-			Document doc = builder.build(slide.getWebdavServerURL().toString() + SLIDE_CONFIG_LOCATION + SLIDE_CONFIG_FILENAME);
+			Document doc = builder.build(getRepositoryService().getWebdavServerURL().toString() + SLIDE_CONFIG_LOCATION + SLIDE_CONFIG_FILENAME);
 			Element root = doc.getRootElement();
-		
+
 			List serviceElements = root.getChildren("service");
 			Iterator serviceIterator = serviceElements.iterator();
 			while(serviceIterator.hasNext()) {
@@ -122,7 +130,7 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 			   source.setIndex(Integer.parseInt(index));
 			   source.setName(name);
 			   source.setIconURL(icon);
-			   
+
 			   Element objectElement = serviceElement.getChild("object");
 			   if(objectElement != null) {
 				   Element objAttr = objectElement.getChild("attributes");
@@ -160,7 +168,7 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 					   }
 				   }
 			   }
-			   
+
 			   Element embedElement = serviceElement.getChild("embed");
 			   if(embedElement != null) {
 				   Element embedAttr = embedElement.getChild("attributes");
@@ -179,7 +187,7 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 					   }
 				   }
 			   }
-			   
+
 			   services.put(source.getId(), source);
 			}
 		}

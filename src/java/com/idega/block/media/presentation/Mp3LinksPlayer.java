@@ -9,17 +9,16 @@ import org.apache.myfaces.renderkit.html.util.AddResourceFactory;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.block.web2.business.Web2Business;
 import com.idega.block.web2.presentation.Sound;
-import com.idega.business.IBOLookup;
 import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.Block;
 import com.idega.presentation.IWContext;
-import com.idega.slide.business.IWSlideService;
+import com.idega.util.ListUtil;
 import com.idega.util.expression.ELUtil;
 
 /**
  * A Javascript MP3 player that picks up all links to mp3 files in the page and puts them in a playlist that you can...well...play!
  * Based on jsAMP javascript mp3 player and SoundManager2,   <a href="http://www.schillmania.com/projects/soundmanager2/">See here.</a>
- * @author <a href="mailto:eiki@idega.is">Eirikur Hrafnsson</a> 
+ * @author <a href="mailto:eiki@idega.is">Eirikur Hrafnsson</a>
  *
  */
 public class Mp3LinksPlayer extends Block {
@@ -28,11 +27,12 @@ public class Mp3LinksPlayer extends Block {
 	private String startingText = "jsAMP Technology Preview v0.99a.20071010";
 	private String mp3FolderPath = null;
 
+	@Override
 	public void main(IWContext iwc) throws Exception {
-		
+
 		//TODO ADD explorer PNG hack
-		
-		
+
+
 		Web2Business web2 = ELUtil.getInstance().getBean(Web2Business.class);
 		IWBundle iwb =  this.getBundle(iwc);
 		AddResource resourceAdder = AddResourceFactory.getInstance(iwc);
@@ -44,7 +44,7 @@ public class Mp3LinksPlayer extends Block {
 		else{
 			resourceAdder.addStyleSheet(iwc, AddResource.HEADER_BEGIN,  this.getBundle(iwc).getVirtualPathWithFileNameString("style/jsAMP-light.css"));
 		}
-	
+
 
 		StringBuffer playerHTML = new StringBuffer();
 		playerHTML.append("<div id='player-template' class='sm2player'> \n");
@@ -103,12 +103,10 @@ public class Mp3LinksPlayer extends Block {
 		playerHTML.append("</div> \n");
 
 		playerHTML.append("</div> \n");
-		
+
 		if(mp3FolderPath!=null){
-			IWSlideService slide = (IWSlideService) IBOLookup.getServiceInstance(iwc, IWSlideService.class);
-			@SuppressWarnings("unchecked")
-			Collection<String> uris = slide.getChildPathsExcludingFoldersAndHiddenFiles(mp3FolderPath);
-			if(!uris.isEmpty()){
+			Collection<String> uris = getRepositoryService().getChildPathsExcludingFoldersAndHiddenFiles(mp3FolderPath);
+			if(!ListUtil.isEmpty(uris)){
 				playerHTML.append("<div style='display:none'> \n");
 				for (Iterator<String> iterator = uris.iterator(); iterator.hasNext();) {
 					String uri = iterator.next();
@@ -116,10 +114,10 @@ public class Mp3LinksPlayer extends Block {
 				}
 				playerHTML.append("</div> \n");
 			}
-			
-			
+
+
 		}
-		
+
 
 		add(playerHTML.toString());
 
@@ -129,7 +127,8 @@ public class Mp3LinksPlayer extends Block {
 
 
 	}
-	
+
+	@Override
 	public String getBundleIdentifier() {
 		return MediaConstants.IW_BUNDLE_IDENTIFIER;
 	}
@@ -157,5 +156,5 @@ public class Mp3LinksPlayer extends Block {
 	public void setToUseDarkSkin(boolean useDarkSkin){
 		this.useDarkSkin = useDarkSkin;
 	}
-	
+
 }
