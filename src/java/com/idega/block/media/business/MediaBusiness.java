@@ -686,11 +686,17 @@ public class MediaBusiness {
 	}
 	public static String getMediaURL(int fileID, IWMainApplication iwma, String datasource) {
 		Cache cache = getCachedFileInfo(fileID, iwma, datasource);
-		return cache.getVirtualPathToFile();
+		if (cache != null) {
+			return cache.getVirtualPathToFile();
+		}
+		return null;
 	}
 	public static String getMediaURL(int id, Class entityClass, IWMainApplication iwma, String datasource) {
 		Cache cache = getCachedFileInfo(id, entityClass, iwma, datasource);
-		return cache.getVirtualPathToFile();
+		if (cache != null) {
+			return cache.getVirtualPathToFile();
+		}
+		return null;
 	}
 	public static ICFile createSubFolder(int parentId, String name) throws FinderException, IDOLookupException, RemoteException, CreateException, SQLException {
 		ICFile parent = ((ICFileHome)IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(parentId));
