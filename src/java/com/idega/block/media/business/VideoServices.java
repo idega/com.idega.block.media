@@ -1,11 +1,13 @@
 package com.idega.block.media.business;
 
 
-import java.util.Map;
-import com.idega.business.IBOService;
-import org.jdom.Document;
 import java.rmi.RemoteException;
+import java.util.Map;
+
+import org.jdom2.Document;
+
 import com.idega.block.media.data.VideoService;
+import com.idega.business.IBOService;
 
 public interface VideoServices extends IBOService {
 	/**
@@ -26,5 +28,5 @@ public interface VideoServices extends IBOService {
 	/**
 	 * @see com.idega.block.media.business.VideoServicesBean#getVideoServices
 	 */
-	public Map getVideoServices() throws RemoteException;
+	public Map<String, VideoService> getVideoServices() throws RemoteException;
 }

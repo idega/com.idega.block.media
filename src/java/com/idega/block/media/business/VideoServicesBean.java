@@ -3,19 +3,17 @@ package com.idega.block.media.business;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
 import javax.jcr.RepositoryException;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 import com.idega.block.media.data.VideoService;
 import com.idega.builder.bean.BuilderEngine;
@@ -28,13 +26,14 @@ import com.idega.core.builder.business.BuilderServiceFactory;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.util.FileUtil;
+import com.idega.util.xml.XmlUtil;
 
 public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 
 	private static final long serialVersionUID = 1660826296410278238L;
 
-	private static final String SLIDE_CONFIG_LOCATION = "/files/cms/settings/";
-	private static final String SLIDE_CONFIG_FILENAME = "video-services.xml";
+	private static final String CONFIG_LOCATION = "/files/cms/settings/";
+	private static final String CONFIG_FILENAME = "video-services.xml";
 	private static final String VIDEO_SERVICE_PROPERTY = ":method:1:implied:void:setServiceId:java.lang.String:";
 	private static final String VIDEO_ID_PROPERTY = ":method:1:implied:void:setVideoId:java.lang.String:";
 
@@ -100,12 +99,12 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 		try {
 			IWMainApplication iwma = IWMainApplication.getDefaultIWMainApplication();
 			try {
-				if (!getRepositoryService().getExistence(SLIDE_CONFIG_LOCATION + SLIDE_CONFIG_FILENAME)) {
+				if (!getRepositoryService().getExistence(CONFIG_LOCATION + CONFIG_FILENAME)) {
 					IWBundle iwb = iwma.getBundle(MediaConstants.IW_BUNDLE_IDENTIFIER);
-					File file = FileUtil.getFileAndCreateIfNotExists(iwb.getResourcesRealPath() + "/settings/" + SLIDE_CONFIG_FILENAME);
+					File file = FileUtil.getFileAndCreateIfNotExists(iwb.getResourcesRealPath() + "/settings/" + CONFIG_FILENAME);
 					FileInputStream fis = new FileInputStream(file);
 
-					getRepositoryService().uploadFile(SLIDE_CONFIG_LOCATION, SLIDE_CONFIG_FILENAME, "text/xml", fis);
+					getRepositoryService().uploadFile(CONFIG_LOCATION, CONFIG_FILENAME, "text/xml", fis);
 				}
 			} catch (RepositoryException e) {
 				e.printStackTrace();
@@ -113,14 +112,18 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 
 			builderService = BuilderServiceFactory.getBuilderService(iwma.getIWApplicationContext());
 			builderEngine = (BuilderEngine) IBOLookup.getServiceInstance(iwma.getIWApplicationContext(), BuilderEngine.class);
-			SAXBuilder builder = new SAXBuilder(false);
-			Document doc = builder.build(getRepositoryService().getWebdavServerURL().toString() + SLIDE_CONFIG_LOCATION + SLIDE_CONFIG_FILENAME);
+			InputStream stream = null;
+			try {
+			stream = getRepositoryService().getInputStreamAsRoot(
+					getRepositoryService().getWebdavServerURL().toString() + CONFIG_LOCATION + CONFIG_FILENAME);
+			} catch (Exception e) {
+				log(Level.WARNING, "Error getting settings for video services", e);
+			}
+			Document doc = XmlUtil.getJDOMXMLDocument(stream);
 			Element root = doc.getRootElement();
 
-			List serviceElements = root.getChildren("service");
-			Iterator serviceIterator = serviceElements.iterator();
-			while(serviceIterator.hasNext()) {
-			   Element serviceElement = (Element)serviceIterator.next();
+			List<Element> serviceElements = root.getChildren("service");
+			for (Element serviceElement: serviceElements) {
 			   VideoService source = new VideoService();
 			   String id = serviceElement.getChild("id").getTextTrim();
 			   String index = serviceElement.getChild("index").getTextTrim();
@@ -135,10 +138,8 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 			   if(objectElement != null) {
 				   Element objAttr = objectElement.getChild("attributes");
 				   if(objAttr != null) {
-					   List objectAttributes = objAttr.getChildren("attribute");
-					   Iterator objAttrIterator = objectAttributes.iterator();
-					   while(objAttrIterator.hasNext()) {
-						   Element objectAttribute = (Element)objAttrIterator.next();
+					   List<Element> objectAttributes = objAttr.getChildren("attribute");
+					   for (Element objectAttribute: objectAttributes) {
 						   source.addObjectAttribute(objectAttribute.getAttributeValue("name"), objectAttribute.getTextTrim());
 						   if(objectAttribute.getAttributeValue("embed") != null) {
 							   if(objectAttribute.getAttributeValue("embed").equalsIgnoreCase("true")) {
@@ -149,10 +150,8 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 				   }
 				   Element objPar = objectElement.getChild("parameters");
 				   if(objPar != null) {
-					   List objectParameters = objPar.getChildren("parameter");
-					   Iterator objParIterator = objectParameters.iterator();
-					   while(objParIterator.hasNext()) {
-						   Element objectParameter = (Element)objParIterator.next();
+					   List<Element> objectParameters = objPar.getChildren("parameter");
+					   for (Element objectParameter: objectParameters) {
 						   source.addParameter(objectParameter.getAttributeValue("name"), objectParameter.getTextTrim());
 						   if(objectParameter.getAttributeValue("embed") != null) {
 							   if(objectParameter.getAttributeValue("embed").equalsIgnoreCase("true")) {
@@ -173,10 +172,8 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 			   if(embedElement != null) {
 				   Element embedAttr = embedElement.getChild("attributes");
 				   if(embedAttr != null) {
-					   List embedAttributes = embedAttr.getChildren("attribute");
-					   Iterator embAttrIterator = embedAttributes.iterator();
-					   while(embAttrIterator.hasNext()) {
-						   Element embedAttribute = (Element)embAttrIterator.next();
+					   List<Element> embedAttributes = embedAttr.getChildren("attribute");
+					   for (Element embedAttribute: embedAttributes) {
 						   source.addEmbedAttribute(embedAttribute.getAttributeValue("name"), embedAttribute.getTextTrim());
 						   if(embedAttribute.getAttributeValue("id") != null) {
 							   if(embedAttribute.getAttributeValue("id").equalsIgnoreCase("true")) {
@@ -190,14 +187,9 @@ public class VideoServicesBean extends IBOServiceBean implements VideoServices {
 
 			   services.put(source.getId(), source);
 			}
-		}
-		catch(JDOMException jde) {
-			log(jde);
-		}
-		catch(IBOLookupException ile) {
+		} catch(IBOLookupException ile) {
 			throw new IBORuntimeException(ile);
-		}
-		catch(IOException ioe) {
+		} catch(IOException ioe) {
 			log(ioe);
 		}
 	}
