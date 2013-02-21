@@ -3,7 +3,7 @@ package com.idega.block.media.presentation;
 /**
  * Title: ImageInserter Description: Copyright: Copyright (c) 2001 Company:
  * idega
- * 
+ *
  * @author Eirikur Hrafnsson, eiki@idega.is
  * @version 1.0
  */
@@ -23,6 +23,7 @@ import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.HiddenInput;
 import com.idega.presentation.ui.Window;
+import com.idega.util.CoreConstants;
 
 public class ImageInserter extends Block  {
 
@@ -92,6 +93,7 @@ public class ImageInserter extends Block  {
 		this.windowClass = WindowToOpen;
 	}
 
+	@Override
 	public void main(IWContext iwc) throws Exception {
 		this.empty();
 		this.iwb = getBundle(iwc);
@@ -182,7 +184,7 @@ public class ImageInserter extends Block  {
 			}
 		}
 
-		CheckBox insertImage = new CheckBox(this.prmUseBox, "Y");
+		CheckBox insertImage = new CheckBox(this.prmUseBox, CoreConstants.Y);
 		insertImage.setChecked(this.selected);
 
 		Text imageText = new Text(this.sUseBoxString + ":&nbsp;");
@@ -264,6 +266,7 @@ public class ImageInserter extends Block  {
 		this.imageWidth = imageWidth;
 	}
 
+	@Override
 	public void setHeight(String imageHeight) {
 		try {
 			this.imageHeight = Integer.parseInt(imageHeight);
@@ -273,6 +276,7 @@ public class ImageInserter extends Block  {
 		}
 	}
 
+	@Override
 	public void setWidth(String imageWidth) {
 		try {
 			this.imageWidth = Integer.parseInt(imageWidth);
@@ -311,6 +315,7 @@ public class ImageInserter extends Block  {
 		this.windowClass = WindowClass;
 	}
 
+	@Override
 	public String getBundleIdentifier() {
 		return IW_BUNDLE_IDENTIFIER;
 	}
@@ -327,7 +332,8 @@ public class ImageInserter extends Block  {
 		this.nullImageIDDefault = true;
 	}
 
-  public String getBuilderName(IWUserContext iwc) {
+  @Override
+public String getBuilderName(IWUserContext iwc) {
     return iwc.getApplicationContext().getIWMainApplication().getCoreBundle().getComponentName(Image.class,iwc.getCurrentLocale());
   }
 }
