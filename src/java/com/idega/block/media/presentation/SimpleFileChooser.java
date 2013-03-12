@@ -22,7 +22,7 @@ import com.idega.presentation.ui.TextInput;
  * <p>Description: A simple to use persentation object to upload a file into the database</p>
  * <p>Copyright: Idega SoftwareCopyright (c) 2001</p>
  * <p>Company: Idega Software</p>
- * @author <a href="gummi@idega.is">Guğmundur Ágúst Sæmundsson</a>
+ * @author <a href="gummi@idega.is">GuÃ°mundur ÃgÃºst SÃ¦mundsson</a>
  * @version 1.1
  */
 
