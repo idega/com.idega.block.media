@@ -16,11 +16,13 @@ import com.idega.core.file.data.ICFile;
  * @author <a href="mailto:tryggvi@idega.is">Tryggvi Larusson</a>
  * @version 1.0
  */
-public class MediaFileSystemBean extends IBOServiceBean implements MediaFileSystem,ICFileSystem
-{
+public class MediaFileSystemBean extends IBOServiceBean implements MediaFileSystem, ICFileSystem {
+
+	private static final long serialVersionUID = -1255970453658541226L;
 	/* (non-Javadoc)
 	 * @see com.idega.core.file.business.ICFileSystem#getFileURL(com.idega.core.data.ICFile)
 	 */
+	@Override
 	public String getFileURI(ICFile file)
 	{
 		return MediaBusiness.getMediaURL(file,this.getIWApplicationContext().getIWMainApplication());
@@ -28,10 +30,12 @@ public class MediaFileSystemBean extends IBOServiceBean implements MediaFileSyst
 	/* (non-Javadoc)
 	 * @see com.idega.core.file.business.ICFileSystem#getFileURL(int)
 	 */
+	@Override
 	public String getFileURI(int fileId)
 	{
 		return MediaBusiness.getMediaURL(fileId,this.getIWApplicationContext().getIWMainApplication());
 	}
+	@Override
 	public String getFileURI(int fileId, String datasource)
 	{
 		return MediaBusiness.getMediaURL(fileId,this.getIWApplicationContext().getIWMainApplication(), datasource);
@@ -39,22 +43,25 @@ public class MediaFileSystemBean extends IBOServiceBean implements MediaFileSyst
 	/* (non-Javadoc)
 	 * @see com.idega.core.file.business.ICFileSystem#initialize()
 	 */
+	@Override
 	public void initialize()
 	{
 		//mediabundlestarter is always started!
-//		MediaBundleStarter starter = new MediaBundleStarter();  		
+//		MediaBundleStarter starter = new MediaBundleStarter();
 //		starter.start(getIWApplicationContext().getIWMainApplication());
 	}
 
 	/* (non-Javadoc)
 	 * @see com.idega.core.file.business.ICFileSystem#getFileIconURI(com.idega.core.file.data.ICFile)
 	 */
+	@Override
 	public String getFileIconURI(ICFile file) throws RemoteException {
 		return getIconURIByMimeType(file.getMimeType());
 	}
 	/* (non-Javadoc)
 	 * @see com.idega.core.file.business.ICFileSystem#getIconURIByMimeType(java.lang.String)
 	 */
+	@Override
 	public String getIconURIByMimeType(String mimeType) throws RemoteException {
 		FileIconSupplier iconSupplier = FileIconSupplier.getInstance();
 		return iconSupplier.getFileIconURLByMimeType(mimeType);
