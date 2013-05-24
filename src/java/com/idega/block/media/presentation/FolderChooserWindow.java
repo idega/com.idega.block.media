@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.ejb.CreateException;
+
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
 import com.idega.core.file.data.ICFile;
@@ -22,6 +24,7 @@ import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.ui.StyledAbstractChooserWindow;
 import com.idega.user.data.User;
+import com.idega.util.CoreConstants;
 
 
 /**
@@ -31,12 +34,12 @@ import com.idega.user.data.User;
  *
  */
 public class FolderChooserWindow extends StyledAbstractChooserWindow{
-	
+
 	private String fileInSessionParameter = "";
   private IWCacheManager cm;
   private IWResourceBundle iwrb;
   private String mainStyleClass = "main";
-  
+
   protected static final String SUBMIT_PARENT_FORM_AFTER_CHANGE = "submit_p_form";
 
 	public FolderChooserWindow() {
@@ -48,11 +51,12 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 	}
 
 
+	@Override
 	public void displaySelection(IWContext iwc) {
     this.iwrb = getResourceBundle(iwc);
     this.cm = iwc.getIWMainApplication().getIWCacheManager();
     this.fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
-    
+
     addTitle(this.iwrb.getLocalizedString("select_folder", "Select folder"), TITLE_STYLECLASS);
 		setTitle(this.iwrb.getLocalizedString("select_group","Select group"));
 		setName(this.iwrb.getLocalizedString("select_group","Select group"));
@@ -66,29 +70,29 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
     ICFile publicRootNodeOld = (ICFile)this.cm.getCachedEntity(com.idega.core.file.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
 
     ICFileTree tree = new ICFileTree();
-    tree.setLocation((IWLocation) this.getLocation().clone()); 
+    tree.setLocation((IWLocation) this.getLocation().clone());
     tree.getLocation().setSubID(1);
     tree.setToShowRootNodeTreeIcons(true);
-    
+
     T.add(tree,1,2);
     add(T,iwc);
-    
+
 	  tree.setNodeActionParameter(this.fileInSessionParameter);
 	  tree.setToMaintainParameter(SCRIPT_PREFIX_PARAMETER, iwc);
 	  tree.setToMaintainParameter(SCRIPT_SUFFIX_PARAMETER,iwc);
 		tree.setToMaintainParameter(DISPLAYSTRING_PARAMETER_NAME,iwc);
 		tree.setToMaintainParameter(VALUE_PARAMETER_NAME,iwc);
-		tree.setDefaultOpenLevel(1);	  
-	  
+		tree.setDefaultOpenLevel(1);
+
 		Link proto = new Link();
-		proto.setURL("#");
+		proto.setURL(CoreConstants.HASH);
 		proto.setNoTextObject(true);
 		tree.setToUseOnClick();
 	  tree.setFileLinkPrototype(proto);
 	  tree.setFolderLinkPrototype(proto);
-	  
+
 	  tree.setOnClick(SELECT_FUNCTION_NAME+"("+ICFileTree.ONCLICK_DEFAULT_NODE_NAME_PARAMETER_NAME+","+ICFileTree.ONCLICK_DEFAULT_NODE_ID_PARAMETER_NAME+");");
-	
+
 		List firstLevelNodes = new ArrayList();
 		if(publicRootNodeOld != null){
 			ICFileTreeNode node = new ICFileTreeNode(publicRootNodeOld);
@@ -96,9 +100,9 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 			node.addVisibleMimeType(ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 			firstLevelNodes.add(node);
 		}
-	
+
 	// add user and group folders to publicRootNodeOld
-	
+
 		User user = iwc.getCurrentUser();
 		if(user != null){
 			ICFileTreeNode node = null;
@@ -114,8 +118,8 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 			node.setToCheckForLocalizationKey(true);
 			node.addVisibleMimeType(ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 			firstLevelNodes.add(node);
-			
-			
+
+
 			List userGroups = user.getParentGroups();
 			Collection groupFolders = null;
 			try {
@@ -135,14 +139,15 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 				firstLevelNodes.add(node);
 			}
 		}
-	
+
 		Iterator it = firstLevelNodes.iterator();
 		if(it!=null) {
 			tree.setFirstLevelNodes(it);
 		}
   }
 
-  public String getBundleIdentifier(){
+  @Override
+public String getBundleIdentifier(){
     return MediaConstants.IW_BUNDLE_IDENTIFIER ;
   }
 }

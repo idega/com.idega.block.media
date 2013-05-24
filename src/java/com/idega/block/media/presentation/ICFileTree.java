@@ -3,6 +3,7 @@ package com.idega.block.media.presentation;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.core.data.ICTreeNode;
 import com.idega.core.file.data.ICFile;
@@ -14,6 +15,7 @@ import com.idega.presentation.PresentationObject;
 import com.idega.presentation.Script;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.ui.AbstractTreeViewer;
+import com.idega.util.CoreConstants;
 
 /**
  * Title:        IW Project
@@ -31,7 +33,7 @@ public class ICFileTree extends AbstractTreeViewer {
   private static final String _NODE_OPEN = "_open";
   private static final String _NODE_CLOSED = "_closed";
   private static final String _DEFAULT_ICON_PREFIX = "icfileicons/ui/";
-  
+
 	public static final String ONCLICK_FUNCTION_NAME = "treenodeselect";
 	public static final String ONCLICK_DEFAULT_NODE_ID_PARAMETER_NAME = "iw_node_id";
 	public static final String ONCLICK_DEFAULT_NODE_NAME_PARAMETER_NAME = "iw_node_name";
@@ -57,15 +59,17 @@ public class ICFileTree extends AbstractTreeViewer {
     fileTree.setFirstLevelNodes(nodes);
     return fileTree;
   }
-  
+
+	@Override
 	public void setFirstLevelNodes(ICTreeNode[] nodes) {
 		super.setFirstLevelNodes(nodes);
-		
+
 		if(nodes.length > 0 && nodes[0] instanceof ICFileTreeNode){
 			this._isICFileTreeNode = true;
 		}
 	}
 
+	@Override
 	public void setFirstLevelNodes(Iterator nodes) {
 		//defaultRoot.clear();
 		super.setFirstLevelNodes((Iterator)null);
@@ -77,14 +81,15 @@ public class ICFileTree extends AbstractTreeViewer {
 		}
 	}
 
+	@Override
 	public void addFirstLevelNode(ICTreeNode node) {
 		super.addFirstLevelNode(node);
 		if(node instanceof ICFileTreeNode){
 			this._isICFileTreeNode = true;
 		}
 	}
-  
-  
+
+
 
   public Image getIcon(Map _icFileIcons,ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode){
     String mimeType = null;
@@ -123,14 +128,15 @@ public class ICFileTree extends AbstractTreeViewer {
     }
   }
 
-  public PresentationObject getObjectToAddToColumn(int colIndex, ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode) {
+  @Override
+public PresentationObject getObjectToAddToColumn(int colIndex, ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode) {
 //    if( filter(node) ){//return null if this
-  	
+
       switch (colIndex) {
         case 1:
           return getIcon(this.getIcons(iwc),node, iwc, nodeIsOpen, nodeHasChild, isRootNode );
         case 2:
-        	
+
 
           if(!node.isLeaf()){
             Link l = this.getFolderLinkClone(node.getNodeName(iwc.getCurrentLocale(),iwc));
@@ -144,7 +150,7 @@ public class ICFileTree extends AbstractTreeViewer {
             }
             if (this._usesOnClick) {
     					String nodeName = node.getNodeName();
-    					l.setURL("#");
+    					l.setURL(CoreConstants.HASH);
     					l.setOnClick(ONCLICK_FUNCTION_NAME + "('" + nodeName + "','" +  node.getId() + "')");
     				}
 
@@ -162,7 +168,7 @@ public class ICFileTree extends AbstractTreeViewer {
             }
             if (this._usesOnClick) {
     					String nodeName = node.getNodeName();
-    					l.setURL("#");
+    					l.setURL(CoreConstants.HASH);
     					l.setOnClick(ONCLICK_FUNCTION_NAME + "('" + nodeName + "','" + node.getId() + "')");
     				}
 
@@ -209,7 +215,7 @@ public class ICFileTree extends AbstractTreeViewer {
     this._folderLink = link;
   }
 
-  
+
   protected void updateIconDimensions(Map _icFileIcons){
     //super.updateIconDimensions();
 
@@ -263,7 +269,7 @@ public class ICFileTree extends AbstractTreeViewer {
       _icFileIcons.put(mimeType+_NODE_CLOSED,bundle.getImage(_DEFAULT_ICON_PREFIX+getUI()+mimeType+_NODE_CLOSED+_DEFAULT_ICON_SUFFIX));
     }
   }
-  
+
 	public void setToUseOnClick() {
 		setToUseOnClick(ONCLICK_DEFAULT_NODE_NAME_PARAMETER_NAME, ONCLICK_DEFAULT_NODE_ID_PARAMETER_NAME);
 	}

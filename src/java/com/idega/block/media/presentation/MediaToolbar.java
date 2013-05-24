@@ -2,30 +2,19 @@ package com.idega.block.media.presentation;
 
 
 
-import com.idega.presentation.ui.AbstractChooserWindow;
-
 import com.idega.block.media.business.FileTypeHandler;
-
 import com.idega.block.media.business.MediaBusiness;
-
 import com.idega.block.media.business.MediaConstants;
-
 import com.idega.block.media.data.MediaProperties;
-
 import com.idega.core.file.data.ICFile;
-
 import com.idega.idegaweb.IWResourceBundle;
-
 import com.idega.presentation.Block;
-
 import com.idega.presentation.IWContext;
-
 import com.idega.presentation.Table;
-
 import com.idega.presentation.text.Link;
-
 import com.idega.presentation.text.Text;
-
+import com.idega.presentation.ui.AbstractChooserWindow;
+import com.idega.util.CoreConstants;
 import com.idega.util.caching.Cache;
 
 
@@ -150,7 +139,8 @@ public class MediaToolbar extends Block {
 
    */
 
-  public void main( IWContext iwc ) throws Exception {
+  @Override
+public void main( IWContext iwc ) throws Exception {
 
     this.iwrb = getResourceBundle(iwc);
 
@@ -464,7 +454,7 @@ public class MediaToolbar extends Block {
 
     else{
 
-      use.setURL( "#" );
+      use.setURL( CoreConstants.HASH );
 
       use.setOnClick( ONCLICK_FUNCTION_NAME + "('" + file.getName() + "','" + file.getPrimaryKey() + "');top.window.close()" );
 
@@ -523,19 +513,19 @@ public class MediaToolbar extends Block {
       T.add( folder, 1, 1 );
 
     }
-    
+
     Link rename = MediaBusiness.getRenameFileLink();
 	rename.setText(this.iwrb.getLocalizedString("mv.properties","properties"));
 	rename.setAsImageButton(true);
 	rename.addParameter(this.fileInSessionParameter,mediaId);
 	T.add(rename,1,1);
-	
+
 	Link move = MediaBusiness.getMoveLink();
 	move.setText(this.iwrb.getLocalizedString("mv.move","move"));
 	move.setAsImageButton(true);
 	move.addParameter(this.fileInSessionParameter,mediaId);
-	T.add(move, 1, 1); 
-	
+	T.add(move, 1, 1);
+
     add( T );
 
 
@@ -558,7 +548,8 @@ public class MediaToolbar extends Block {
 
    */
 
-  public String getBundleIdentifier() {
+  @Override
+public String getBundleIdentifier() {
 
     return MediaConstants.IW_BUNDLE_IDENTIFIER;
 
