@@ -19,6 +19,7 @@ import com.idega.core.file.data.ICFile;
 public class MediaFileSystemBean extends IBOServiceBean implements MediaFileSystem, ICFileSystem {
 
 	private static final long serialVersionUID = -1255970453658541226L;
+
 	/* (non-Javadoc)
 	 * @see com.idega.core.file.business.ICFileSystem#getFileURL(com.idega.core.data.ICFile)
 	 */
