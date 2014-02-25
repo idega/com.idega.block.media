@@ -48,20 +48,21 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 	/* (non-Javadoc)
 	 * @see com.idega.block.media.business.FileTypeHandler#getPresentationObject(int, com.idega.presentation.IWContext)
 	 */
+	@Override
 	public PresentationObject getPresentationObject(int icFileId, IWContext iwc) {
-		
-		
+
+
 		try {
 			int id = -1;
 			Cache cache =  FileTypeHandler.getCachedFileInfo(icFileId,iwc);
 			String filePath =cache.getRealPathToFile();
-			
+
 			ICFile file = (ICFile) cache.getEntity();
-			 ICTreeNode parent = file.getParentNode();
-			 if(parent!=null) {
+			ICTreeNode<?> parent = file.getParentNode();
+			if (parent!=null) {
 				id = Integer.parseInt(parent.getId());
 			}
-			
+
 			return getZipFileContent(filePath,new Integer(id));
 		}
 		catch (ZipException e) {
@@ -75,6 +76,7 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 	/* (non-Javadoc)
 	 * @see com.idega.block.media.business.FileTypeHandler#getPresentationObject(com.idega.block.media.data.MediaProperties, com.idega.presentation.IWContext)
 	 */
+	@Override
 	public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc) {
 		try {
 			int parentID = MediaBusiness.getMediaId(iwc);
@@ -88,7 +90,7 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 		}
 		return null;
 	}
-	
+
 	private PresentationObject getZipFileContent(String zipFilePath,Integer parentID) throws ZipException,IOException{
 		ZipFile zipFile = new ZipFile(new File(zipFilePath));
 		Form form = new Form(MediaViewerWindow.class);
@@ -104,57 +106,58 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 		table.add(fileSize,2,1);
 		table.add(fileContentType,3,1);
 		int row = 2;
-		Enumeration entries = zipFile.entries();
+		Enumeration<? extends ZipEntry> entries = zipFile.entries();
 		String name,contentType;
 		while (entries.hasMoreElements()) {
-			ZipEntry entry = (ZipEntry) entries.nextElement();
+			ZipEntry entry = entries.nextElement();
 			name = entry.getName();
 			table.add(name,1,row);
 			table.add(String.valueOf(entry.getSize()),2,row);
-			contentType  = fileNameMap.getContentTypeFor(name);				
+			contentType  = fileNameMap.getContentTypeFor(name);
 			if(contentType!=null) {
 				table.add(contentType,3,row);
 			}
 			else {
 				table.add("unknown , please update you resources",3,row);
 			}
-						
+
 			row++;
 		}
 		CheckBox createDirectoryStructure = new CheckBox("create_dirs","true");
 		createDirectoryStructure.setChecked(true);
 		SubmitButton uncompress = new SubmitButton("uncompress","Uncompress");
-		uncompress.setToolTip("Files will be inflated to chosen directory");
+		uncompress.setTitle("Files will be inflated to chosen directory");
 		Table buttons = new Table();
 		buttons.add(new Text("Create directory structure"),1,1);
 		buttons.add(createDirectoryStructure,2,1);
 		buttons.add(uncompress,3,1);
-		
+
 		form.add(Text.getBreak());
 		form.add(buttons);
 		form.add(table);
-		
+
 		form.setEventListener(this.getClass());
 		form.add(new HiddenInput("zip_path",zipFilePath));
 		form.add(new HiddenInput("parent_folder",parentID.toString()));
-		
-		
-		
-		
+
+
+
+
 		return form;
-		
+
 	}
 	/* (non-Javadoc)
 	 * @see com.idega.event.IWPageEventListener#actionPerformed(com.idega.presentation.IWContext)
 	 */
+	@Override
 	public boolean actionPerformed(IWContext iwc) throws IWException {
 		boolean createDirectoryStructure  = iwc.isParameterSet("create_dirs");
 		String zipFilePath = iwc.getParameter("zip_path");
 		Integer parentID = Integer.valueOf(iwc.getParameter("parent_folder"));
 		int id = parentID.intValue();
-		//System.out.println("Create directories "+createDirectoryStructure +" path: "+zipFilePath+" parent "+parentID);	
-	
-		
+		//System.out.println("Create directories "+createDirectoryStructure +" path: "+zipFilePath+" parent "+parentID);
+
+
 			try {
 //				if no error occur we want to view the parent directory content
 				if( iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME )!=null) {
@@ -162,7 +165,7 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 				}
 				MediaBusiness.saveMediaIdToSession(iwc,id);
 				uncompressZipToDB(zipFilePath,createDirectoryStructure,parentID);
-				
+
 			}
 			catch (ZipException e) {
 				e.printStackTrace();
@@ -173,19 +176,19 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 			catch (CreateException e) {
 				e.printStackTrace();
 			}
-		
+
 		return false;
 	}
-	
+
 	private void uncompressZipToDB(String zipFilePath,boolean createDirectories,Integer parentID)throws ZipException,IOException,CreateException{
 		ZipFile zipFile = new ZipFile(new File(zipFilePath));
-		Enumeration enumer = zipFile.entries();
-		Map folderMap = new Hashtable();
+		Enumeration<? extends ZipEntry> enumer = zipFile.entries();
+		Map<String, Integer> folderMap = new Hashtable<String, Integer>();
 		FileNameMap fileNameMap = URLConnection.getFileNameMap();
 		String file,folder;
 		while (enumer.hasMoreElements()) {
-			ZipEntry entry = (ZipEntry) enumer.nextElement();
-			
+			ZipEntry entry = enumer.nextElement();
+
 			String name = entry.getName();
 			int i = name.lastIndexOf("/");
 			if(i>0){
@@ -201,7 +204,7 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 			if(file.length()>0){
 				if(createDirectories && folder!=null ){
 					if(!folderMap.containsKey(folder)){
-				
+
 						int parent = parentFolderID;
 						StringTokenizer tokener = new StringTokenizer(folder,"/");
 						String folderPath = "";
@@ -213,17 +216,17 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 								folderMap.put(folderPath,new Integer(parent));
 							}
 							else{
-								parent = ((Integer)folderMap.get(folderPath)).intValue();
+								parent = folderMap.get(folderPath).intValue();
 							}
 						}
 						parentFolderID = parent;
 					}
 					else{
-						parentFolderID = ((Integer) folderMap.get(folder)).intValue();
+						parentFolderID = folderMap.get(folder).intValue();
 						//System.out.println("map contains folder "+ folder +" id "+parentFolderID);
 					}
 				}
-				
+
 				ICFile zfile = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).create();
 				zfile.setName(file);
 				zfile.setFileSize((int)entry.getSize());
@@ -235,12 +238,12 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 				//System.out.println("Save file "+file+ " of type "+mimeType+" under folder "+parentFolderID);
 				zfile.setMimeType(mimeType);
 				zfile = MediaBusiness.saveMediaToDB(zfile, parentFolderID);
-			
+
 			}
-			
+
 		}
 	}
-	
+
 	private int createSubFolder(String name, int parent){
 		try {
 			ICFile folder = MediaBusiness.createSubFolder(parent,name);

@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.idega.block.media.business.MediaBusiness;
-import com.idega.core.data.ICTreeNode;
-import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICMimeType;
 import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.IWContext;
@@ -26,7 +24,7 @@ import com.idega.util.CoreConstants;
  * @version 1.0
  */
 
-public class ICFileTree extends AbstractTreeViewer {
+public class ICFileTree extends AbstractTreeViewer<ICFileTreeNode> {
 
   private static final String _APP_DEFAULT_FILE_ICONS = "ic_filetree_icons";
   private String _APP_FILE_ICONS = _APP_DEFAULT_FILE_ICONS;
@@ -46,58 +44,42 @@ public class ICFileTree extends AbstractTreeViewer {
   private String nodeNameTarget = null;
   private String nodeActionPrm = null;
 
-  private boolean _isICFileTreeNode = false;
-	private boolean _usesOnClick = false;
+  private boolean _usesOnClick = false;
 
   public ICFileTree(){
     super();
     this.setColumns(2);
   }
 
-  public static ICFileTree getICFileTreeInstance(ICTreeNode[] nodes){
+  public static ICFileTree getICFileTreeInstance(ICFileTreeNode[] nodes){
     ICFileTree fileTree = new ICFileTree();
     fileTree.setFirstLevelNodes(nodes);
     return fileTree;
   }
 
 	@Override
-	public void setFirstLevelNodes(ICTreeNode[] nodes) {
+	public void setFirstLevelNodes(ICFileTreeNode[] nodes) {
 		super.setFirstLevelNodes(nodes);
-
-		if(nodes.length > 0 && nodes[0] instanceof ICFileTreeNode){
-			this._isICFileTreeNode = true;
-		}
 	}
 
 	@Override
-	public void setFirstLevelNodes(Iterator nodes) {
-		//defaultRoot.clear();
-		super.setFirstLevelNodes((Iterator)null);
+	public void setFirstLevelNodes(Iterator<ICFileTreeNode> nodes) {
+		super.setFirstLevelNodes((ICFileTreeNode[]) null);
 		if (nodes != null) {
 			while (nodes.hasNext()) {
-				ICTreeNode node = (ICTreeNode) nodes.next();
+				ICFileTreeNode node = nodes.next();
 				this.addFirstLevelNode(node);
 			}
 		}
 	}
 
 	@Override
-	public void addFirstLevelNode(ICTreeNode node) {
+	public void addFirstLevelNode(ICFileTreeNode node) {
 		super.addFirstLevelNode(node);
-		if(node instanceof ICFileTreeNode){
-			this._isICFileTreeNode = true;
-		}
 	}
 
-
-
-  public Image getIcon(Map _icFileIcons,ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode){
-    String mimeType = null;
-    if(this._isICFileTreeNode){
-			mimeType = ((ICFileTreeNode)node).getICFile().getMimeType();
-    } else {
-		mimeType = ((ICFile)node).getMimeType();
-    }
+  public Image getIcon(Map<String, Image> _icFileIcons, ICFileTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode){
+    String mimeType = node.getICFile().getMimeType();
     if(mimeType != null){
       mimeType = mimeType.replace('\\','_');
       mimeType = mimeType.replace('/','_');
@@ -129,15 +111,11 @@ public class ICFileTree extends AbstractTreeViewer {
   }
 
   @Override
-public PresentationObject getObjectToAddToColumn(int colIndex, ICTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode) {
-//    if( filter(node) ){//return null if this
-
+  public PresentationObject getObjectToAddToColumn(int colIndex, ICFileTreeNode node, IWContext iwc, boolean nodeIsOpen, boolean nodeHasChild, boolean isRootNode) {
       switch (colIndex) {
         case 1:
-          return getIcon(this.getIcons(iwc),node, iwc, nodeIsOpen, nodeHasChild, isRootNode );
+          return getIcon(this.getIcons(iwc), node, iwc, nodeIsOpen, nodeHasChild, isRootNode);
         case 2:
-
-
           if(!node.isLeaf()){
             Link l = this.getFolderLinkClone(node.getNodeName(iwc.getCurrentLocale(),iwc));
 
@@ -216,13 +194,13 @@ public PresentationObject getObjectToAddToColumn(int colIndex, ICTreeNode node, 
   }
 
 
-  protected void updateIconDimensions(Map _icFileIcons){
+  protected void updateIconDimensions(Map<String, Image> _icFileIcons){
     //super.updateIconDimensions();
 
     if(_icFileIcons != null && _icFileIcons.values() != null){
-      Iterator iter = _icFileIcons.values().iterator();
+      Iterator<Image> iter = _icFileIcons.values().iterator();
       while (iter.hasNext()) {
-        Image item = (Image)iter.next();
+        Image item = iter.next();
         if(item != null){
           item.setHeight(this.iconHeight);
         }
@@ -230,21 +208,22 @@ public PresentationObject getObjectToAddToColumn(int colIndex, ICTreeNode node, 
     }
   }
 
-  public Map getIcons(IWContext iwc){
+  public Map<String, Image> getIcons(IWContext iwc){
   //public void initIcons(IWContext iwc){
     //super.initIcons(iwc);
 
     //Object obj = iwc.getApplicationAttribute(_APP_FILE_ICONS + getUI());
     //if(obj == null){
       IWBundle bundle = this.getBundle(iwc);
-      Map tmp = new HashMap();
+      Map<String, Image> tmp = new HashMap<String, Image>();
 
-      HashMap mimeMap = (HashMap)MediaBusiness.getICMimeTypeMap(iwc);
+      @SuppressWarnings("unchecked")
+	HashMap<String, ICMimeType> mimeMap = (HashMap<String, ICMimeType>) MediaBusiness.getICMimeTypeMap(iwc);
 
       if(mimeMap != null){
-        Iterator iter = mimeMap.keySet().iterator();
+        Iterator<String> iter = mimeMap.keySet().iterator();
         while (iter.hasNext()) {
-          ICMimeType item = (ICMimeType)(mimeMap.get(iter.next()));
+          ICMimeType item = (mimeMap.get(iter.next()));
           String mimeType = item.getMimeType();
           tmp.put(mimeType,bundle.getImage(_DEFAULT_ICON_PREFIX+getUI()+mimeType+_DEFAULT_ICON_SUFFIX));
         }
@@ -260,7 +239,7 @@ public PresentationObject getObjectToAddToColumn(int colIndex, ICTreeNode node, 
     return tmp;
   }
 
-  public void updateFileIcon(Map _icFileIcons,String mimeType, IWContext iwc, boolean isLeaf){
+  public void updateFileIcon(Map<String, Image> _icFileIcons,String mimeType, IWContext iwc, boolean isLeaf){
     IWBundle bundle = this.getBundle(iwc);
     if(isLeaf){
       _icFileIcons.put(mimeType,bundle.getImage(_DEFAULT_ICON_PREFIX+getUI()+mimeType+_DEFAULT_ICON_SUFFIX));
@@ -281,6 +260,7 @@ public PresentationObject getObjectToAddToColumn(int colIndex, ICTreeNode node, 
 		}
 	}
 
+	@Override
 	public void setOnClick(String action) {
 		Script associatedScript = getParentPage().getAssociatedScript();
 		if(associatedScript != null) {

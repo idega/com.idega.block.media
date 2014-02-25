@@ -2,6 +2,7 @@ package com.idega.block.media.presentation;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.idega.presentation.IWContext;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
+import com.idega.user.data.Group;
 import com.idega.user.data.User;
 
 /**
@@ -34,7 +36,8 @@ public class MediaTreeViewer extends Block {
   private String fileInSessionParameter = "";
   private IWCacheManager cm;
 
-  public void  main(IWContext iwc) throws Exception{
+  @Override
+public void  main(IWContext iwc) throws Exception{
     this.cm = iwc.getIWMainApplication().getIWCacheManager();
     this.fileInSessionParameter = MediaBusiness.getMediaParameterNameInSession(iwc);
 
@@ -51,45 +54,41 @@ public class MediaTreeViewer extends Block {
     tree.getLocation().setApplicationClass(MediaTreeViewer.class);
     tree.getLocation().setTarget("legacy_mediaviewer");
     tree.setToShowRootNodeTreeIcons(true);
-	
-	
+
+
 //    Iterator it = publicRootNodeOld.getChildren();
 //    if(it!=null) tree.setFirstLevelNodes(it);
-	
-	List firstLevelNodes = new ArrayList();
+
+	List<ICFileTreeNode> firstLevelNodes = new ArrayList<ICFileTreeNode>();
 	if(publicRootNodeOld != null){
 		ICFileTreeNode node = new ICFileTreeNode(publicRootNodeOld);
 		node.setToCheckForLocalizationKey(true);
 		node.addVisibleMimeType(ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 		firstLevelNodes.add(node);
 	}
-	
+
 	// add user and group folders to publicRootNodeOld
-	
+
 	User user = iwc.getCurrentUser();
 	if(user != null){
 		ICFileTreeNode node = new ICFileTreeNode(MediaBusiness.getGroupHomeFolder(user,iwc));
 		node.setToCheckForLocalizationKey(true);
 		node.addVisibleMimeType(ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 		firstLevelNodes.add(node);
-		
-		
-		List userGroups = user.getParentGroups();
-		Collection groupFolders = MediaBusiness.getGroupHomeFolders(userGroups,iwc);
-		for (Iterator iter = groupFolders.iterator(); iter.hasNext();) {
-			ICFile folder = (ICFile)iter.next();
+
+
+		List<Group> userGroups = user.getParentGroups();
+		Collection<ICFile> groupFolders = MediaBusiness.getGroupHomeFolders(userGroups,iwc);
+		for (Iterator<ICFile> iter = groupFolders.iterator(); iter.hasNext();) {
+			ICFile folder = iter.next();
 			node = new ICFileTreeNode(folder);
 			node.setToCheckForLocalizationKey(false);
 			node.addVisibleMimeType(ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 			firstLevelNodes.add(node);
 		}
 	}
-	
-//	ICFileSystem fileSystem = ICFileSystemFactory.getFileSystem(iwc);
-	
 
-
-	Iterator it = firstLevelNodes.iterator();
+	Iterator<ICFileTreeNode> it = firstLevelNodes.iterator();
 	if(it!=null) {
 		tree.setFirstLevelNodes(it);
 	}
@@ -99,11 +98,7 @@ public class MediaTreeViewer extends Block {
 
     tree.setFolderLinkPrototype(proto);
 
-
-    //tree.setUI(tree._UI_MAC);
-
     T.add(tree,1,2);
-
 
     /**@todo: localize
     *
@@ -135,15 +130,17 @@ public class MediaTreeViewer extends Block {
     return L;
   }
 
-  public List listOfMedia(){
-    List L = null;
+  public List<ICFile> listOfMedia(){
     try {
       ICFileHome fileHome = (com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class);
-      L =   (List)fileHome.findAllDescendingOrdered();
+      Collection<ICFile> files = fileHome.findAllDescendingOrdered();
+      if (files != null) {
+    	  return new ArrayList<ICFile>(files);
+      }
     } catch (FinderException e) {
 		e.printStackTrace();
 	}
-    return L;
+    return Collections.emptyList();
   }
 
   public Text formatText(String s){
@@ -160,11 +157,13 @@ public class MediaTreeViewer extends Block {
     return formatText(String.valueOf(i));
   }
 
-  public String getBundleIdentifier(){
+  @Override
+public String getBundleIdentifier(){
     return MediaConstants.IW_BUNDLE_IDENTIFIER ;
   }
 
-  protected String getCacheState(IWContext iwc, String cacheStatePrefix) {
+  @Override
+protected String getCacheState(IWContext iwc, String cacheStatePrefix) {
     /**@todo: Override this com.idega.presentation.Block method*/
     return super.getCacheState( iwc,  cacheStatePrefix);
   }

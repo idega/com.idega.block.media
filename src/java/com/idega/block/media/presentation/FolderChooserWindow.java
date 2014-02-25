@@ -23,6 +23,7 @@ import com.idega.presentation.IWContext;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.ui.StyledAbstractChooserWindow;
+import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.util.CoreConstants;
 
@@ -93,7 +94,7 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 
 	  tree.setOnClick(SELECT_FUNCTION_NAME+"("+ICFileTree.ONCLICK_DEFAULT_NODE_NAME_PARAMETER_NAME+","+ICFileTree.ONCLICK_DEFAULT_NODE_ID_PARAMETER_NAME+");");
 
-		List firstLevelNodes = new ArrayList();
+		List<ICFileTreeNode> firstLevelNodes = new ArrayList<ICFileTreeNode>();
 		if(publicRootNodeOld != null){
 			ICFileTreeNode node = new ICFileTreeNode(publicRootNodeOld);
 			node.setToCheckForLocalizationKey(true);
@@ -120,8 +121,8 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 			firstLevelNodes.add(node);
 
 
-			List userGroups = user.getParentGroups();
-			Collection groupFolders = null;
+			List<Group> userGroups = user.getParentGroups();
+			Collection<ICFile> groupFolders = null;
 			try {
 				groupFolders = MediaBusiness.getGroupHomeFolders(userGroups,iwc);
 			}
@@ -131,8 +132,8 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 			catch (CreateException e1) {
 				e1.printStackTrace();
 			}
-			for (Iterator iter = groupFolders.iterator(); iter.hasNext();) {
-				ICFile folder = (ICFile)iter.next();
+			for (Iterator<ICFile> iter = groupFolders.iterator(); iter.hasNext();) {
+				ICFile folder = iter.next();
 				node = new ICFileTreeNode(folder);
 				node.setToCheckForLocalizationKey(false);
 				node.addVisibleMimeType(ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
@@ -140,7 +141,7 @@ public class FolderChooserWindow extends StyledAbstractChooserWindow{
 			}
 		}
 
-		Iterator it = firstLevelNodes.iterator();
+		Iterator<ICFileTreeNode> it = firstLevelNodes.iterator();
 		if(it!=null) {
 			tree.setFirstLevelNodes(it);
 		}

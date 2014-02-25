@@ -3,9 +3,9 @@ package com.idega.block.media.presentation;
 import java.text.DateFormat;
 import java.util.Iterator;
 import java.util.Map;
+
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.media.business.MediaConstants;
-import com.idega.core.data.ICTreeNode;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
 import com.idega.core.file.data.ICFileType;
@@ -39,7 +39,8 @@ public class MediaFolderEditorWindow extends Window {
   }
 
 
-  public void main(IWContext iwc) throws Exception {
+  @Override
+public void main(IWContext iwc) throws Exception {
     super.main(iwc);
     this.iwrb = getResourceBundle(iwc);
     handleEvents(iwc);
@@ -123,7 +124,7 @@ public class MediaFolderEditorWindow extends Window {
 		  	else if( action.equals(MediaConstants.MEDIA_ACTION_RENAME) ){
 		  		String newFileName = iwc.getParameter(MediaConstants.MEDIA_FOLDER_NAME_PARAMETER_NAME);
 		  		String newDescription = iwc.getParameter("me_fol_desc");
-		  		
+
 		  		if(mediaId>0){
 		  			ICFile file = ( (ICFileHome) IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(mediaId));
 		  			// Keeping same file ending :
@@ -131,7 +132,7 @@ public class MediaFolderEditorWindow extends Window {
 		  			boolean store = false;
 		  			// Check for new name or description
 		  			if( (newFileName!=null)  &&!(newFileName.equalsIgnoreCase(""))  ){
-		  				//	keeping same file ending 
+		  				//	keeping same file ending
 		  				if(oldFileName!=null&& !oldFileName.equals(newFileName)){
 		  					int lastPeriod = oldFileName.lastIndexOf(".");
 		  					if(lastPeriod>0){
@@ -143,14 +144,14 @@ public class MediaFolderEditorWindow extends Window {
 		  				}
 		  				file.setName(newFileName);
 		  				store = true;
-		  			}			
-		  					
+		  			}
+
 		  			// Check for new description
 		  			if(newDescription!=null && !newDescription.equals(file.getDescription()) ){
 		  				file.setDescription(newDescription);
 		  				store = true;
 		  			}
-		  					
+
 		  			// Check for new metadata
 		  			if(iwc.isParameterSet("me_fol_mkey") && iwc.isParameterSet("me_fol_mval")){
 		  				String key = iwc.getParameter("me_fol_mkey");
@@ -165,18 +166,18 @@ public class MediaFolderEditorWindow extends Window {
 		  					for (int i = 0; i < deleteMeta.length; i++) {
 		  						file.removeMetaData(deleteMeta[i]);
 		  					}
-		  					file.updateMetaData();				
+		  					file.updateMetaData();
 		  				}
 		  			}
 		  			if(store){
 		  				file.store();
 		  			}
-		  				
+
 		  			setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
 		  			addFileProperties(iwc,mediaId);
 		  				//add(new MediaToolbar(file.getID()));
 		  				//add(new MediaViewer(file.getID()));
-		  			
+
 		  		}
 		  	}
 		  	else if(action.equals(MediaConstants.MEDIA_ACTION_SAVE_MOVE)) {
@@ -188,7 +189,7 @@ public class MediaFolderEditorWindow extends Window {
 		  	}
     }
   }
-  
+
   private void addFileProperties(IWContext iwc,int mediaId)throws Exception{
 		add(new MediaToolbar(mediaId));
 		Form form = new Form();
@@ -198,7 +199,7 @@ public class MediaFolderEditorWindow extends Window {
 		//table.setVerticalAlignment(1,1,Table.VERTICAL_ALIGN_TOP);
 		//table.setVerticalAlignment(1,2,Table.VERTICAL_ALIGN_TOP);
 		//table.setVerticalAlignment(1,3,Table.VERTICAL_ALIGN_TOP);
-	
+
 
 		TextInput inputName = new TextInput(MediaConstants.MEDIA_FOLDER_NAME_PARAMETER_NAME);
 		TextArea inputDescription = new TextArea("me_fol_desc");
@@ -224,14 +225,14 @@ public class MediaFolderEditorWindow extends Window {
 		Text name = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.filename","Name"));
 		table.add(name,1,row);
 		table.add(inputName,2,row++);
-		
+
 		Text description = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.description","Description"));
 		table.add(description,1,row);
 		table.add(inputDescription,2,row++);
-		
+
 		SubmitButton save = new SubmitButton(this.iwrb.getLocalizedString("mv.save","save"));
 		table.add(save,2,row++);
-	
+
 		String mimeType = (file.getMimeType() != null ) ? file.getMimeType() : "";
 		ICFileType fileType = MediaBusiness.getFileType(iwc,mimeType);
 		Text type = getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.type","Type")+":");
@@ -259,17 +260,17 @@ public class MediaFolderEditorWindow extends Window {
 		table.add(modified,1,row);
 		table.add(file.getModificationDate()!=null?df.format(file.getModificationDate()):"",2,row);
 		row++;
-		
+
 		table.add(Text.getBreak(),1,row++);
-		
+
 		table.mergeCells(1,row,2,row);
 		table.add(new HorizontalRule(),1,row++);
 		table.setAlignment(1,row,Table.HORIZONTAL_ALIGN_CENTER);
 		table.setColumnVerticalAlignment(1,Table.VERTICAL_ALIGN_TOP);
 		table.setColumnAlignment(1,Table.HORIZONTAL_ALIGN_RIGHT);
 		table.setAlignment(1,1,Table.HORIZONTAL_ALIGN_CENTER);
-		
-		
+
+
 		Table metaTable = new Table();
 		int mrow = 1;
 		metaTable.add(Text.getBreak(),1,mrow);
@@ -281,31 +282,31 @@ public class MediaFolderEditorWindow extends Window {
 		metaTable.add(getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.metadata.value","Value")),2,mrow);
 		metaTable.add(getHeaderText(this.iwrb.getLocalizedString("mediafoldereditwindow.properties.metadata.remove","Remove")),3,mrow);
 		mrow++;
-		file.getMetaData("test");	// to fetch the metadata !! //TODO do it in a better way	
-		if(file.getMetaDataAttributes()!=null){			
-			Iterator iter = file.getMetaDataAttributes().entrySet().iterator();
+		file.getMetaData("test");	// to fetch the metadata !! //TODO do it in a better way
+		if(file.getMetaDataAttributes()!=null){
+			Iterator<Map.Entry<String, String>> iter = file.getMetaDataAttributes().entrySet().iterator();
 			while(iter.hasNext()){
-				Map.Entry entry = (Map.Entry) iter.next();
-				Text key = getHeaderText((String)entry.getKey());
+				Map.Entry<String, String> entry = iter.next();
+				Text key = getHeaderText(entry.getKey());
 				metaTable.add(key,1,mrow);
-				metaTable.add((String)entry.getValue(),2,mrow);
-				metaTable.add(new CheckBox("me_fol_mdel",(String)entry.getKey()),3,mrow++);
+				metaTable.add(entry.getValue(),2,mrow);
+				metaTable.add(new CheckBox("me_fol_mdel",entry.getKey()),3,mrow++);
 			}
 			table.add(metaTable,1,row);
 			table.mergeCells(1,row,2,row);
 		}
-		
+
 		TextInput inputKey = new TextInput("me_fol_mkey");
 		TextInput inputValue = new TextInput("me_fol_mval");
 		metaTable.add(inputKey,1,mrow);
 		metaTable.add(inputValue,2,mrow);
 		metaTable.add(save,3,mrow);
 		metaTable.setAlignment(1,1,Table.HORIZONTAL_ALIGN_CENTER);
-	
+
 			 form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),String.valueOf(mediaId)));
-		
+
 		}
-		
+
 		form.add(table);
 		add(form);
 
@@ -320,28 +321,28 @@ public class MediaFolderEditorWindow extends Window {
   		table.setWidth(Table.HUNDRED_PERCENT);
   		table.add(Text.BREAK,1,1);
   		table.add(new HiddenInput(MediaConstants.MEDIA_ACTION_PARAMETER_NAME,MediaConstants.MEDIA_ACTION_SAVE_MOVE),1,2);
-  		
+
   		Text move = new Text(this.iwrb.getLocalizedString("mediafoldereditwindow.choose_folder_to_move_to","Choose a folder to move current file/folder to"));
   		move.setStyle(Text.FONT_FACE_ARIAL);
   		move.setFontSize(Text.FONT_SIZE_10_HTML_2);
   		move.setBold();
   		table.setAlignment(1,1,Table.HORIZONTAL_ALIGN_CENTER);
   		table.add(move,1,1);
-  		
+
   		FolderChooser folderChooser = new FolderChooser(MediaConstants.MEDIA_CHOOSER_FOLDER_CHOOSER_NAME);
   		table.setAlignment(1,2,Table.HORIZONTAL_ALIGN_CENTER);
   		table.add(Text.BREAK,1,2);
   		table.add(folderChooser,1,2);
-  		
+
   		SubmitButton submit = new SubmitButton(this.iwrb.getLocalizedString("mv.save","save"));
   		table.setAlignment(1,3,Table.HORIZONTAL_ALIGN_CENTER);
-  		table.add(Text.BREAK,1,3); 
+  		table.add(Text.BREAK,1,3);
   		table.add(submit,1,3);
-  		
+
   		form.add(table);
   		add(form);
   }
-  
+
 	private Text getHeaderText(String string){
 		Text  text= new Text(string);
 		text.setStyle(Text.FONT_FACE_ARIAL);
@@ -349,24 +350,25 @@ public class MediaFolderEditorWindow extends Window {
 		text.setBold();
 		return text;
   }
-  
-  	private String getFileLocation(ICTreeNode node,String delimiter){
-		ICTreeNode parent = node.getParentNode();
+
+  	private String getFileLocation(ICFile node, String delimiter){
+		ICFile parent = node.getParentNode();
 		if(parent!=null  ){
 			// we dont print the name of the leaf , only parents
 			if(!node.isLeaf()) {
-				return  getFileLocation(parent,delimiter)+delimiter+node.getNodeName();
+				return getFileLocation(parent,delimiter)+delimiter+node.getNodeName();
 			}
 			else {
 				return getFileLocation(parent,delimiter)+delimiter;
 			}
 		}
-		// dont print the root ( ICROOT ) 
-		return "";  	
+		// dont print the root ( ICROOT )
+		return "";
   	}
-  
 
-  public String getBundleIdentifier(){
+
+  @Override
+public String getBundleIdentifier(){
     return MediaConstants.IW_BUNDLE_IDENTIFIER ;
   }
 

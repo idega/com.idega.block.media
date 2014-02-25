@@ -105,23 +105,23 @@ public class MediaBusiness {
 		return saveMediaToDB(mediaProps, 0, iwc);
 	}
 	/**
-	
+
 	 *  Description of the Method
-	
+
 	 *
-	
+
 	 * @param  file      The ICFile to insert
-	
+
 	 * @param  icFileParentId  The id of the media's parent in the database.
-	
+
 	 * <br> A value of -1 sets the parent to the default parent directory of the IWDBFS
-	
+
 	 * <br> A value of 0 saves the media with no parent.
-	
+
 	 * @param  iwc             The IWContext
-	
+
 	 * @return                 Returns the ICFile
-	
+
 	 */
 	public static ICFile saveMediaToDB(ICFile file, int parentId, IWApplicationContext iwc) {
 		try {
@@ -152,19 +152,19 @@ public class MediaBusiness {
 		return file;
 	}
 	/**
-	
+
 	 * @param  iwc            The IWContext used to get the multipart form
-	
+
 	 * @return                MediaProperties An object that stores the uploaded
-	
+
 	 *      files location and extra parameters
-	
+
 	 * @todo                  this should be handled in IWContext Parses a
-	
+
 	 *      multi-part form , uploads the file part and returns a MediaProperties
-	
+
 	 *      class
-	
+
 	 */
 	public static MediaProperties uploadToDiskAndGetMediaProperties(IWContext iwc) {
 		MediaProperties mediaProps = null;
@@ -186,17 +186,17 @@ public class MediaBusiness {
 		return mediaProps;
 	}
 	/**
-	
+
 	 *  Gets the current media parameter name from the request or session.
-	
+
 	 *
-	
+
 	 * @param  iwc  The IWContext
-	
+
 	 * @return      the parameter found or the default parameter name from
-	
+
 	 *      MediaConstants.FILE_IN_SESSION_PARAMETER_NAME
-	
+
 	 */
 	public static String getMediaParameterNameInSession(IWContext iwc) {
 		String fileInSessionParameter = null;
@@ -212,15 +212,15 @@ public class MediaBusiness {
 		return fileInSessionParameter;
 	}
 	/**
-	
+
 	 *  Gets the mediaId attribute
-	
+
 	 *
-	
+
 	 * @param  iwc  The IWContext
-	
+
 	 * @return      The mediaId value
-	
+
 	 */
 	public static int getMediaId(IWContext iwc) {
 		String fileInSessionParameter = getMediaParameterNameInSession(iwc);
@@ -235,27 +235,27 @@ public class MediaBusiness {
 		return id;
 	}
 	/**
-	
+
 	*  Description of the Method
-	
+
 	*
-	
+
 	* @param  iwc  The IWContext
-	
+
 	*/
 	public static void removeMediaIdFromSession(IWContext iwc) {
 		iwc.removeSessionAttribute(getMediaParameterNameInSession(iwc));
 	}
 	/**
-	
+
 	 *  Saves the media id to session if not -1
-	
+
 	 *
-	
+
 	 * @param  iwc      Description of the Parameter
-	
+
 	 * @param  mediaId  Description of the Parameter
-	
+
 	 */
 	public static void saveMediaIdToSession(IWContext iwc, int mediaId) {
 		if (mediaId != -1) {
@@ -263,23 +263,23 @@ public class MediaBusiness {
 		}
 	}
 	/**
-	
+
 	 *  Gets a FileTypeHandler for this type of file (mime type)
-	
+
 	 *
-	
+
 	 * @param  iwc                           The IWContext for getting the
-	
+
 	 *      IWCacheManager
-	
+
 	 * @param  mimeType                      The mime type of this file
-	
+
 	 * @return                               A FileTypeHandler class
-	
+
 	 * @exception  MissingMimeTypeException  An exception that is thrown when the
-	
+
 	 *      database doesn't have this mimeType registered
-	
+
 	 */
 	public static FileTypeHandler getFileTypeHandler(IWContext iwc, String mimeType) throws MissingMimeTypeException {
 		try {
@@ -357,60 +357,60 @@ public class MediaBusiness {
 		}
 	}
 	/**
-	
+
 	*  Gets the cached getICMimeType entity Map
-	
+
 	* @todo implement
-	
+
 	* @param  iwc  The IWContext
-	
+
 	* @return      The ICMimeTypeMap value
-	
+
 	*/
 	public static Map getICMimeTypeMap(IWContext iwc) {
 		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 		return cm.getCachedTableMap(ICMimeType.class);
 	}
 	/**
-	
+
 	 *  Gets the cached ICFileType entity Map
-	
+
 	 * @todo implement
-	
+
 	 * @param  iwc  The IWContext
-	
+
 	 * @return      The ICFileTypeMap value
-	
+
 	 */
 	public static Map getICFileTypeMap(IWContext iwc) {
 		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 		return cm.getCachedTableMap(ICFileType.class);
 	}
 	/**
-	
+
 	*  Gets the cached ICFileTypeHandler entity Map
-	
+
 	* @todo implement
-	
+
 	* @param  iwc  The IWContext
-	
+
 	* @return      The ICFileTypeHandlerMap value
-	
+
 	*/
 	public static Map getICFileTypeHandlerMap(IWContext iwc) {
 		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 		return cm.getCachedTableMap(ICFileTypeHandler.class);
 	}
 	/**
-	
+
 	 *  Deletes the media (marks as deleted) and all it's children.
-	
+
 	 *
-	
+
 	 * @param  mediaId  The id of the media to delete
-	
+
 	 * @return          Return true if succeeded false if failed
-	
+
 	 */
 	public static boolean deleteMedia(int mediaId) {
 		try {
@@ -429,11 +429,11 @@ public class MediaBusiness {
 	}
 	//presentation helper stuff
 	/**
-	
+
 	 * @return    The newFileLink value
-	
+
 	 * @todo      Move this to a utility class Gets the newFileLink attribute
-	
+
 	 */
 	public static Link getNewFileLink() {
 		Link L = (Link)MediaConstants.MEDIA_UPLOADER_LINK.clone();
@@ -442,13 +442,13 @@ public class MediaBusiness {
 		return L;
 	}
 	/**
-	
+
 	 *  Gets the newFolderLink attribute
-	
+
 	 *
-	
+
 	 * @return    The newFolderLink value
-	
+
 	 */
 	public static Link getNewFolderLink() {
 		Link L = (Link)MediaConstants.MEDIA_FOLDER_EDITOR_LINK.clone();
@@ -464,11 +464,11 @@ public class MediaBusiness {
 		return L;
 	}
 	/**
-	
+
 	 * @return    The useImageLink value
-	
+
 	 * @todo      Move this to a utility class Gets the useImageLink attribute
-	
+
 	 */
 	public static Link getUseImageLink() {
 		Link L = (Link)MediaConstants.MEDIA_VIEWER_LINK.clone();
@@ -477,13 +477,13 @@ public class MediaBusiness {
 		return L;
 	}
 	/**
-	
+
 	 *  Gets the mediaViewerLink attribute
-	
+
 	 *
-	
+
 	 * @return    The mediaViewerLink value
-	
+
 	 */
 	public static Link getMediaViewerLink() {
 		Link L = (Link)MediaConstants.MEDIA_VIEWER_LINK.clone();
@@ -491,11 +491,11 @@ public class MediaBusiness {
 		return L;
 	}
 	/**
-	
+
 	 * @return    The deleteLink value
-	
+
 	 * @todo      Move this to a utility class Gets the deleteLink attribute
-	
+
 	 */
 	public static Link getDeleteLink() {
 		Link L = (Link)MediaConstants.MEDIA_VIEWER_LINK.clone();
@@ -504,11 +504,11 @@ public class MediaBusiness {
 		return L;
 	}
 	/**
-	
+
 	 * @return    The reloadLink value
-	
+
 	 * @todo      Move this to a utility class Gets the reloadLink attribute
-	
+
 	 */
 	public static Link getReloadLink() {
 		Link L = (Link)MediaConstants.MEDIA_TREE_VIEWER_LINK.clone();
@@ -517,7 +517,7 @@ public class MediaBusiness {
 		return L;
 	}
 	/**
-	 * 
+	 *
 	 * @return The moveLink value
 	 */
 	public static Link getMoveLink() {
@@ -527,29 +527,29 @@ public class MediaBusiness {
 		return L;
 	}
 	/**
-	
+
 	 *  Checks if the ICFile is a folder (has the mimetype
-	
+
 	 *  com.idega.core.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER)
-	
+
 	 *
-	
+
 	 * @param  file  The ICFile to check
-	
+
 	 * @return       true if folder otherwise false
-	
+
 	 */
 	public static boolean isFolder(ICFile file) {
 		return file.isFolder();
 	}
 	/**
-	
+
 	 * @param  iwc  The IWContext
-	
+
 	 * @return      Description of the Return Value
-	
+
 	 * @todo        Move this to a utility class Description of the Method
-	
+
 	 */
 	public static boolean reloadOnClose(IWContext iwc) {
 		if (iwc.getParameter(MediaConstants.MEDIA_ACTION_RELOAD) != null) {
@@ -562,23 +562,23 @@ public class MediaBusiness {
 		return saveMediaToDB(uploadFile, 0, iwc);
 	}
 	/**
-	
+
 	  *  Description of the Method
-	
+
 	  *
-	
+
 	  * @param  mediaProps      The MediaProperties class containing the path to the media
-	
+
 	  * @param  icFileParentId  The id of the media's parent in the database.
-	
+
 	  * <br> A value of -1 sets the parent to the default parent directory of the IWDBFS
-	
+
 	  * <br> A value of 0 saves the media with no parent.
-	
+
 	  * @param  iwc             The IWContext
-	
+
 	  * @return                 Return the ICFile class, null if failed, sets uploadfile.getID() = com.idega.core.data.ICFileBMPBean.getID() or -1 if failed
-	
+
 	  */
 	public static ICFile saveMediaToDB(UploadFile uploadFile, int icFileParentId, IWContext iwc) {
 		int id = -1;
@@ -726,27 +726,27 @@ public class MediaBusiness {
 		}
 		return buffer;
 	}
-	
+
 	public static ICFile getGroupHomeFolder(Group group, IWApplicationContext iwac) throws RemoteException, CreateException{
 		ICFile folder = group.getHomeFolder();
 		if(folder == null){
-			GroupBusiness b = (GroupBusiness)IBOLookup.getServiceInstance(iwac,GroupBusiness.class);
+			GroupBusiness b = IBOLookup.getServiceInstance(iwac,GroupBusiness.class);
 			folder = b.createGroupHomeFolder(group);
 		}
 		return folder;
 	}
-	
-	public static Collection getGroupHomeFolders(Collection groups, IWApplicationContext iwac) throws RemoteException, CreateException{
+
+	public static Collection<ICFile> getGroupHomeFolders(Collection<Group> groups, IWApplicationContext iwac) throws RemoteException, CreateException{
 		GroupBusiness b = null;
-		Collection toReturn = new ArrayList();
+		Collection<ICFile> toReturn = new ArrayList<ICFile>();
 		if(!groups.isEmpty()){
-			for (Iterator iter = groups.iterator(); iter.hasNext();) {
-				Group group = (Group)iter.next();
+			for (Iterator<Group> iter = groups.iterator(); iter.hasNext();) {
+				Group group = iter.next();
 				if(group != null){
 					ICFile folder = group.getHomeFolder();
 					if(folder == null){
 						if(b==null){
-							b=(GroupBusiness)IBOLookup.getServiceInstance(iwac,GroupBusiness.class);
+							b=IBOLookup.getServiceInstance(iwac,GroupBusiness.class);
 						}
 						folder = b.createGroupHomeFolder(group);
 					}
