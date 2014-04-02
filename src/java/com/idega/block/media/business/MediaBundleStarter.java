@@ -11,9 +11,11 @@ package com.idega.block.media.business;
  */
 
 import java.rmi.RemoteException;
+
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
+
 import com.idega.core.data.ICApplicationBinding;
 import com.idega.core.data.ICApplicationBindingHome;
 import com.idega.core.file.data.ICFile;
@@ -248,6 +250,10 @@ public class MediaBundleStarter implements IWBundleStartable {
 	}
 
 	public void registerMimeType(String[] array, ICFileType type) throws RemoteException {
+		if (array == null || type == null) {
+			return;
+		}
+		
 		int typeId = type.getID();
 		ICMimeType mimetype;
 
