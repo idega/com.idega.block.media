@@ -25,6 +25,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.tuckey.web.filters.urlrewrite.utils.StringUtils;
+
 import com.idega.core.file.business.FileSystemConstants;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.io.MediaWritable;
@@ -38,7 +40,7 @@ import com.idega.servlet.IWCoreServlet;
 public class MediaServlet extends IWCoreServlet implements Servlet {
 
 	private static final long serialVersionUID = 6029625854933532862L;
-	
+
 	public static final String PARAMETER_NAME = FileSystemConstants.PARAM_FILE_ID;
 	public static final String USES_OLD_TABLES = "IW_USES_OLD_MEDIA_TABLES";
 	public static final String PRM_WRITABLE_CLASS = "wrcls";
@@ -51,7 +53,7 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 	private ServletConfig servletConfig = null;
 	private FacesContextFactory facesContextFactory = null;
 	private Lifecycle lifecycle = null;
-  
+
 	public static Parameter getParameter(int FileId){
 		return new Parameter(PARAMETER_NAME, String.valueOf(FileId));
 	}
@@ -59,17 +61,17 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 	@Override
   	public void init(ServletConfig servletConfig)	throws ServletException {
   		this.servletConfig = servletConfig;
-  		
+
   		facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
   		LifecycleFactory lifecycleFactory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
   		lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
   	}
-  	
+
   	private String getLifecycleId() {
   		String lifecycleId = servletConfig.getServletContext().getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
   		return lifecycleId != null ? lifecycleId : LifecycleFactory.DEFAULT_LIFECYCLE;
     }
-  
+
   	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		doPost(request, response);
@@ -85,7 +87,7 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 	    	new MediaOutputWriter().doPost(request, response, iwma);
 	    } else if (request.getParameter(PRM_SESSION_MEMORY_BUFFER) != null) {
 	    	new MemoryFileBufferWriter().doPost(request, response);
-	    } else if (request.getParameter(MediaWritable.PRM_WRITABLE_CLASS) != null) {
+	    } else if (request.getParameter(MediaWritable.PRM_WRITABLE_CLASS) != null || request.getParameter("amp;" + MediaWritable.PRM_WRITABLE_CLASS) != null) {
 	    	IWContext iwc = null;
 	    	try {
 		    	FacesContext facesContext = facesContextFactory.getFacesContext(servletConfig.getServletContext(), request, response, lifecycle);
@@ -97,8 +99,11 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 	    		if (iwc == null) {
 	    			iwc = new IWContext(request, response, servletConfig.getServletContext());
 	    		}
-	      		
+
 	    		String mediaWriter = request.getParameter(MediaWritable.PRM_WRITABLE_CLASS);
+	    		if (StringUtils.isBlank(mediaWriter)) {
+	    			mediaWriter = request.getParameter("amp;" + MediaWritable.PRM_WRITABLE_CLASS);
+	    		}
 	    		MediaWritable mw = (MediaWritable) RefactorClassRegistry.forName(IWMainApplication.decryptClassName(mediaWriter)).newInstance();
 		        mw.init(request, iwc);
 	    		response.setContentType(mw.getMimeType());
