@@ -36,6 +36,7 @@ import com.idega.presentation.text.Link;
 import com.idega.user.business.GroupBusiness;
 import com.idega.user.data.Group;
 import com.idega.util.FileUtil;
+import com.idega.util.IOUtil;
 import com.idega.util.caching.Cache;
 /**
  *  Title: com.idega.block.media.business.MediaBusiness Description: The main
@@ -47,6 +48,7 @@ import com.idega.util.caching.Cache;
  * @version    1.0
  */
 public class MediaBusiness {
+
 	/**
 	 *  Description of the Method
 	 *
@@ -58,45 +60,8 @@ public class MediaBusiness {
 	 * @return                 Return the MediaProperties class setId(the new media id) -1 if failed
 	 */
 	public static MediaProperties saveMediaToDB(MediaProperties mediaProps, int icFileParentId, IWContext iwc) {
-		//ICFile icFile = saveMediaToDB(mediaProps.getUploadFile(),icFileParentId,iwc);
 		saveMediaToDB(mediaProps.getUploadFile(), icFileParentId, iwc);
 		return mediaProps;
-		//    int id = -1;
-		//    try {
-		//
-		//      long time1 = System.currentTimeMillis();
-		//
-		//      FileInputStream input = new FileInputStream( mediaProps.getRealPath() );
-		//
-		//      ICFile file = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).createLegacy();
-		//      file.setName( mediaProps.getName() );
-		//      file.setMimeType( mediaProps.getMimeType() );
-		//
-		//      file.setFileValue( input );
-		//      file.setFileSize( ( int ) mediaProps.getSize() );
-		//
-		//
-		//      file = saveMediaToDB(file,icFileParentId,iwc);
-		//      long time2 = System.currentTimeMillis();
-		//      System.out.println("MediaBusiness saveMediaToDB :"+ (time2 - time1 )+ " ms for "+mediaProps.getSize()+" bytes");
-		//
-		//      id = file.getID();
-		//      mediaProps.setId( id );
-		//
-		//      try {
-		//        FileUtil.delete(mediaProps.getRealPath() );
-		//      }
-		//      catch (Exception ex) {
-		//        System.err.println("MediaBusiness: deleting the temporary file at "+mediaProps.getRealPath()+" failed.");
-		//      }
-		//    }
-		//    catch( Exception e ) {
-		//      e.printStackTrace( System.err );
-		//      mediaProps.setId( -1 );
-		//      return mediaProps;
-		//    }
-		//
-		//    return mediaProps;
 	}
 	public static MediaProperties saveMediaToDBUnderRoot(MediaProperties mediaProps, IWContext iwc) {
 		return saveMediaToDB(mediaProps, -1, iwc);
@@ -139,6 +104,7 @@ public class MediaBusiness {
 		}
 		return file;
 	}
+
 	public static ICFile saveMediaToDB(ICFile file, int parentId) {
 		try {
 			file.store();
@@ -151,6 +117,7 @@ public class MediaBusiness {
 		}
 		return file;
 	}
+
 	/**
 
 	 * @param  iwc            The IWContext used to get the multipart form
@@ -185,6 +152,7 @@ public class MediaBusiness {
 		}
 		return mediaProps;
 	}
+
 	/**
 
 	 *  Gets the current media parameter name from the request or session.
@@ -211,6 +179,7 @@ public class MediaBusiness {
 		iwc.setSessionAttribute(MediaConstants.FILE_IN_SESSION_PARAMETER_NAME, fileInSessionParameter);
 		return fileInSessionParameter;
 	}
+
 	/**
 
 	 *  Gets the mediaId attribute
@@ -234,6 +203,7 @@ public class MediaBusiness {
 		}
 		return id;
 	}
+
 	/**
 
 	*  Description of the Method
@@ -246,6 +216,7 @@ public class MediaBusiness {
 	public static void removeMediaIdFromSession(IWContext iwc) {
 		iwc.removeSessionAttribute(getMediaParameterNameInSession(iwc));
 	}
+
 	/**
 
 	 *  Saves the media id to session if not -1
@@ -262,6 +233,7 @@ public class MediaBusiness {
 			iwc.setSessionAttribute(getMediaParameterNameInSession(iwc), String.valueOf(mediaId));
 		}
 	}
+
 	/**
 
 	 *  Gets a FileTypeHandler for this type of file (mime type)
@@ -306,6 +278,7 @@ public class MediaBusiness {
 			throw new MissingMimeTypeException("The mimetype is missing", mimeType);
 		}
 	}
+
 	public static ICFileType getFileType(IWContext iwc, String mimeType) throws MissingMimeTypeException {
 		try {
 			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
@@ -326,6 +299,7 @@ public class MediaBusiness {
 			throw new MissingMimeTypeException("The mimetype is missing", mimeType);
 		}
 	}
+
 	public static int getFileTypeId(IWContext iwc, String mimeType) throws MissingMimeTypeException {
 		try {
 			IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
@@ -346,6 +320,7 @@ public class MediaBusiness {
 			throw new MissingMimeTypeException("The mimetype is missing", mimeType);
 		}
 	}
+
 	public static void saveMimeType(String mimeType, String description, int fileTypeId) {
 		try {
 			ICMimeType mime = ((com.idega.core.file.data.ICMimeTypeHome)com.idega.data.IDOLookup.getHomeLegacy(ICMimeType.class)).createLegacy();
@@ -356,6 +331,7 @@ public class MediaBusiness {
 			ex.printStackTrace();
 		}
 	}
+
 	/**
 
 	*  Gets the cached getICMimeType entity Map
@@ -371,6 +347,7 @@ public class MediaBusiness {
 		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 		return cm.getCachedTableMap(ICMimeType.class);
 	}
+
 	/**
 
 	 *  Gets the cached ICFileType entity Map
@@ -386,6 +363,7 @@ public class MediaBusiness {
 		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 		return cm.getCachedTableMap(ICFileType.class);
 	}
+
 	/**
 
 	*  Gets the cached ICFileTypeHandler entity Map
@@ -401,6 +379,7 @@ public class MediaBusiness {
 		IWCacheManager cm = iwc.getIWMainApplication().getIWCacheManager();
 		return cm.getCachedTableMap(ICFileTypeHandler.class);
 	}
+
 	/**
 
 	 *  Deletes the media (marks as deleted) and all it's children.
@@ -427,7 +406,7 @@ public class MediaBusiness {
 			return false;
 		}
 	}
-	//presentation helper stuff
+
 	/**
 
 	 * @return    The newFileLink value
@@ -441,6 +420,7 @@ public class MediaBusiness {
 		L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
 		return L;
 	}
+
 	/**
 
 	 *  Gets the newFolderLink attribute
@@ -476,6 +456,7 @@ public class MediaBusiness {
 		L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
 		return L;
 	}
+
 	/**
 
 	 *  Gets the mediaViewerLink attribute
@@ -490,6 +471,7 @@ public class MediaBusiness {
 		L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
 		return L;
 	}
+
 	/**
 
 	 * @return    The deleteLink value
@@ -503,6 +485,7 @@ public class MediaBusiness {
 		L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
 		return L;
 	}
+
 	/**
 
 	 * @return    The reloadLink value
@@ -516,6 +499,7 @@ public class MediaBusiness {
 		L.setTarget(MediaConstants.TARGET_MEDIA_TREE);
 		return L;
 	}
+
 	/**
 	 *
 	 * @return The moveLink value
@@ -526,6 +510,7 @@ public class MediaBusiness {
 		L.setTarget(MediaConstants.TARGET_MEDIA_VIEWER);
 		return L;
 	}
+
 	/**
 
 	 *  Checks if the ICFile is a folder (has the mimetype
@@ -542,6 +527,7 @@ public class MediaBusiness {
 	public static boolean isFolder(ICFile file) {
 		return file.isFolder();
 	}
+
 	/**
 
 	 * @param  iwc  The IWContext
@@ -558,9 +544,11 @@ public class MediaBusiness {
 			return false;
 		}
 	}
+
 	public static ICFile saveMediaToDBUploadFolder(UploadFile uploadFile, IWContext iwc) {
 		return saveMediaToDB(uploadFile, 0, iwc);
 	}
+
 	/**
 
 	  *  Description of the Method
@@ -608,41 +596,8 @@ public class MediaBusiness {
 			return null;
 		}
 		return file;
-		//    int parentId = getMediaId(iwc);
-		//    ICFile file = null;
-		//    int id = -1;
-		//    try{
-		//      FileInputStream input = new FileInputStream(uploadFile.getRealPath());
-		//      file = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).createLegacy();
-		//      file.setName(uploadFile.getName());
-		//      file.setMimeType(uploadFile.getMimeType() );
-		//
-		//      System.out.println("MIMETYPE: "+uploadFile.getMimeType());
-		//
-		//      file.setFileValue(input);
-		//      file.setFileSize((int)uploadFile.getSize());
-		//      file.insert();
-		//
-		//      if( parentId==-1 ){
-		//        ICFile rootNode = (ICFile)iwc.getApplication().getIWCacheManager().getCachedEntity(com.idega.core.data.ICFileBMPBean.IC_ROOT_FOLDER_CACHE_KEY);
-		//        rootNode.addChild(file);
-		//      }
-		//      else {
-		//        ICFile rootNode = ((com.idega.core.data.ICFileHome)com.idega.data.IDOLookup.getHomeLegacy(ICFile.class)).findByPrimaryKeyLegacy(parentId);
-		//        rootNode.addChild(file);
-		//      }
-		//
-		//      id = file.getID();
-		//      uploadFile.setId(id);
-		//    }
-		//    catch(Exception e){
-		//      e.printStackTrace(System.err);
-		//      uploadFile.setId(-1);
-		//      return file;
-		//    }
-		//
-		//    return file;
 	}
+
 	public static boolean moveMedia(ICFile media, ICFile newParent) {
 		try {
 			ICFile currentParent = (ICFile)media.getParentEntity();
@@ -656,6 +611,7 @@ public class MediaBusiness {
 			return false;
 		}
 	}
+
 	public static boolean moveMedia(int mediaId, int newParentId) {
 		try {
 			ICFile media = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(mediaId));
@@ -668,40 +624,50 @@ public class MediaBusiness {
 		}
 		return false;
 	}
+
 	public static Cache getCachedFileInfo(int icFileId, IWMainApplication iwma) {
 		return getCachedFileInfo(icFileId, ICFile.class, iwma, null);
 	}
+
 	public static Cache getCachedFileInfo(int icFileId, IWMainApplication iwma,String datasource) {
 		return getCachedFileInfo(icFileId, ICFile.class, iwma, datasource);
 	}
+
 	public static Cache getCachedFileInfo(int id, Class entityClass, IWMainApplication iwma, String datasource) {
 		return iwma.getIWCacheManager().getCachedBlobObject(entityClass.getName(), id, iwma, datasource);
 	}
+
 	public static String getMediaURL(ICFile file, IWMainApplication iwma) {
-		Cache cache = getCachedFileInfo(((Integer)file.getPrimaryKey()).intValue(), iwma, file.getDatasource());
-		return cache.getVirtualPathToFile();
+		return getMediaURL(((Integer) file.getPrimaryKey()).intValue(), iwma, file.getDatasource());
 	}
+
 	public static String getMediaURL(int fileID, IWMainApplication iwma) {
 		return getMediaURL(fileID, iwma, null);
 	}
+
 	public static String getMediaURL(int fileID, IWMainApplication iwma, String datasource) {
 		Cache cache = getCachedFileInfo(fileID, iwma, datasource);
-		if (cache != null) {
-			return cache.getVirtualPathToFile();
-		}
-		return null;
+		return getURL(cache, iwma);
 	}
-	public static String getMediaURL(int id, Class entityClass, IWMainApplication iwma, String datasource) {
+
+	public static String getMediaURL(int id, Class<?> entityClass, IWMainApplication iwma, String datasource) {
 		Cache cache = getCachedFileInfo(id, entityClass, iwma, datasource);
-		if (cache != null) {
-			return cache.getVirtualPathToFile();
-		}
-		return null;
+		return getURL(cache, iwma);
 	}
+
+	private static String getURL(Cache cache, IWMainApplication iwma) {
+		if (cache == null) {
+			return null;
+		}
+
+		return cache.getVirtualPathToFile();
+	}
+
 	public static ICFile createSubFolder(int parentId, String name) throws FinderException, IDOLookupException, RemoteException, CreateException, SQLException {
 		ICFile parent = ((ICFileHome)IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(parentId));
 		return createSubFolder(parent, name);
 	}
+
 	public static ICFile createSubFolder(ICFile parent, String name) throws java.rmi.RemoteException, IDOLookupException, CreateException, SQLException {
 		ICFile folder = ((ICFileHome)IDOLookup.getHome(ICFile.class)).create();
 		folder.setName(name);
@@ -710,19 +676,26 @@ public class MediaBusiness {
 		parent.addChild(folder);
 		return folder;
 	}
+
 	public static MemoryFileBuffer getMediaBuffer(int fileId) throws Exception {
 		ICFile file = ((ICFileHome)IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(fileId));
 		return getMediaBuffer(file);
 	}
+
 	public static MemoryFileBuffer getMediaBuffer(ICFile file) throws Exception {
 		BufferedInputStream bis = new BufferedInputStream(file.getFileValue());
 		MemoryFileBuffer buffer = new MemoryFileBuffer();
 		MemoryOutputStream bos = new MemoryOutputStream(buffer);
-		byte[] buff = new byte[2048];
-		int bytesRead;
-		// Simple read/write loop.
-		while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-			bos.write(buff, 0, bytesRead);
+		try {
+			byte[] buff = new byte[2048];
+			int bytesRead;
+			// Simple read/write loop.
+			while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+				bos.write(buff, 0, bytesRead);
+			}
+		} finally {
+			IOUtil.close(bos);
+			IOUtil.close(bis);
 		}
 		return buffer;
 	}
