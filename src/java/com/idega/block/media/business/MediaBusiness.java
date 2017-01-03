@@ -35,8 +35,10 @@ import com.idega.presentation.IWContext;
 import com.idega.presentation.text.Link;
 import com.idega.user.business.GroupBusiness;
 import com.idega.user.data.Group;
+import com.idega.util.CoreConstants;
 import com.idega.util.FileUtil;
 import com.idega.util.IOUtil;
+import com.idega.util.StringHandler;
 import com.idega.util.caching.Cache;
 /**
  *  Title: com.idega.block.media.business.MediaBusiness Description: The main
@@ -201,6 +203,16 @@ public class MediaBusiness {
 			id = Integer.parseInt((String)iwc.getSessionAttribute(fileInSessionParameter));
 			//check the session parameters
 		}
+
+		String uri = iwc.getRequestURI();
+		if (id == -1 && (uri != null && uri.indexOf("iw_cache") != -1)) {
+			String name = uri.substring(uri.lastIndexOf(CoreConstants.SLASH) + 1);
+			String mediaId = name.substring(0, name.indexOf(CoreConstants.UNDER));
+			if (StringHandler.isNumeric(mediaId)) {
+				id = Integer.valueOf(mediaId);
+			}
+		}
+
 		return id;
 	}
 
