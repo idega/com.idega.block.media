@@ -213,11 +213,16 @@ public class MediaBusiness {
 
 	public static int getMediaId(String requestURI) {
 		if (requestURI != null && requestURI.indexOf("iw_cache") != -1) {
-			String name = requestURI.substring(requestURI.lastIndexOf(CoreConstants.SLASH) + 1);
-			String mediaId = name.substring(0, name.indexOf(CoreConstants.UNDER));
-			if (StringHandler.isNumeric(mediaId)) {
-				return Integer.valueOf(mediaId);
-			}
+			try {
+				String name = requestURI.substring(requestURI.lastIndexOf(CoreConstants.SLASH) + 1);
+				int nameUnderIndex = name.indexOf(CoreConstants.UNDER);
+				if (nameUnderIndex != -1) {
+					String mediaId = name.substring(0, nameUnderIndex);
+					if (StringHandler.isNumeric(mediaId)) {
+						return Integer.valueOf(mediaId);
+					}
+				}
+			} catch (Exception e) {}
 		}
 		return -1;
 	}
