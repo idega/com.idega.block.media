@@ -217,8 +217,7 @@ public class ICFileTree extends AbstractTreeViewer<ICFileTreeNode> {
       IWBundle bundle = this.getBundle(iwc);
       Map<String, Image> tmp = new HashMap<String, Image>();
 
-      @SuppressWarnings("unchecked")
-	HashMap<String, ICMimeType> mimeMap = (HashMap<String, ICMimeType>) MediaBusiness.getICMimeTypeMap(iwc);
+	Map<String, ICMimeType> mimeMap = MediaBusiness.getICMimeTypeMap(iwc);
 
       if(mimeMap != null){
         Iterator<String> iter = mimeMap.keySet().iterator();
