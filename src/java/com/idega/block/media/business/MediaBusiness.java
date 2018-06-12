@@ -1,6 +1,11 @@
 package com.idega.block.media.business;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,6 +17,8 @@ import java.util.Map;
 
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
+
+import org.apache.commons.io.IOUtils;
 
 import com.idega.block.media.data.MediaProperties;
 import com.idega.business.IBOLookup;
@@ -36,9 +43,11 @@ import com.idega.presentation.text.Link;
 import com.idega.user.business.GroupBusiness;
 import com.idega.user.data.Group;
 import com.idega.util.CoreConstants;
+import com.idega.util.CoreUtil;
 import com.idega.util.FileUtil;
 import com.idega.util.IOUtil;
 import com.idega.util.StringHandler;
+import com.idega.util.StringUtil;
 import com.idega.util.caching.Cache;
 /**
  *  Title: com.idega.block.media.business.MediaBusiness Description: The main
@@ -752,4 +761,81 @@ public class MediaBusiness {
 		}
 		return toReturn;
 	}
+	
+	public static ICFile getConvertedVideo(InputStream stream, ICFile file) {
+		if (file == null || stream == null) {
+			return null;
+		}
+		
+		File inputFile = null;
+		File outputFile = null;
+		FileOutputStream fileOutputStream = null;
+		byte[] fileBytes = null;
+		try {
+			String inputFilePrefix = file.getName();
+			inputFilePrefix = inputFilePrefix.substring(0, inputFilePrefix.lastIndexOf(CoreConstants.DOT));
+			
+			String inputFileExtension = file.getName();
+			inputFileExtension = inputFileExtension.substring(inputFileExtension.lastIndexOf(CoreConstants.DOT));
+			
+			inputFile = File.createTempFile(inputFilePrefix, inputFileExtension);
+			fileOutputStream = new FileOutputStream(inputFile);
+			fileOutputStream.write(IOUtils.toByteArray(stream));
+			
+			String inputFilePath = inputFile.getPath();
+			
+			String outputFileName = inputFilePrefix + ".mp4";
+			
+			String outputFilePath = inputFilePath.substring(0, inputFilePath.lastIndexOf(CoreConstants.DOT));
+			outputFilePath += "_conv.mp4";
+			
+			boolean fileConverted = doConvertFile(inputFilePath, outputFilePath);
+			if (fileConverted) {
+				outputFile = new File(outputFilePath);
+				fileBytes = Files.readAllBytes(outputFile.toPath());
+				
+				file.setMimeType("video/mp4");
+				file.setName(outputFileName);
+				file.setFileValue(new ByteArrayInputStream(fileBytes));
+				
+				return file;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtil.close(fileOutputStream);
+			
+			if (inputFile.exists()) {
+				inputFile.delete();
+			}
+			
+			if (outputFile.exists()) {
+				outputFile.delete();
+			}
+		}
+		
+		return null;
+	}
+	
+	private static boolean doConvertFile(String inputFilePath, String outputFilePath) {
+		if (StringUtil.isEmpty(inputFilePath) || StringUtil.isEmpty(outputFilePath)) {
+			return false;
+		}
+		
+		String command = "ffmpeg -i ";
+		command += inputFilePath;
+		command += " -c:v libx264 -profile:v baseline -c:a aac ";
+		command += outputFilePath;
+		
+		try {
+			CoreUtil.executeCommand(command);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
 }
