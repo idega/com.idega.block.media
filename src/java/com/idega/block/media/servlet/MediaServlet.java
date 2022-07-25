@@ -11,6 +11,8 @@ package com.idega.block.media.servlet;
  */
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
@@ -35,6 +37,7 @@ import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.Parameter;
 import com.idega.repository.data.RefactorClassRegistry;
 import com.idega.servlet.IWCoreServlet;
+import com.idega.util.CoreConstants;
 
 @SuppressWarnings("deprecation")
 public class MediaServlet extends IWCoreServlet implements Servlet {
@@ -85,8 +88,10 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 
 	    if (request.getParameter(PARAMETER_NAME) != null || request.getParameter("image_id") != null) {
 	    	new MediaOutputWriter().doPost(request, response, iwma);
+
 	    } else if (request.getParameter(PRM_SESSION_MEMORY_BUFFER) != null) {
 	    	new MemoryFileBufferWriter().doPost(request, response);
+
 	    } else if (request.getParameter(MediaWritable.PRM_WRITABLE_CLASS) != null || request.getParameter("amp;" + MediaWritable.PRM_WRITABLE_CLASS) != null) {
 	    	IWContext iwc = null;
 	    	try {
@@ -95,6 +100,8 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 	    	} catch(Exception e) {
 	    		e.printStackTrace();
 	    	}
+
+	    	MediaWritable mw = null;
 	    	try {
 	    		if (iwc == null) {
 	    			iwc = new IWContext(request, response, servletConfig.getServletContext());
@@ -104,14 +111,18 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 	    		if (StringUtils.isBlank(mediaWriter)) {
 	    			mediaWriter = request.getParameter("amp;" + MediaWritable.PRM_WRITABLE_CLASS);
 	    		}
-	    		MediaWritable mw = (MediaWritable) RefactorClassRegistry.forName(IWMainApplication.decryptClassName(mediaWriter)).newInstance();
+	    		mw = (MediaWritable) RefactorClassRegistry.forName(IWMainApplication.decryptClassName(mediaWriter)).newInstance();
 		        mw.init(request, iwc);
 	    		response.setContentType(mw.getMimeType());
 		        ServletOutputStream out = response.getOutputStream();
 		        mw.writeTo(out);
 		        out.flush();
 		    } catch(Exception ex) {
-	    		ex.printStackTrace();
+		    	Logger.getLogger(getClass().getName()).log(
+		    			Level.WARNING,
+		    			"Error getting or writing media" + (mw == null ? CoreConstants.EMPTY : " from " + mw.getClass().getName()),
+		    			ex
+		    	);
 	    	}
 	    }
 	}
