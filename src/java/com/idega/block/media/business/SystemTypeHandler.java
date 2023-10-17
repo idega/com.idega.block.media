@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+
 import com.idega.block.media.data.MediaProperties;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICMimeType;
@@ -19,7 +20,7 @@ import com.idega.presentation.text.Text;
  * Title: com.idega.block.media.business.SystemTypeHandler Description: A type
  * handler that handles idegaWeb system type files such as folders ( The Finder ;)
  * Copyright: Copyright (c) 2001 Company: idega software
- * 
+ *
  * @author Eirikur S. Hrafnsson eiki@idega.is
  * @version 1.0
  */
@@ -40,6 +41,7 @@ public class SystemTypeHandler extends FileTypeHandler {
 	protected String iconWidth = "16";
 	protected String iconHeight = "16";
 
+	@Override
 	public PresentationObject getPresentationObject(int icFileId, IWContext iwc) {
 		//ContentViewer listView = null;
 		//try {
@@ -50,7 +52,8 @@ public class SystemTypeHandler extends FileTypeHandler {
 		table.setHeight(Table.HUNDRED_PERCENT);
 		table.setCellpadding(2);
 		table.setCellspacing(0);
-		ICFile file = (ICFile) FileTypeHandler.getCachedFileInfo(icFileId, iwc).getEntity();
+		ICFile tmp = getFile(icFileId);
+		ICFile file = (ICFile) FileTypeHandler.getCachedFileInfo(iwc, tmp.getUniqueId(), tmp.getToken()).getEntity();
 		Iterator iter = file.getChildrenIterator();
 		int x = 1;
 		int y = 1;
@@ -101,21 +104,21 @@ public class SystemTypeHandler extends FileTypeHandler {
 		//table.setColumnColor(4,"#FCFCFC");
 		/*
 		 * Vector V = new Vector();
-		 * 
+		 *
 		 * if(!MediaBusiness.isFolder(file)) V.add(getContentObject(file));
-		 * 
+		 *
 		 * Iterator iter = file.getChildren(); int i = 0; if( iter != null ){
 		 * while (iter.hasNext()) { i++; ICFile item = (ICFile) iter.next();
 		 * V.add(getContentObject(item)); } }
-		 * 
+		 *
 		 * listView = new ContentViewer(LIST_VIEW_HEADERS,V); if( i>0 )
 		 * listView.setDisplayNumber(i); listView.setAllowOrder(true);
-		 * 
+		 *
 		 * listView.setWidth("100%");
-		 * 
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
+		 *
 		 *  } catch (Exception ex) { ex.printStackTrace(System.err); } return
 		 * listView;
 		 */
@@ -204,7 +207,7 @@ public class SystemTypeHandler extends FileTypeHandler {
 		}
 	}
 
-	
+
 	public void updateFileIcon(Map _icFileIcons,String mimeType, IWContext iwc, boolean isLeaf) {
 		IWBundle bundle = this.getBundle(iwc);
 		if (isLeaf) {
@@ -221,6 +224,7 @@ public class SystemTypeHandler extends FileTypeHandler {
 		return this._ui;
 	}
 
+	@Override
 	public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc) {
 		return new Table();
 	}

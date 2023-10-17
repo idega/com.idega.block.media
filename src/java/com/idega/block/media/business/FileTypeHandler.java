@@ -1,6 +1,12 @@
 package com.idega.block.media.business;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.idega.block.media.data.MediaProperties;
+import com.idega.core.file.data.ICFile;
+import com.idega.core.file.data.ICFileHome;
+import com.idega.data.IDOLookup;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.PresentationObject;
@@ -40,9 +46,21 @@ public static FileTypeHandler getInstance(IWMainApplication iwma, Class handlerC
   return getInstance(iwma,handlerClass.getName());
 }
 
-public static Cache getCachedFileInfo(int icFileId, IWContext iwc){
-  return MediaBusiness.getCachedFileInfo(icFileId,iwc.getIWMainApplication());
+public static Cache getCachedFileInfo(IWContext iwc, String fileUniqueId, String fileToken){
+  return MediaBusiness.getCachedFileInfo(iwc, fileUniqueId, fileToken, iwc.getIWMainApplication());
 }
 
-}
+	public static ICFile getFile(int fileId) {
+		if (fileId > 0) {
+			try {
+				ICFileHome fileHome = (ICFileHome) IDOLookup.getHome(ICFile.class);
+				ICFile file = fileHome.findByPrimaryKey(fileId);
+				return file;
+			} catch (Exception e) {
+				Logger.getLogger(FileTypeHandler.class.getName()).log(Level.WARNING, "Error getting file's (" + fileId + ") unique ID", e);
+			}
+		}
+		return null;
+	}
 
+}

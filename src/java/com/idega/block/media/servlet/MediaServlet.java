@@ -38,6 +38,7 @@ import com.idega.presentation.ui.Parameter;
 import com.idega.repository.data.RefactorClassRegistry;
 import com.idega.servlet.IWCoreServlet;
 import com.idega.util.CoreConstants;
+import com.idega.util.FileUtil;
 
 @SuppressWarnings("deprecation")
 public class MediaServlet extends IWCoreServlet implements Servlet {
@@ -87,9 +88,21 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 		}
 
 	    if (request.getParameter(PARAMETER_NAME) != null || request.getParameter("image_id") != null) {
+	    	if (FileUtil.isDownloadFileViaUniqueIdOnly(IWMainApplication.getDefaultIWMainApplication().getSettings())) {
+	    		Logger.getLogger(getClass().getName()).warning("Files can be downloaded via unique ID only - not allowing to download by image ID. All parameters: " +
+	    				request.getParameterMap());
+	    		return;
+	    	}
+
 	    	new MediaOutputWriter().doPost(request, response, iwma);
 
 	    } else if (request.getParameter(PRM_SESSION_MEMORY_BUFFER) != null) {
+	    	if (FileUtil.isDownloadFileViaUniqueIdOnly(IWMainApplication.getDefaultIWMainApplication().getSettings())) {
+	    		Logger.getLogger(getClass().getName()).warning("Files can be downloaded via unique ID only - not allowing to download from memory buffer. All parameters: " +
+	    				request.getParameterMap());
+	    		return;
+	    	}
+
 	    	new MemoryFileBufferWriter().doPost(request, response);
 
 	    } else if (request.getParameter(MediaWritable.PRM_WRITABLE_CLASS) != null || request.getParameter("amp;" + MediaWritable.PRM_WRITABLE_CLASS) != null) {
@@ -115,7 +128,7 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 		        mw.init(request, iwc);
 	    		response.setContentType(mw.getMimeType());
 		        ServletOutputStream out = response.getOutputStream();
-		        mw.writeTo(out);
+		        mw.writeTo(iwc, out);
 		        out.flush();
 		    } catch(Exception ex) {
 		    	Logger.getLogger(getClass().getName()).log(
@@ -126,4 +139,5 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 	    	}
 	    }
 	}
+
 }

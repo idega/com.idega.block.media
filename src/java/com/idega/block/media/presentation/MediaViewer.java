@@ -25,28 +25,28 @@ public class MediaViewer extends Block {
 	private MediaProperties props = null;
 	private int mediaId = -1;
 	/**
-	
+
 	 *  Constructor for the MediaViewer object
-	
+
 	 */
 	public MediaViewer() {
 	}
 	/**
-	
+
 	 *  Constructor for the MediaViewer object
-	
+
 	 */
 	public MediaViewer(int mediaId) {
 		this.mediaId = mediaId;
 	}
 	/**
-	
+
 	 *  Constructor for the MediaViewer object
-	
+
 	 *
-	
+
 	 * @param  props  Description of the Parameter
-	
+
 	 */
 	public MediaViewer(MediaProperties props) {
 		this();
@@ -54,21 +54,22 @@ public class MediaViewer extends Block {
 		this.mediaId = props.getId();
 	}
 	/**
-	
+
 	 *  This is the main method were we decide is we show the file from disk or db
-	
+
 	 *
-	
+
 	 * @param  iwc            The IWContext
-	
+
 	 * @exception  Exception  An Exception of an unknown type
-	
+
 	 */
+	@Override
 	public void main(IWContext iwc) throws Exception {
 		if ((this.mediaId == -1) && (this.props == null)) {
-			this.mediaId = MediaBusiness.getMediaId(iwc);
+			this.mediaId = Integer.valueOf(MediaBusiness.getMediaId(iwc));
 		}
-		
+
 		if (this.mediaId != -1) {
 			displayCurrentMediaName(iwc, this.mediaId);
 			viewFileFromDB(iwc, this.mediaId);
@@ -78,17 +79,17 @@ public class MediaViewer extends Block {
 		}
 	}
 	/**
-	
+
 	 *  Finds the right filehandler and displays the media from disk
-	
+
 	 *
-	
+
 	 * @param  iwc            The IWContext
-	
+
 	 * @param  props          The MediaProperties
-	
+
 	 * @exception  Exception  Description of the Exception
-	
+
 	 */
 	protected void viewFileFromDisk(IWContext iwc, MediaProperties props) {
 		Table table = new Table();
@@ -103,24 +104,25 @@ public class MediaViewer extends Block {
 		add(table);
 	}
 	/**
-	
+
 	 *  Finds a correct filehandler and displays the media
-	
+
 	 *
-	
+
 	 * @param  iwc      the IWContext
-	
+
 	 * @param  mediaId  The media id
-	
+
 	 */
 	protected void viewFileFromDB(IWContext iwc, int id) {
-		Cache cache = FileTypeHandler.getCachedFileInfo(this.mediaId, iwc);
+		ICFile tmp = FileTypeHandler.getFile(id);
+		Cache cache = FileTypeHandler.getCachedFileInfo(iwc, tmp.getUniqueId(), tmp.getToken());
 		ICFile file = (ICFile) cache.getEntity();
 		FileTypeHandler handler = MediaBusiness.getFileTypeHandler(iwc, file.getMimeType());
 		add(Text.BREAK);
 		add(handler.getPresentationObject(id, iwc));
 	}
-	
+
 	private void displayCurrentMediaName(IWContext iwc, int mediaId) {
 		IWResourceBundle iwrb = getResourceBundle(iwc);
 		Table table = new Table();
@@ -129,9 +131,10 @@ public class MediaViewer extends Block {
 		table.setWidth(Table.HUNDRED_PERCENT);
 		table.setStyleAttribute("background: #ffffff; border-bottom: 1px solid #cccccc; border-top: 1px solid #cccccc");
 
-	  Cache cache = FileTypeHandler.getCachedFileInfo( mediaId, iwc );
+		ICFile tmp = FileTypeHandler.getFile(mediaId);
+	  Cache cache = FileTypeHandler.getCachedFileInfo(iwc, tmp.getUniqueId(), tmp.getToken());
 	  ICFile file = ( ICFile ) cache.getEntity();
-	  
+
 	  if(MediaBusiness.isFolder(file)) {
 	  		Text folderText = new Text(iwrb.getLocalizedString("mediaviewer.current_folder", "The current folder is") + ": ");
 	  		folderText.setStyle(Text.FONT_FACE_ARIAL);
@@ -152,14 +155,15 @@ public class MediaViewer extends Block {
 
 	}
 	/**
-	
+
 	 *  Gets the bundleIdentifier attribute of the MediaViewer object
-	
+
 	 *
-	
+
 	 * @return    The bundleIdentifier value
-	
+
 	 */
+	@Override
 	public String getBundleIdentifier() {
 		return MediaConstants.IW_BUNDLE_IDENTIFIER;
 	}

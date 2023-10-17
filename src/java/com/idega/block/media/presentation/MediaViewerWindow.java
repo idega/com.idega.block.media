@@ -22,12 +22,13 @@ public MediaViewerWindow(){
   }
 
 
-  public void main(IWContext iwc) throws Exception{
+  @Override
+public void main(IWContext iwc) throws Exception{
   	//System.out.println("MEDIA param = "+MediaBusiness.getMediaParameterNameInSession(iwc));
-    int mediaId = MediaBusiness.getMediaId(iwc);
-    
+    int mediaId = Integer.valueOf(MediaBusiness.getMediaId(iwc));
+
     //System.out.println("MEDIA ID = "+mediaId);
-    
+
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
     if(action==null) {
 			action = "";
@@ -39,7 +40,8 @@ public MediaViewerWindow(){
     }
   }
 
-  public String getBundleIdentifier(){
+  @Override
+public String getBundleIdentifier(){
     return MediaConstants.IW_BUNDLE_IDENTIFIER ;
   }
 }

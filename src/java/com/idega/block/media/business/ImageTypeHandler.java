@@ -11,6 +11,7 @@ package com.idega.block.media.business;
 
 
 import com.idega.block.media.data.MediaProperties;
+import com.idega.core.file.data.ICFile;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.PresentationObject;
@@ -19,13 +20,16 @@ import com.idega.presentation.ui.TextInput;
 import com.idega.util.caching.Cache;
 public class ImageTypeHandler extends FileTypeHandler {
 
-  public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
-    Cache cache = FileTypeHandler.getCachedFileInfo(icFileId,iwc);
+  @Override
+public PresentationObject getPresentationObject(int icFileId, IWContext iwc){
+	ICFile file = getFile(icFileId);
+	Cache cache = getCachedFileInfo(iwc, file.getUniqueId(), file.getToken());
     Image image = new Image(cache.getVirtualPathToFile(),cache.getEntity().toString());
     return image;
   }
 
-  public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc){
+  @Override
+public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc){
     Table T = new Table();
     Image image = new Image(props.getWebPath(),props.getName());
     TextInput width = new TextInput("iw_im_width");

@@ -200,7 +200,7 @@ public void main( IWContext iwc ) throws Exception {
 
     if( (this.mediaId==-1) && (this.props==null) ) {
 
-      this.mediaId = MediaBusiness.getMediaId(iwc);
+      this.mediaId = Integer.valueOf(MediaBusiness.getMediaId(iwc));
 
     }
 
@@ -214,7 +214,7 @@ public void main( IWContext iwc ) throws Exception {
 
         /*selecting and closing the window only reaches this state in the builder selecting images*/
 
-        MediaBusiness.saveMediaIdToSession( iwc, this.mediaId );
+        MediaBusiness.saveMediaIdToSession( iwc, String.valueOf(this.mediaId) );
 
         getParentPage().setOnLoad( "top.window.close()" );
 
@@ -284,8 +284,8 @@ public void main( IWContext iwc ) throws Exception {
    */
 
   protected void confirmDeleteMedia( int id, IWContext iwc ) {
-
-    Cache cache = FileTypeHandler.getCachedFileInfo( id, iwc );
+	ICFile tmp = FileTypeHandler.getFile(id);
+	Cache cache = FileTypeHandler.getCachedFileInfo(iwc, tmp.getUniqueId(), tmp.getToken());
 
     ICFile file = ( ICFile ) cache.getEntity();
 
@@ -408,10 +408,8 @@ public void main( IWContext iwc ) throws Exception {
    */
 
   protected void viewFileFromDB( IWContext iwc, int mediaId ) {
-
-
-
-    Cache cache = FileTypeHandler.getCachedFileInfo( mediaId, iwc );
+	  ICFile tmp = FileTypeHandler.getFile(mediaId);
+    Cache cache = FileTypeHandler.getCachedFileInfo(iwc, tmp.getUniqueId(), tmp.getToken());
 
     ICFile file = ( ICFile ) cache.getEntity();
 

@@ -46,7 +46,6 @@ import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 import com.idega.util.FileUtil;
 import com.idega.util.IOUtil;
-import com.idega.util.StringHandler;
 import com.idega.util.StringUtil;
 import com.idega.util.caching.Cache;
 /**
@@ -202,38 +201,38 @@ public class MediaBusiness {
 	 * @return      The mediaId value
 
 	 */
-	public static int getMediaId(IWContext iwc) {
+	public static String getMediaId(IWContext iwc) {
 		String fileInSessionParameter = getMediaParameterNameInSession(iwc);
-		int id = -1;
+		String id = null;
 		if (iwc.getParameter(fileInSessionParameter) != null) {
-			id = Integer.parseInt(iwc.getParameter(fileInSessionParameter));
+			id = iwc.getParameter(fileInSessionParameter);
 			//check parameters
 		} else if (iwc.getSessionAttribute(fileInSessionParameter) != null) {
-			id = Integer.parseInt((String)iwc.getSessionAttribute(fileInSessionParameter));
+			id = (String) iwc.getSessionAttribute(fileInSessionParameter);
 			//check the session parameters
 		}
 
-		if (id < 0) {
+		if (StringUtil.isEmpty(id)) {
 			id = getMediaId(iwc.getRequestURI());
 		}
 
 		return id;
 	}
 
-	public static int getMediaId(String requestURI) {
+	public static String getMediaId(String requestURI) {
 		if (requestURI != null && requestURI.indexOf("iw_cache") != -1) {
 			try {
 				String name = requestURI.substring(requestURI.lastIndexOf(CoreConstants.SLASH) + 1);
 				int nameUnderIndex = name.indexOf(CoreConstants.UNDER);
 				if (nameUnderIndex != -1) {
 					String mediaId = name.substring(0, nameUnderIndex);
-					if (StringHandler.isNumeric(mediaId)) {
-						return Integer.valueOf(mediaId);
+					if (!StringUtil.isEmpty(mediaId)) {
+						return mediaId;
 					}
 				}
 			} catch (Exception e) {}
 		}
-		return -1;
+		return String.valueOf(-1);
 	}
 
 	/**
@@ -260,9 +259,9 @@ public class MediaBusiness {
 	 * @param  mediaId  Description of the Parameter
 
 	 */
-	public static void saveMediaIdToSession(IWContext iwc, int mediaId) {
-		if (mediaId != -1) {
-			iwc.setSessionAttribute(getMediaParameterNameInSession(iwc), String.valueOf(mediaId));
+	public static void saveMediaIdToSession(IWContext iwc, String mediaId) {
+		if (!StringUtil.isEmpty(mediaId) && !"-1".equals(mediaId)) {
+			iwc.setSessionAttribute(getMediaParameterNameInSession(iwc), mediaId);
 		}
 	}
 
@@ -610,6 +609,7 @@ public class MediaBusiness {
 			file.setName(uploadFile.getName());
 			file.setMimeType(uploadFile.getMimeType());
 			file.setFileValue(input);
+			file.setPublic(true);
 			file.setFileSize((int)uploadFile.getSize());
 			file = saveMediaToDB(file, icFileParentId, iwc);
 			long time2 = System.currentTimeMillis();
@@ -657,33 +657,36 @@ public class MediaBusiness {
 		return false;
 	}
 
-	public static Cache getCachedFileInfo(int icFileId, IWMainApplication iwma) {
-		return getCachedFileInfo(icFileId, ICFile.class, iwma, null);
+	public static Cache getCachedFileInfo(IWContext iwc, String fileUniqueID, String fileToken, IWMainApplication iwma) {
+		return getCachedFileInfo(iwc, fileUniqueID, fileToken, ICFile.class, iwma, null);
 	}
 
-	public static Cache getCachedFileInfo(int icFileId, IWMainApplication iwma,String datasource) {
-		return getCachedFileInfo(icFileId, ICFile.class, iwma, datasource);
+	public static Cache getCachedFileInfo(IWContext iwc, String fileUniqueID, String fileToken, IWMainApplication iwma,String datasource) {
+		return getCachedFileInfo(iwc, fileUniqueID, fileToken, ICFile.class, iwma, datasource);
 	}
 
-	public static Cache getCachedFileInfo(int id, Class entityClass, IWMainApplication iwma, String datasource) {
-		return iwma.getIWCacheManager().getCachedBlobObject(entityClass.getName(), id, iwma, datasource);
+	public static Cache getCachedFileInfo(IWContext iwc, String fileUniqueID, String fileToken, Class entityClass, IWMainApplication iwma, String datasource) {
+		return iwma.getIWCacheManager().getCachedBlobObject(iwc, entityClass.getName(), fileUniqueID, fileToken, iwma, datasource);
 	}
 
-	public static String getMediaURL(ICFile file, IWMainApplication iwma) {
-		return getMediaURL(((Integer) file.getPrimaryKey()).intValue(), iwma, file.getDatasource());
+	public static String getMediaURL(IWContext iwc, ICFile file, IWMainApplication iwma) {
+		if (file == null) {
+			return null;
+		}
+		return getMediaURL(iwc, file.getUniqueId(), file.getToken(), iwma, file.getDatasource());
 	}
 
-	public static String getMediaURL(int fileID, IWMainApplication iwma) {
-		return getMediaURL(fileID, iwma, null);
+	public static String getMediaURL(IWContext iwc, String fileUniqueID, String fileToken, IWMainApplication iwma) {
+		return getMediaURL(iwc, fileUniqueID, fileToken, iwma, null);
 	}
 
-	public static String getMediaURL(int fileID, IWMainApplication iwma, String datasource) {
-		Cache cache = getCachedFileInfo(fileID, iwma, datasource);
+	public static String getMediaURL(IWContext iwc, String fileUniqueID, String fileToken, IWMainApplication iwma, String datasource) {
+		Cache cache = getCachedFileInfo(iwc, fileUniqueID, fileToken, iwma, datasource);
 		return getURL(cache, iwma);
 	}
 
-	public static String getMediaURL(int id, Class<?> entityClass, IWMainApplication iwma, String datasource) {
-		Cache cache = getCachedFileInfo(id, entityClass, iwma, datasource);
+	public static String getMediaURL(IWContext iwc, String fileUniqueID, String fileToken, Class<?> entityClass, IWMainApplication iwma, String datasource) {
+		Cache cache = getCachedFileInfo(iwc, fileUniqueID, fileToken, entityClass, iwma, datasource);
 		return getURL(cache, iwma);
 	}
 
@@ -743,7 +746,7 @@ public class MediaBusiness {
 
 	public static Collection<ICFile> getGroupHomeFolders(Collection<Group> groups, IWApplicationContext iwac) throws RemoteException, CreateException{
 		GroupBusiness b = null;
-		Collection<ICFile> toReturn = new ArrayList<ICFile>();
+		Collection<ICFile> toReturn = new ArrayList<>();
 		if(!groups.isEmpty()){
 			for (Iterator<Group> iter = groups.iterator(); iter.hasNext();) {
 				Group group = iter.next();
@@ -761,12 +764,12 @@ public class MediaBusiness {
 		}
 		return toReturn;
 	}
-	
+
 	public static ICFile getConvertedVideo(InputStream stream, ICFile file) {
 		if (file == null || stream == null) {
 			return null;
 		}
-		
+
 		File inputFile = null;
 		File outputFile = null;
 		FileOutputStream fileOutputStream = null;
@@ -774,68 +777,69 @@ public class MediaBusiness {
 		try {
 			String inputFilePrefix = file.getName();
 			inputFilePrefix = inputFilePrefix.substring(0, inputFilePrefix.lastIndexOf(CoreConstants.DOT));
-			
+
 			String inputFileExtension = file.getName();
 			inputFileExtension = inputFileExtension.substring(inputFileExtension.lastIndexOf(CoreConstants.DOT));
-			
+
 			inputFile = File.createTempFile(inputFilePrefix, inputFileExtension);
 			fileOutputStream = new FileOutputStream(inputFile);
 			fileOutputStream.write(IOUtils.toByteArray(stream));
-			
+
 			String inputFilePath = inputFile.getPath();
-			
+
 			String outputFileName = inputFilePrefix + ".mp4";
-			
+
 			String outputFilePath = inputFilePath.substring(0, inputFilePath.lastIndexOf(CoreConstants.DOT));
 			outputFilePath += "_conv.mp4";
-			
+
 			boolean fileConverted = doConvertFile(inputFilePath, outputFilePath);
 			if (fileConverted) {
 				outputFile = new File(outputFilePath);
 				fileBytes = Files.readAllBytes(outputFile.toPath());
-				
+
 				file.setMimeType("video/mp4");
 				file.setName(outputFileName);
 				file.setFileValue(new ByteArrayInputStream(fileBytes));
-				
+				file.setPublic(true);
+
 				return file;
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			IOUtil.close(fileOutputStream);
-			
+
 			if (inputFile.exists()) {
 				inputFile.delete();
 			}
-			
+
 			if (outputFile.exists()) {
 				outputFile.delete();
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	private static boolean doConvertFile(String inputFilePath, String outputFilePath) {
 		if (StringUtil.isEmpty(inputFilePath) || StringUtil.isEmpty(outputFilePath)) {
 			return false;
 		}
-		
+
 		String command = "ffmpeg -i ";
 		command += inputFilePath;
 		command += " -c:v libx264 -profile:v baseline -c:a aac ";
 		command += outputFilePath;
-		
+
 		try {
 			CoreUtil.executeCommand(command);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
-	
+
 }

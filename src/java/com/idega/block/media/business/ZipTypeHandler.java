@@ -54,7 +54,8 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 
 		try {
 			int id = -1;
-			Cache cache =  FileTypeHandler.getCachedFileInfo(icFileId,iwc);
+			ICFile tmp = getFile(icFileId);
+			Cache cache = getCachedFileInfo(iwc, tmp.getUniqueId(), tmp.getToken());
 			String filePath =cache.getRealPathToFile();
 
 			ICFile file = (ICFile) cache.getEntity();
@@ -79,7 +80,7 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 	@Override
 	public PresentationObject getPresentationObject(MediaProperties props, IWContext iwc) {
 		try {
-			int parentID = MediaBusiness.getMediaId(iwc);
+			String parentID = MediaBusiness.getMediaId(iwc);
 			return getZipFileContent(props.getRealPath(),new Integer(parentID));
 		}
 		catch (ZipException e) {
@@ -154,14 +155,14 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 		boolean createDirectoryStructure  = iwc.isParameterSet("create_dirs");
 		String zipFilePath = iwc.getParameter("zip_path");
 		Integer parentID = Integer.valueOf(iwc.getParameter("parent_folder"));
-		int id = parentID.intValue();
+		String id = parentID.toString();
 		//System.out.println("Create directories "+createDirectoryStructure +" path: "+zipFilePath+" parent "+parentID);
 
 
 			try {
 //				if no error occur we want to view the parent directory content
 				if( iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME )!=null) {
-					(( MediaProperties ) iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME )).setId(id);
+					(( MediaProperties ) iwc.getSessionAttribute( MediaConstants.MEDIA_PROPERTIES_IN_SESSION_PARAMETER_NAME )).setId(Integer.valueOf(id));
 				}
 				MediaBusiness.saveMediaIdToSession(iwc,id);
 				uncompressZipToDB(zipFilePath,createDirectoryStructure,parentID);
@@ -183,7 +184,7 @@ public class ZipTypeHandler extends FileTypeHandler implements IWPageEventListen
 	private void uncompressZipToDB(String zipFilePath,boolean createDirectories,Integer parentID)throws ZipException,IOException,CreateException{
 		ZipFile zipFile = new ZipFile(new File(zipFilePath));
 		Enumeration<? extends ZipEntry> enumer = zipFile.entries();
-		Map<String, Integer> folderMap = new Hashtable<String, Integer>();
+		Map<String, Integer> folderMap = new Hashtable<>();
 		FileNameMap fileNameMap = URLConnection.getFileNameMap();
 		String file,folder;
 		while (enumer.hasMoreElements()) {

@@ -22,6 +22,7 @@ import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.TextArea;
 import com.idega.presentation.ui.TextInput;
 import com.idega.presentation.ui.Window;
+import com.idega.util.StringUtil;
 
 /**
  * Title: com.idega.block.media.presentation.MediaFolderEditorWindow
@@ -52,11 +53,11 @@ public void main(IWContext iwc) throws Exception {
 
     String action = iwc.getParameter(MediaConstants.MEDIA_ACTION_PARAMETER_NAME);
 
-    int mediaId = MediaBusiness.getMediaId(iwc);
+    String mediaId = MediaBusiness.getMediaId(iwc);
 
     if(action != null) {
       if( action.equals(MediaConstants.MEDIA_ACTION_NEW) ) {
-      		add(new MediaToolbar(mediaId));
+      		add(new MediaToolbar(Integer.valueOf(mediaId)));
         Form form = new Form();
         Table table = new Table(1,3);
         table.setWidth(300);
@@ -82,7 +83,7 @@ public void main(IWContext iwc) throws Exception {
 
         form.add(table);
 
-        if( mediaId != -1){
+        if(!StringUtil.isEmpty(mediaId)){
           form.add(new HiddenInput(MediaBusiness.getMediaParameterNameInSession(iwc),String.valueOf(mediaId)));
         }
         else{
@@ -98,7 +99,7 @@ public void main(IWContext iwc) throws Exception {
   	 	addFileProperties(iwc,mediaId);
       }
 	    	else if(action.equals(MediaConstants.MEDIA_ACTION_MOVE)) {
-	    		addFileMove(iwc, mediaId);
+	    		addFileMove(iwc, Integer.valueOf(mediaId));
 	    	}
       else if( action.equals(MediaConstants.MEDIA_ACTION_FOLDER_SAVE) ){
         String folderName = iwc.getParameter(MediaConstants.MEDIA_FOLDER_NAME_PARAMETER_NAME);
@@ -109,7 +110,7 @@ public void main(IWContext iwc) throws Exception {
           folder.setName(folderName);
           folder.setMimeType(com.idega.core.file.data.ICMimeTypeBMPBean.IC_MIME_TYPE_FOLDER);
 
-          folder = MediaBusiness.saveMediaToDB(folder,mediaId,iwc);
+          folder = MediaBusiness.saveMediaToDB(folder,Integer.valueOf(mediaId),iwc);
           setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
           add(new MediaToolbar(((Integer)folder.getPrimaryKey()).intValue()));
           add(new MediaViewer(((Integer)folder.getPrimaryKey()).intValue()));
@@ -125,7 +126,7 @@ public void main(IWContext iwc) throws Exception {
 		  		String newFileName = iwc.getParameter(MediaConstants.MEDIA_FOLDER_NAME_PARAMETER_NAME);
 		  		String newDescription = iwc.getParameter("me_fol_desc");
 
-		  		if(mediaId>0){
+		  		if(!StringUtil.isEmpty(mediaId)){
 		  			ICFile file = ( (ICFileHome) IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(mediaId));
 		  			// Keeping same file ending :
 		  			String oldFileName = file.getName();
@@ -183,15 +184,15 @@ public void main(IWContext iwc) throws Exception {
 		  	else if(action.equals(MediaConstants.MEDIA_ACTION_SAVE_MOVE)) {
 		  		String newFolder = iwc.getParameter(MediaConstants.MEDIA_CHOOSER_FOLDER_CHOOSER_NAME);
 		  		if(newFolder != null && !newFolder.equals("")) {
-		    		MediaBusiness.moveMedia(mediaId,Integer.parseInt(newFolder));
+		    		MediaBusiness.moveMedia(Integer.valueOf(mediaId),Integer.parseInt(newFolder));
 		  		}
 				setOnLoad("parent.frames['"+MediaConstants.TARGET_MEDIA_TREE+"'].location.reload()");
 		  	}
     }
   }
 
-  private void addFileProperties(IWContext iwc,int mediaId)throws Exception{
-		add(new MediaToolbar(mediaId));
+  private void addFileProperties(IWContext iwc,String mediaId)throws Exception{
+		add(new MediaToolbar(Integer.valueOf(mediaId)));
 		Form form = new Form();
 		Table table = new Table();
 		//table.setWidth(300);
@@ -203,7 +204,7 @@ public void main(IWContext iwc) throws Exception {
 
 		TextInput inputName = new TextInput(MediaConstants.MEDIA_FOLDER_NAME_PARAMETER_NAME);
 		TextArea inputDescription = new TextArea("me_fol_desc");
-		if(mediaId>0){
+		if(!StringUtil.isEmpty(mediaId)){
 			ICFile file = ( (ICFileHome) IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(mediaId));
 			//ICFile file = (ICFile)MediaBusiness.getCachedFileInfo(mediaId,iwc.getApplication()).getEntity();
 			if(file.getName()!=null){

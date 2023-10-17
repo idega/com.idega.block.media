@@ -32,7 +32,7 @@ public class SimpleFileChooser extends InterfaceObject {
   private String name;
   private int selectedFileId = -1;
   private boolean deleteOnChange = true;
-  
+
   private BusyBar busy = null;
   private List disabledObjects;
 
@@ -73,9 +73,10 @@ public class SimpleFileChooser extends InterfaceObject {
   }
 
 
-  public void main(IWContext iwc) throws Exception{
+  @Override
+public void main(IWContext iwc) throws Exception{
 		this.coreBundle = iwc.getIWMainApplication().getCoreBundle();
-		
+
     if(this.deleteOnChange && "true".equals(iwc.getParameter("change_file"))&&iwc.getParameter(this.name) != null){
       System.out.println("deleteFile: "+ iwc.getParameter(this.name));
       boolean del = false;
@@ -85,7 +86,7 @@ public class SimpleFileChooser extends InterfaceObject {
       }
       catch (Exception ex) {
         del = false;
-      } 
+      }
       finally{
         if(!del){
           System.err.println("media: "+iwc.getParameter(this.name)+" failed to delete");
@@ -132,7 +133,7 @@ public class SimpleFileChooser extends InterfaceObject {
       table.add(this.busy,1,2);
 
       this.add(table);
-    } 
+    }
     else if(file != null){//uploaded
 			ICFile icFile = MediaBusiness.saveMediaToDBUploadFolder(file,iwc);
 
@@ -140,26 +141,26 @@ public class SimpleFileChooser extends InterfaceObject {
 	      Table table = new Table(1,2);
 	      table.setCellpadding(0);
 	      table.setCellspacing(0);
-	
+
 	      TextInput tInput = new TextInput("ic_uploaded_file",file.getName());
 	      tInput.setDisabled(true);
 	      SubmitButton change = new SubmitButton("Change...","change_file","true");
-	
+
 	      String style = this.getStyleAttribute();
 	      if(style != null){
 	        tInput.setStyleAttribute(style);
 	        change.setStyleAttribute(style);
 	      }
-	
+
 	      table.add(tInput,1,1);
 	      table.add(change,1,1);
 	      //table.add(busy,1,2);
-	     
+
 	      table.add(new HiddenInput(this.name,icFile.getPrimaryKey().toString()),1,2);
-	      
+
 				if( this.showPreviewLink){
 			    Link preview = new Link("Preview");
-			    preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getIWMainApplication()));
+			    preview.setURL(MediaBusiness.getMediaURL(iwc, icFile, iwc.getIWMainApplication()));
 			    preview.setTarget(Link.TARGET_NEW_WINDOW);
 			    table.add(preview,1,2);
 				}
@@ -170,35 +171,35 @@ public class SimpleFileChooser extends InterfaceObject {
 			}
       //this.add(new Image(file.getWebPath(),file.getName()));
     } else if(this.selectedFileId != -1) {
-    	
+
     	if( this.showChangeUploadedFileOption){
 	      Table table = new Table(1,2);
 	      table.setCellpadding(0);
 	      table.setCellspacing(0);
-	
+
 	      ICFile icFile = ((com.idega.core.file.data.ICFileHome)com.idega.data.IDOLookup.getHome(ICFile.class)).findByPrimaryKey(new Integer(this.selectedFileId));
 	      TextInput tInput = new TextInput("ic_uploaded_file",icFile.getName());
 	      tInput.setDisabled(true);
 	      SubmitButton change = new SubmitButton("Change...","change_file","true");
-	
+
 	      String style = this.getStyleAttribute();
 	      if(style != null){
 	        tInput.setStyleAttribute(style);
 	        change.setStyleAttribute(style);
 	      }
-	
+
 	      table.add(tInput,1,1);
 	      table.add(change,1,1);
 	      //table.add(busy,1,2);
 	      table.add(new HiddenInput(this.name,Integer.toString(this.selectedFileId)),1,2);
-	      
+
 	      if( this.showPreviewLink){
 		      Link preview = new Link("Preview");
-		      preview.setURL(MediaBusiness.getMediaURL(icFile,iwc.getIWMainApplication()));
+		      preview.setURL(MediaBusiness.getMediaURL(iwc, icFile, iwc.getIWMainApplication()));
 		      preview.setTarget(Link.TARGET_NEW_WINDOW);
 		      table.add(preview,1,2);
 	      }
-	      
+
 	      this.add(table);
     	}
     	else{
@@ -234,12 +235,14 @@ public class SimpleFileChooser extends InterfaceObject {
 	/* (non-Javadoc)
 	 * @see com.idega.presentation.ui.InterfaceObject#handleKeepStatus(com.idega.presentation.IWContext)
 	 */
+	@Override
 	public void handleKeepStatus(IWContext iwc) {
 	}
 
 	/* (non-Javadoc)
 	 * @see com.idega.presentation.PresentationObject#isContainer()
 	 */
+	@Override
 	public boolean isContainer() {
 		return false;
 	}

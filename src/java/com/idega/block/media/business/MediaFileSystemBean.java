@@ -9,6 +9,7 @@ import com.idega.business.IBOServiceBean;
 import com.idega.core.file.business.FileIconSupplier;
 import com.idega.core.file.business.ICFileSystem;
 import com.idega.core.file.data.ICFile;
+import com.idega.presentation.IWContext;
 
 /**
  * MediaFileSystemBean The implementation of the FileSystem interface for the Media block
@@ -24,22 +25,22 @@ public class MediaFileSystemBean extends IBOServiceBean implements MediaFileSyst
 	 * @see com.idega.core.file.business.ICFileSystem#getFileURL(com.idega.core.data.ICFile)
 	 */
 	@Override
-	public String getFileURI(ICFile file)
+	public String getFileURI(IWContext iwc, ICFile file)
 	{
-		return MediaBusiness.getMediaURL(file,this.getIWApplicationContext().getIWMainApplication());
+		return MediaBusiness.getMediaURL(iwc, file, this.getIWApplicationContext().getIWMainApplication());
 	}
 	/* (non-Javadoc)
 	 * @see com.idega.core.file.business.ICFileSystem#getFileURL(int)
 	 */
 	@Override
-	public String getFileURI(int fileId)
+	public String getFileURI(IWContext iwc, String fileUniqueId, String fileToken)
 	{
-		return MediaBusiness.getMediaURL(fileId,this.getIWApplicationContext().getIWMainApplication());
+		return MediaBusiness.getMediaURL(iwc, fileUniqueId, fileToken, this.getIWApplicationContext().getIWMainApplication());
 	}
 	@Override
-	public String getFileURI(int fileId, String datasource)
+	public String getFileURI(IWContext iwc, String fileUniqueId, String fileToken, String datasource)
 	{
-		return MediaBusiness.getMediaURL(fileId,this.getIWApplicationContext().getIWMainApplication(), datasource);
+		return MediaBusiness.getMediaURL(iwc, fileUniqueId, fileToken, this.getIWApplicationContext().getIWMainApplication(), datasource);
 	}
 	/* (non-Javadoc)
 	 * @see com.idega.core.file.business.ICFileSystem#initialize()
