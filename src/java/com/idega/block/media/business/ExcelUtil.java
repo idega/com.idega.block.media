@@ -2,8 +2,8 @@ package com.idega.block.media.business;
 
 import java.util.Iterator;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 public class ExcelUtil {
 
@@ -15,7 +15,7 @@ public class ExcelUtil {
 		return UTIL;
 	}
 
-	public boolean autosizeSheetColumns(HSSFSheet sheet, int nrOfCells) {
+	public boolean autosizeSheetColumns(Sheet sheet, int nrOfCells) {
 		if (sheet == null || nrOfCells <= 0) {
 			return false;
 		}
@@ -29,7 +29,7 @@ public class ExcelUtil {
 		return true;
 	}
 
-	public boolean autosizeColumns(HSSFSheet sheet) {
+	public boolean autosizeColumns(Sheet sheet) {
 		if (sheet == null) {
 			return Boolean.FALSE;
 		}
