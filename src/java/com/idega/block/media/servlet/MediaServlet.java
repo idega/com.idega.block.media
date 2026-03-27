@@ -133,7 +133,8 @@ public class MediaServlet extends IWCoreServlet implements Servlet {
 		    } catch(Exception ex) {
 		    	Logger.getLogger(getClass().getName()).log(
 		    			Level.WARNING,
-		    			"Error getting or writing media" + (mw == null ? CoreConstants.EMPTY : " from " + mw.getClass().getName()),
+		    			"Error getting or writing media" + (mw == null ? CoreConstants.EMPTY : " from " + mw.getClass().getName() +
+		    					". URI: " + request.getRequestURI() + ", query: " + request.getQueryString()),
 		    			ex
 		    	);
 	    	}
